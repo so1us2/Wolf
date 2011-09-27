@@ -5,6 +5,7 @@ import java.util.Map;
 
 import wolf.Player;
 import wolf.WolfBot;
+import wolf.WolfException;
 
 public class LeaveAction extends AbstractInitAction {
 
@@ -19,7 +20,7 @@ public class LeaveAction extends AbstractInitAction {
 		Player player = map.get(sender.toLowerCase());
 
 		if (player == null) {
-			throw new RuntimeException(sender + " can't leave a game they haven't joined.");
+			throw new WolfException(sender + " can't leave a game they haven't joined.");
 		}
 
 		map.remove(sender.toLowerCase());

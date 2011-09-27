@@ -3,6 +3,7 @@ package wolf.action;
 import java.util.List;
 
 import wolf.WolfBot;
+import wolf.WolfException;
 
 public abstract class BotAction {
 
@@ -25,14 +26,28 @@ public abstract class BotAction {
 
 	public void tryInvoke(WolfBot bot, String sender, String command, List<String> args) {
 		if (!hasPermission(sender)) {
-			throw new RuntimeException("Permission denied.");
+			throw new WolfException("Permission denied.");
 		}
 
 		if (args.size() < minArguments || args.size() > maxArguments) {
-			throw new RuntimeException("Invalid arguments.");
+			throw new WolfException(getArgumentsError());
 		}
 
 		execute(bot, sender, command, args);
+	}
+
+	protected String getArgumentsError() {
+		if (minArguments != maxArguments) {
+			return "Invalid arguments (need between " + minArguments + " and " + maxArguments + " arguments)";
+		}
+
+		if (minArguments == 0) {
+			return "This command shouldn't have any arguments.";
+		} else if (minArguments == 1) {
+			return "This command should only have one argument.";
+		} else {
+			return "This command should have " + minArguments + " arguments.";
+		}
 	}
 
 	protected abstract void execute(WolfBot bot, String sender, String command, List<String> args);

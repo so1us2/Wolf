@@ -5,6 +5,7 @@ import java.util.Map;
 
 import wolf.Player;
 import wolf.WolfBot;
+import wolf.WolfException;
 
 public class JoinAction extends AbstractInitAction {
 
@@ -19,7 +20,7 @@ public class JoinAction extends AbstractInitAction {
 		Player player = map.get(sender.toLowerCase());
 
 		if (player != null) {
-			throw new RuntimeException(sender + " has already joined.");
+			throw new WolfException(sender + " has already joined.");
 		}
 
 		map.put(sender.toLowerCase(), new Player(sender));

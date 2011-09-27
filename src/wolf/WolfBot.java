@@ -20,7 +20,7 @@ public class WolfBot extends PircBot {
 	public static final ImmutableList<String> admins = ImmutableList.of("satnam", "semisober");
 	public static final List<BotAction> actions = Lists.<BotAction> newArrayList(new InitGameAction(), new ShutdownAction());
 
-	public static final String channel = "#mtgwolf";
+	public static final String channel = "#mtgwolf_test";
 	public static final String botName = "Overseer";
 
 	private GameHandler currentHandler = null;
@@ -42,7 +42,9 @@ public class WolfBot extends PircBot {
 			}
 			handleMessage(this, actions, channel, sender, login, hostname, message);
 		} catch (RuntimeException e) {
-			e.printStackTrace();
+			if (!(e instanceof WolfException)) {
+				e.printStackTrace();
+			}
 			sendMessage(channel, "Problem: " + e.getMessage());
 		}
 	}
@@ -56,7 +58,9 @@ public class WolfBot extends PircBot {
 			}
 			handleMessage(this, actions, null, sender, login, hostname, message);
 		} catch (Exception e) {
-			e.printStackTrace();
+			if (!(e instanceof WolfException)) {
+				e.printStackTrace();
+			}
 			sendMessage(sender, "Problem: " + e.getMessage());
 		}
 	}
@@ -83,7 +87,12 @@ public class WolfBot extends PircBot {
 		if (targetAction != null) {
 			targetAction.tryInvoke(bot, sender, command, m.subList(1, m.size()));
 		} else {
-			throw new RuntimeException("Unrecognized command: !" + command);
+			StringBuilder possibleCommands = new StringBuilder();
+			for (BotAction action : possibleActions) {
+				possibleCommands.append('!').append(action.getCommandName()).append(", ");
+			}
+			possibleCommands.delete(possibleCommands.length() - 2, possibleCommands.length());
+			throw new RuntimeException("Unrecognized command: !" + command + ".  Possible commands are: " + possibleCommands);
 		}
 	}
 

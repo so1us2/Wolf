@@ -12,7 +12,4 @@ public class Player {
 		return name;
 	}
 
-	public String whoRules() {
-		return "Tom Rules";
-	}
 }

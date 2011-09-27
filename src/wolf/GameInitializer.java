@@ -3,6 +3,8 @@ package wolf;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import wolf.action.init.AbstractInitAction;
 import wolf.action.init.JoinAction;
 import wolf.action.init.LeaveAction;
@@ -21,12 +23,17 @@ import com.google.common.collect.Maps;
  */
 public class GameInitializer implements GameHandler {
 
+	@SuppressWarnings("unused")
+	private static final Logger logger = Logger.getLogger(GameInitializer.class);
+
 	private final List<AbstractInitAction> actions = Lists.newArrayList(new JoinAction(), new LeaveAction(), new LoadPresetAction(),
 			new SetRoleCountAction(), new StartGameAction(), new PregameStatusAction(), new ListPlayerAction());
 
 	private final Map<String, Player> namePlayerMap = Maps.newLinkedHashMap();
 
 	private final Map<Class<? extends GameRole>, Integer> roleCountMap = Maps.newLinkedHashMap();
+
+	private Map<String, WolfProperty> props = WolfProperty.createDefaults();
 
 	public GameInitializer() {
 		for (AbstractInitAction action : actions) {

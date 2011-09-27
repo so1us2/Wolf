@@ -6,8 +6,10 @@ import java.util.Map;
 import wolf.WolfBot;
 import wolf.WolfException;
 import wolf.role.GameRole;
+import wolf.role.classic.Anarchist;
 import wolf.role.classic.Civilian;
 import wolf.role.classic.Seer;
+import wolf.role.classic.Vigilante;
 import wolf.role.classic.Wolf;
 
 import com.google.common.collect.Maps;
@@ -18,6 +20,9 @@ public class LoadPresetAction extends AbstractInitAction {
 
 	static {
 		map.put("classic", new Preset().with(6, Civilian.class).with(2, Wolf.class).with(1, Seer.class));
+		map.put("five",
+				new Preset().with(1, Civilian.class).with(1, Wolf.class).with(1, Seer.class).with(1, Vigilante.class)
+						.with(1, Anarchist.class));
 	}
 
 	public LoadPresetAction() {
@@ -42,6 +47,7 @@ public class LoadPresetAction extends AbstractInitAction {
 		Map<Class<? extends GameRole>, Integer> roleCountMap = initializer.getRoleCountMap();
 		roleCountMap.clear();
 		roleCountMap.putAll(preset.roleCountMap);
+		bot.sendMessage("Loaded " + presetName.toLowerCase());
 	}
 
 	private static class Preset {

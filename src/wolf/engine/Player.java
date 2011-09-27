@@ -8,8 +8,22 @@ public class Player {
 
 	private GameRole role;
 
+	private boolean alive = true;
+
 	public Player(String name) {
 		this.name = name;
+	}
+
+	public boolean isAlive() {
+		return alive;
+	}
+
+	public void kill() {
+		if (alive) {
+			alive = false;
+		} else {
+			throw new RuntimeException(name + " is already dead.");
+		}
 	}
 
 	public String getName() {
@@ -28,10 +42,6 @@ public class Player {
 	@Override
 	public String toString() {
 		return this.getName();
-	}
-
-	public void begin(WolfEngine engine, Time time) {
-		role.begin(engine, this, time);
 	}
 
 }

@@ -33,7 +33,15 @@ public abstract class GameRole {
 		// Subclasses may override
 	}
 
+	protected void onDayEnds() {
+		// Subclasses may override
+	}
+
 	protected void onNightBegins() {
+		// Subclasses may override
+	}
+
+	protected void onNightEnds() {
 		// Subclasses may override
 	}
 
@@ -42,16 +50,37 @@ public abstract class GameRole {
 		return Collections.emptyList();
 	}
 
+	public boolean isFinished() {
+		// Subclasses may override
+		return true;
+	}
+
 	public void handlePrivateMessage(String message) {
 		WolfBot.handleMessage(engine.getBot(), getCurrentActions(), null, player.getName(), message);
 	}
 
-	public void begin(WolfEngine engine, Player player, Time time) {
+	public void begin(Time time) {
 		if (time == Time.Day) {
 			onDayBegins();
 		} else if (time == Time.Night) {
 			onNightBegins();
 		}
+	}
+
+	public void end(Time time) {
+		if (time == Time.Day) {
+			onDayEnds();
+		} else if (time == Time.Night) {
+			onNightEnds();
+		}
+	}
+
+	protected final boolean isDay() {
+		return getEngine().getTime() == Time.Day;
+	}
+
+	protected final boolean isNight() {
+		return getEngine().getTime() == Time.Night;
 	}
 
 	public final Player getPlayer() {

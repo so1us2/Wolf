@@ -11,6 +11,8 @@ import wolf.WolfException;
 import wolf.action.init.AbstractInitAction;
 import wolf.role.GameRole;
 
+import com.google.common.base.Predicate;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 public class WolfEngine implements GameHandler {
@@ -53,9 +55,41 @@ public class WolfEngine implements GameHandler {
 			bot.sendMessage("The world grows dark as the villagers drift to sleep.");
 		}
 
-		for (Player player : namePlayerMap.values()) {
-			player.begin(this, time);
+		for (Player player : getAlivePlayers()) {
+			player.getRole().begin(time);
 		}
+
+		// check for the end right away, it's possible that nobody has any action to take.
+		checkEndOfTimePeriod();
+	}
+
+	/**
+	 * Ends the current day/night
+	 */
+	private void end() {
+		for (Player player : getAlivePlayers()) {
+			player.getRole().end(time);
+		}
+
+		if (time == Time.Day) {
+			begin(Time.Night);
+		} else if (time == Time.Night) {
+			begin(Time.Day);
+		} else {
+			throw new IllegalStateException("Don't know how to end: " + time);
+		}
+	}
+
+	/**
+	 * Checks to see if the current day / night should end
+	 */
+	private void checkEndOfTimePeriod() {
+		for (Player player : getAlivePlayers()) {
+			if (!player.getRole().isFinished()) {
+				return;
+			}
+		}
+		end();
 	}
 
 	private void assignRoles(Map<Class<? extends GameRole>, Integer> roleCountMap) throws Exception {
@@ -94,10 +128,21 @@ public class WolfEngine implements GameHandler {
 		}
 
 		player.getRole().handlePrivateMessage(message);
+
+		checkEndOfTimePeriod();
 	}
 
-	private Player getPlayer(String sender) {
+	public Player getPlayer(String sender) {
 		return namePlayerMap.get(sender.toLowerCase());
+	}
+
+	public Iterable<Player> getAlivePlayers() {
+		return Iterables.filter(namePlayerMap.values(), new Predicate<Player>() {
+			@Override
+			public boolean apply(Player player) {
+				return player.isAlive();
+			}
+		});
 	}
 
 	public Time getTime() {

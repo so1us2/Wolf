@@ -6,7 +6,9 @@ import java.util.Map;
 import wolf.action.init.AbstractInitAction;
 import wolf.action.init.JoinAction;
 import wolf.action.init.LeaveAction;
+import wolf.action.init.ListPlayerAction;
 import wolf.action.init.LoadPresetAction;
+import wolf.action.init.PregameStatusAction;
 import wolf.action.init.SetRoleCountAction;
 import wolf.action.init.StartGameAction;
 import wolf.role.GameRole;
@@ -19,12 +21,12 @@ import com.google.common.collect.Maps;
  */
 public class GameInitializer implements GameHandler {
 
-	private List<AbstractInitAction> actions = Lists.newArrayList(new JoinAction(), new LeaveAction(), new LoadPresetAction(),
-			new SetRoleCountAction(), new StartGameAction());
+	private final List<AbstractInitAction> actions = Lists.newArrayList(new JoinAction(), new LeaveAction(), new LoadPresetAction(),
+			new SetRoleCountAction(), new StartGameAction(), new PregameStatusAction(), new ListPlayerAction());
 
-	private Map<String, Player> namePlayerMap = Maps.newLinkedHashMap();
+	private final Map<String, Player> namePlayerMap = Maps.newLinkedHashMap();
 
-	private Map<Class<? extends GameRole>, Integer> roleCountMap = Maps.newLinkedHashMap();
+	private final Map<Class<? extends GameRole>, Integer> roleCountMap = Maps.newLinkedHashMap();
 
 	public GameInitializer() {
 		for (AbstractInitAction action : actions) {

@@ -1,7 +1,6 @@
 package wolf.role.classic;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -15,25 +14,22 @@ import wolf.engine.Time;
 import wolf.role.GameRole;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
 
 @DisplayName(value = "Seer", plural = "Seers")
 public class Seer extends GameRole {
 
 	private Player currentPeekTarget = null;
-	private Map<Player, GameRole> peeks;
-
-	public void Seer() {
-		peeks = new HashMap();
-	}
+	private final Map<Player, GameRole> peeks = Maps.newHashMap();
 
 	@Override
 	public Faction getFaction() {
-		return Faction.VILLAGE;
+		return Faction.VILLAGERS;
 	}
 
 	@Override
 	protected void onNightBegins() {
-		getEngine().getBot().sendMessage(getPlayer(), "Tell me who you want to peek.  Message me '/peek [target]'");
+		getEngine().getBot().sendMessage(getPlayer(), "Tell me who you want to peek.  Message me '!peek [target]'");
 	}
 
 	@Override

@@ -21,16 +21,12 @@ public class WolfBot extends PircBot {
 	public static final ImmutableList<String> admins = ImmutableList.of("satnam", "semisober");
 	public static final List<BotAction> actions = Lists.<BotAction> newArrayList(new InitGameAction(), new ShutdownAction());
 
-	public static final String channel = "#mtgwolf";
+	public static final String channel = "#mtgwolf_test";
 	public static final String botName = "Overseer";
 
 	private GameHandler currentHandler = null;
 
 	public void transition(GameHandler nextHandler) {
-		// if (nextHandler == null) {
-		// throw new IllegalArgumentException();
-		// }
-
 		this.currentHandler = nextHandler;
 	}
 
@@ -93,7 +89,7 @@ public class WolfBot extends PircBot {
 				possibleCommands.append('!').append(action.getCommandName()).append(", ");
 			}
 			possibleCommands.delete(possibleCommands.length() - 2, possibleCommands.length());
-			throw new RuntimeException("Unrecognized command: !" + command + ".  Possible commands are: " + possibleCommands);
+			throw new WolfException("Unrecognized command: !" + command + ".  Possible commands are: " + possibleCommands);
 		}
 	}
 

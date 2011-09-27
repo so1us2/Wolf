@@ -1,5 +1,6 @@
 package wolf.engine;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -9,11 +10,15 @@ import wolf.GameInitializer;
 import wolf.WolfBot;
 import wolf.WolfException;
 import wolf.action.init.AbstractInitAction;
+import wolf.engine.spell.Spell;
 import wolf.role.GameRole;
 
 import com.google.common.base.Predicate;
+import com.google.common.collect.ArrayListMultimap;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 
 public class WolfEngine implements GameHandler {
 
@@ -29,12 +34,14 @@ public class WolfEngine implements GameHandler {
 
 	private Faction winner = null;
 
+	private List<Spell> spells = Lists.newArrayList();
+
 	public WolfEngine(WolfBot bot, GameInitializer initializer) throws Exception {
 		this.bot = bot;
 		this.namePlayerMap = initializer.getNamePlayerMap();
 		this.properties = initializer.getProperties();
 
-		Time startingTime = properties.get(WolfProperty.STARTING_TIME).getValue();
+		Time startingTime = getProperty(WolfProperty.STARTING_TIME);
 
 		assignRoles(initializer.getRoleCountMap());
 
@@ -67,17 +74,70 @@ public class WolfEngine implements GameHandler {
 	 * Ends the current day/night
 	 */
 	private void end() {
+		Multimap<Class<? extends GameRole>, GameRole> roleMembers = ArrayListMultimap.create();
+
 		for (Player player : getAlivePlayers()) {
-			player.getRole().end(time);
+			roleMembers.put(player.getRole().getClass(), player.getRole());
 		}
 
-		if (time == Time.Day) {
-			begin(Time.Night);
-		} else if (time == Time.Night) {
-			begin(Time.Day);
-		} else {
-			throw new IllegalStateException("Don't know how to end: " + time);
+		for (Class<? extends GameRole> roleClass : roleMembers.keySet()) {
+			Collection<GameRole> members = roleMembers.get(roleClass);
+			members.iterator().next().end(time, members);
 		}
+
+		executeSpells();
+
+		checkForWinner();
+
+		if (!isGameOver()) {
+			if (time == Time.Day) {
+				begin(Time.Night);
+			} else if (time == Time.Night) {
+				begin(Time.Day);
+			} else {
+				throw new IllegalStateException("Don't know how to end: " + time);
+			}
+		}
+	}
+
+	private void checkForWinner() {
+		Map<Faction, Integer> factionCount = Maps.newHashMap();
+
+		for (Player player : getAlivePlayers()) {
+			Faction faction = player.getRole().getFaction();
+			Integer i = factionCount.get(faction);
+			if (i == null) {
+				factionCount.put(faction, 1);
+			} else {
+				factionCount.put(faction, i + 1);
+			}
+		}
+
+		if (factionCount.containsKey(Faction.WOLVES) && factionCount.containsKey(Faction.VILLAGERS)) {
+			// see if there are more wolves than villagers
+			if (factionCount.get(Faction.WOLVES) >= factionCount.get(Faction.VILLAGERS)) {
+				setWinner(Faction.WOLVES);
+				return;
+			}
+		}
+
+		if (factionCount.containsKey(Faction.VILLAGERS) && factionCount.containsKey(Faction.WOLVES)) {
+			// see if there are no more wolves left
+			if (factionCount.get(Faction.WOLVES) == 0) {
+				setWinner(Faction.VILLAGERS);
+				return;
+			}
+		}
+	}
+
+	private void setWinner(Faction faction) {
+		bot.sendMessage("The " + faction + " have won the game!");
+		bot.transition(null);
+		this.winner = faction;
+	}
+
+	private boolean isGameOver() {
+		return getWinner() != null;
 	}
 
 	/**
@@ -151,6 +211,31 @@ public class WolfEngine implements GameHandler {
 
 	public WolfBot getBot() {
 		return bot;
+	}
+
+	public Faction getWinner() {
+		return winner;
+	}
+
+	private <T> T getProperty(String propertyName) {
+		return properties.get(propertyName.toLowerCase()).getValue();
+	}
+
+	private void executeSpells() {
+		List<Spell> toExecute = Lists.newArrayList(spells);
+		this.spells.clear();
+
+		for (Spell spell : toExecute) {
+			spell.execute(this);
+		}
+	}
+
+	public void cast(Spell spell) {
+		if (spell == null) {
+			throw new IllegalArgumentException("spell can't be null!");
+		}
+
+		spells.add(spell);
 	}
 
 }

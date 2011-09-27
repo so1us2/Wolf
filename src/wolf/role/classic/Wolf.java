@@ -10,9 +10,11 @@ import wolf.arch.DisplayName;
 import wolf.engine.Faction;
 import wolf.engine.Player;
 import wolf.engine.Time;
+import wolf.engine.spell.KillSpell;
 import wolf.role.GameRole;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 
 @DisplayName(value = "Wolf", plural = "Wolves")
 public class Wolf extends GameRole {
@@ -30,9 +32,19 @@ public class Wolf extends GameRole {
 	}
 
 	@Override
+	public void end(Time time, Collection<GameRole> wolves) {
+		if (time == Time.Night) {
+			// choose a random target from the collection of wolves
+			Wolf chosen = (Wolf) Iterables.get(wolves, (int) Math.random() * wolves.size());
+			Player killTarget = chosen.currentKillTarget;
+			getEngine().cast(new KillSpell(killTarget));
+		}
+		super.end(time, wolves);
+	}
+
+	@Override
 	protected void onNightEnds() {
-		// TODO, how do we end the night since wolves act in unison (not individually?)
-		// maybe we just don't kill anyone lol
+		currentKillTarget = null;
 	}
 
 	@Override

@@ -2,11 +2,11 @@ package wolf.engine;
 
 public enum Faction {
 
-	VILLAGE, WOLVES;
+	VILLAGERS, WOLVES;
 
 	@Override
 	public String toString() {
-		return this == VILLAGE ? "Village" : "Wolves";
+		return this == VILLAGERS ? "Villagers" : "Wolves";
 	};
 
 }

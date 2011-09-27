@@ -19,7 +19,7 @@ public class Vigilante extends GameRole {
 
 	@Override
 	public Faction getFaction() {
-		return Faction.VILLAGE;
+		return Faction.VILLAGERS;
 	}
 
 	@Override

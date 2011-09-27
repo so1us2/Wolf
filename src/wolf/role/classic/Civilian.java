@@ -9,7 +9,7 @@ public class Civilian extends GameRole {
 
 	@Override
 	public Faction getFaction() {
-		return Faction.VILLAGE;
+		return Faction.VILLAGERS;
 	}
 
 }

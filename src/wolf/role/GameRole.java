@@ -71,6 +71,12 @@ public abstract class GameRole {
 		}
 	}
 
+	public void end(Time time, Collection<GameRole> members) {
+		for (GameRole member : members) {
+			member.end(time);
+		}
+	}
+
 	public void end(Time time) {
 		if (time == Time.Day) {
 			onDayEnds();

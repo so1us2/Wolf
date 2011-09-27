@@ -58,7 +58,7 @@ public class GameInitializer implements GameHandler {
 
 	@Override
 	public void onMessage(WolfBot bot, String channel, String sender, String login, String hostname, String message) {
-		WolfBot.handleMessage(bot, actions, channel, sender, login, hostname, message);
+		WolfBot.handleMessage(bot, actions, channel, sender, message);
 	}
 
 	@Override

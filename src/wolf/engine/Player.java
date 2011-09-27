@@ -22,6 +22,7 @@ public class Player {
 
 	public void setRole(GameRole role) {
 		this.role = role;
+		role.setPlayer(this);
 	}
 
 	@Override
@@ -30,7 +31,7 @@ public class Player {
 	}
 
 	public void begin(WolfEngine engine, Time time) {
-		role.begin(engine, time);
+		role.begin(engine, this, time);
 	}
 
 }

@@ -1,10 +1,15 @@
 package wolf.role;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
+import wolf.WolfBot;
+import wolf.action.BotAction;
 import wolf.arch.Utils;
 import wolf.engine.Faction;
+import wolf.engine.Player;
 import wolf.engine.Time;
 import wolf.engine.WolfEngine;
 import wolf.role.classic.Civilian;
@@ -19,6 +24,57 @@ import com.google.common.collect.Maps;
 
 public abstract class GameRole {
 
+	private WolfEngine engine;
+	private Player player;
+
+	public abstract Faction getFaction();
+
+	protected void onDayBegins() {
+		// Subclasses may override
+	}
+
+	protected void onNightBegins() {
+		// Subclasses may override
+	}
+
+	protected Collection<? extends BotAction> getCurrentActions() {
+		// Subclasses may override
+		return Collections.emptyList();
+	}
+
+	public void handlePrivateMessage(String message) {
+		WolfBot.handleMessage(engine.getBot(), getCurrentActions(), null, player.getName(), message);
+	}
+
+	public void begin(WolfEngine engine, Player player, Time time) {
+		if (time == Time.Day) {
+			onDayBegins();
+		} else if (time == Time.Night) {
+			onNightBegins();
+		}
+	}
+
+	public final Player getPlayer() {
+		return player;
+	}
+
+	public final WolfEngine getEngine() {
+		return engine;
+	}
+
+	public final void setPlayer(Player player) {
+		this.player = player;
+	}
+
+	public final void setEngine(WolfEngine engine) {
+		this.engine = engine;
+	}
+
+	@Override
+	public String toString() {
+		return Utils.getDisplayName(getClass(), false);
+	}
+
 	@SuppressWarnings("unchecked")
 	public static final List<Class<? extends GameRole>> roles = Lists.newArrayList(Civilian.class, Hunter.class, Priest.class, Seer.class,
 			Vigilante.class, Wolf.class);
@@ -29,17 +85,6 @@ public abstract class GameRole {
 		for (Class<? extends GameRole> c : roles) {
 			typeRoleMap.put(c.getSimpleName().toLowerCase(), c);
 		}
-	}
-
-	@Override
-	public String toString() {
-		return Utils.getDisplayName(getClass(), false);
-	}
-
-	public abstract Faction getFaction();
-
-	public void begin(WolfEngine engine, Time time) {
-		// Subclasses may override
 	}
 
 }

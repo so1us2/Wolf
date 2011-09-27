@@ -1,8 +1,12 @@
 package wolf;
 
+import wolf.role.GameRole;
+
 public class Player {
 
 	private final String name;
+
+	private GameRole role;
 
 	public Player(String name) {
 		this.name = name;
@@ -10,6 +14,14 @@ public class Player {
 
 	public String getName() {
 		return name;
+	}
+
+	public GameRole getRole() {
+		return role;
+	}
+
+	public void setRole(GameRole role) {
+		this.role = role;
 	}
 
 }

@@ -3,7 +3,7 @@ package wolf.role;
 import java.util.List;
 import java.util.Map;
 
-import wolf.arch.DisplayName;
+import wolf.arch.Utils;
 import wolf.role.classic.Civilian;
 import wolf.role.classic.Hunter;
 import wolf.role.classic.Lyncher;
@@ -31,11 +31,7 @@ public abstract class GameRole {
 
 	@Override
 	public String toString() {
-		DisplayName displayName = getClass().getAnnotation(DisplayName.class);
-		if (displayName == null) {
-			return getClass().getSimpleName();
-		}
-		return displayName.value();
+		return Utils.getDisplayName(getClass(), false);
 	}
 
 }

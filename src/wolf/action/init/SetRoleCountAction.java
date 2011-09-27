@@ -35,10 +35,10 @@ public class SetRoleCountAction extends AbstractInitAction {
 
 		if (num == 0) {
 			initializer.getRoleCountMap().remove(role);
-			bot.sendMessage(WolfBot.channel, "Removed role: " + role.getSimpleName());
+			bot.sendMessage("Removed role: " + role.getSimpleName());
 		} else {
 			initializer.getRoleCountMap().put(role, num);
-			bot.sendMessage(WolfBot.channel, "Set the number of " + Utils.getDisplayName(role, true) + " to " + num + ".");
+			bot.sendMessage("Set the number of " + Utils.getDisplayName(role, true) + " to " + num + ".");
 		}
 	}
 }

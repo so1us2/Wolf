@@ -25,7 +25,7 @@ public class LeaveAction extends AbstractInitAction {
 
 		map.remove(sender.toLowerCase());
 		bot.deVoice(WolfBot.channel, sender);
-		bot.sendMessage(WolfBot.channel, sender + " left the game.");
+		bot.sendMessage(sender + " left the game.");
 	}
 
 }

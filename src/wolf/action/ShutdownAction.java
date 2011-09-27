@@ -13,7 +13,7 @@ public class ShutdownAction extends BotAction {
 
 	@Override
 	protected void execute(WolfBot bot, String sender, String command, List<String> args) {
-		bot.sendMessage(WolfBot.channel, "Shutting down.");
+		bot.sendMessage("Shutting down.");
 		System.exit(0);
 	}
 

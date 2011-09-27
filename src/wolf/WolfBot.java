@@ -45,7 +45,7 @@ public class WolfBot extends PircBot {
 			if (!(e instanceof WolfException)) {
 				e.printStackTrace();
 			}
-			sendMessage(channel, "Problem: " + e.getMessage());
+			sendMessage("Problem: " + e.getMessage());
 		}
 	}
 
@@ -100,6 +100,13 @@ public class WolfBot extends PircBot {
 		for (User user : getUsers(channel)) {
 			deVoice(channel, user.getNick());
 		}
+	}
+
+	/**
+	 * Sends a message to everyone in the wolf channel.
+	 */
+	public void sendMessage(String message) {
+		super.sendMessage(channel, message);
 	}
 
 	public WolfBot() throws Exception {

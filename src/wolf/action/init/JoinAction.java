@@ -28,6 +28,6 @@ public class JoinAction extends AbstractInitAction {
 		bot.deOp(WolfBot.channel, sender);
 		bot.voice(WolfBot.channel, sender);
 
-		bot.sendMessage(WolfBot.channel, sender + " joined the game.");
+		bot.sendMessage(sender + " joined the game.");
 	}
 }

@@ -13,6 +13,8 @@ import wolf.action.init.LoadPresetAction;
 import wolf.action.init.PregameStatusAction;
 import wolf.action.init.SetRoleCountAction;
 import wolf.action.init.StartGameAction;
+import wolf.engine.Player;
+import wolf.engine.WolfProperty;
 import wolf.role.GameRole;
 
 import com.google.common.collect.Lists;
@@ -33,12 +35,16 @@ public class GameInitializer implements GameHandler {
 
 	private final Map<Class<? extends GameRole>, Integer> roleCountMap = Maps.newLinkedHashMap();
 
-	private Map<String, WolfProperty> props = WolfProperty.createDefaults();
+	private Map<String, WolfProperty> properties = WolfProperty.createDefaults();
 
 	public GameInitializer() {
 		for (AbstractInitAction action : actions) {
 			action.setInitializer(this);
 		}
+	}
+
+	public Map<String, WolfProperty> getProperties() {
+		return properties;
 	}
 
 	public Map<String, Player> getNamePlayerMap() {

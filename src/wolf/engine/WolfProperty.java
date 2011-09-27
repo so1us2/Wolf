@@ -1,7 +1,8 @@
-package wolf;
+package wolf.engine;
 
 import java.util.List;
 import java.util.Map;
+
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -9,11 +10,16 @@ import com.google.common.collect.Maps;
 
 public class WolfProperty {
 
-	public final String name;
-	public final ImmutableList<String> options;
-	public String value;
+	public static String STARTING_TIME = "StartingTime", SILENT = "Silent";
 
-	public WolfProperty(String name, String... options) {
+	public final String name;
+	public final ImmutableList<Object> options;
+	public Object value;
+
+	/**
+	 * Note that the first property in the options array is used as the default starting option.
+	 */
+	public WolfProperty(String name, Object... options) {
 		this.name = name;
 		this.options = ImmutableList.copyOf(options);
 		this.value = this.options.get(0);
@@ -23,23 +29,24 @@ public class WolfProperty {
 		return name;
 	}
 
-	public ImmutableList<String> getOptions() {
+	public ImmutableList<Object> getOptions() {
 		return options;
 	}
 
-	public String getValue() {
-		return value;
+	@SuppressWarnings("unchecked")
+	public <T> T getValue() {
+		return (T) value;
 	}
 
-	public void setValue(String value) {
+	public void setValue(Object value) {
 		this.value = value;
 	}
 
 	public static Map<String, WolfProperty> createDefaults() {
 		List<WolfProperty> defaults = Lists.newArrayList();
 
-		defaults.add(new WolfProperty("StartingTime", "Day", "Night"));
-		defaults.add(new WolfProperty("Silent", "Off", "On"));
+		defaults.add(new WolfProperty(STARTING_TIME, Time.Day, Time.Night));
+		defaults.add(new WolfProperty(SILENT, false, true));
 
 		Map<String, WolfProperty> ret = Maps.newLinkedHashMap();
 		for (WolfProperty prop : defaults) {

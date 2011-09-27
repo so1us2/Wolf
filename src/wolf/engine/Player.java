@@ -1,4 +1,4 @@
-package wolf;
+package wolf.engine;
 
 import wolf.role.GameRole;
 
@@ -27,6 +27,10 @@ public class Player {
 	@Override
 	public String toString() {
 		return this.getName();
+	}
+
+	public void begin(WolfEngine engine, Time time) {
+		role.begin(engine, time);
 	}
 
 }

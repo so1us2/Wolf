@@ -3,9 +3,9 @@ package wolf.action.init;
 import java.util.List;
 import java.util.Map;
 
-import wolf.Player;
 import wolf.WolfBot;
 import wolf.WolfException;
+import wolf.engine.Player;
 
 public class LeaveAction extends AbstractInitAction {
 

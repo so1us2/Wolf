@@ -21,7 +21,7 @@ public class PregameStatusAction extends AbstractInitAction {
 		Map<Class<? extends GameRole>, Integer> roleCounts = initializer.getRoleCountMap();
 		int numPlayers = initializer.getNamePlayerMap().size();
 
-		bot.sendMessage("You have " + numPlayers + " players. You need " + roleCounts.size() + "total players.");
+		bot.sendMessage("You have " + numPlayers + " players. You need " + roleCounts.size() + " total players.");
 		printRoles(bot);
 	}
 

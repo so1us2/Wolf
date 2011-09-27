@@ -17,6 +17,7 @@ public class InitGameAction extends BotAction {
 		bot.deVoiceAll();
 
 		bot.transition(new GameInitializer());
+		bot.sendMessage("New game is forming!");
 	}
 
 }

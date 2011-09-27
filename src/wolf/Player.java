@@ -24,4 +24,9 @@ public class Player {
 		this.role = role;
 	}
 
+	@Override
+	public String toString() {
+		return this.getName();
+	}
+
 }

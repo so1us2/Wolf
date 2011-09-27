@@ -21,7 +21,7 @@ public class WolfBot extends PircBot {
 	public static final List<BotAction> actions = Lists.<BotAction> newArrayList(new InitGameAction(), new ShutdownAction());
 
 	public static final String channel = "#mtgwolf";
-	public static final String botName = "Storyteller";
+	public static final String botName = "Overseer";
 
 	private GameHandler currentHandler = null;
 

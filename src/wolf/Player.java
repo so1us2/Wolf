@@ -11,4 +11,8 @@ public class Player {
 	public String getName() {
 		return name;
 	}
+
+	public String whoRules() {
+		return "Tom Rules";
+	}
 }

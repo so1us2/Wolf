@@ -34,6 +34,8 @@ public class StartGameAction extends AbstractInitAction {
 					+ " you may start the game.");
 		}
 
+		bot.sendMessage(WolfBot.channel, "The game has begun!");
+
 		bot.transition(new WolfEngine(initializer));
 	}
 }

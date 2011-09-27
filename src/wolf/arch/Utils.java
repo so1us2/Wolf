@@ -1,5 +1,6 @@
 package wolf.arch;
 
+
 public class Utils {
 
 	public static String getDisplayName(Class<?> c, boolean plural) {

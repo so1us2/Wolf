@@ -7,6 +7,7 @@ import java.util.Map.Entry;
 import wolf.GameHandler;
 import wolf.GameInitializer;
 import wolf.WolfBot;
+import wolf.WolfException;
 import wolf.action.init.AbstractInitAction;
 import wolf.role.GameRole;
 
@@ -65,14 +66,16 @@ public class WolfEngine implements GameHandler {
 					break outerLoop;
 				}
 				Player randomPlayer = playersWhoNeedRoles.remove((int) (Math.random() * playersWhoNeedRoles.size()));
-				randomPlayer.setRole(entry.getKey().newInstance());
+				GameRole role = entry.getKey().newInstance();
+				role.setEngine(this);
+				randomPlayer.setRole(role);
 			}
 		}
 
 		bot.sendMessage("Assigning roles...");
 
 		for (Player player : namePlayerMap.values()) {
-			bot.sendMessage(player.getName(), "You are a " + player.getRole() + ".");
+			bot.sendMessage(player, "You are a " + player.getRole() + ".");
 		}
 
 		bot.sendMessage("Roles have been assigned.");
@@ -80,12 +83,29 @@ public class WolfEngine implements GameHandler {
 
 	@Override
 	public void onMessage(WolfBot bot, String channel, String sender, String login, String hostname, String message) {
-		WolfBot.handleMessage(bot, actions, channel, sender, login, hostname, message);
+		WolfBot.handleMessage(bot, actions, channel, sender, message);
 	}
 
 	@Override
 	public void onPrivateMessage(WolfBot bot, String sender, String login, String hostname, String message) {
-		bot.sendMessage(sender, "Private messages don't do anything right now.");
+		Player player = getPlayer(sender);
+		if (player == null) {
+			throw new WolfException("You are not part of the game.");
+		}
+
+		player.getRole().handlePrivateMessage(message);
+	}
+
+	private Player getPlayer(String sender) {
+		return namePlayerMap.get(sender.toLowerCase());
+	}
+
+	public Time getTime() {
+		return time;
+	}
+
+	public WolfBot getBot() {
+		return bot;
 	}
 
 }

@@ -10,6 +10,7 @@ import org.jibble.pircbot.User;
 import wolf.action.BotAction;
 import wolf.action.InitGameAction;
 import wolf.action.ShutdownAction;
+import wolf.engine.Player;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
@@ -40,7 +41,7 @@ public class WolfBot extends PircBot {
 				currentHandler.onMessage(this, channel, sender, login, hostname, message);
 				return;
 			}
-			handleMessage(this, actions, channel, sender, login, hostname, message);
+			handleMessage(this, actions, channel, sender, message);
 		} catch (RuntimeException e) {
 			if (!(e instanceof WolfException)) {
 				e.printStackTrace();
@@ -56,7 +57,7 @@ public class WolfBot extends PircBot {
 				currentHandler.onPrivateMessage(this, sender, login, hostname, message);
 				return;
 			}
-			handleMessage(this, actions, null, sender, login, hostname, message);
+			handleMessage(this, actions, null, sender, message);
 		} catch (Exception e) {
 			if (!(e instanceof WolfException)) {
 				e.printStackTrace();
@@ -66,7 +67,7 @@ public class WolfBot extends PircBot {
 	}
 
 	public static void handleMessage(WolfBot bot, Collection<? extends BotAction> possibleActions, String channel, String sender,
-			String login, String hostname, String message) {
+			String message) {
 		List<String> m = Lists.newArrayList(Splitter.on(' ').split(message));
 		String command = m.get(0);
 
@@ -107,6 +108,10 @@ public class WolfBot extends PircBot {
 	 */
 	public void sendMessage(String message) {
 		super.sendMessage(channel, message);
+	}
+
+	public void sendMessage(Player player, String message) {
+		super.sendMessage(player.getName(), message);
 	}
 
 	public WolfBot() throws Exception {

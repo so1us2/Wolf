@@ -1,7 +1,9 @@
 package wolf.role.classic;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import wolf.WolfBot;
 import wolf.WolfException;
@@ -18,6 +20,11 @@ import com.google.common.collect.ImmutableList;
 public class Seer extends GameRole {
 
 	private Player currentPeekTarget = null;
+	private Map<Player, GameRole> peeks;
+
+	public void Seer() {
+		peeks = new HashMap();
+	}
 
 	@Override
 	public Faction getFaction() {
@@ -33,7 +40,7 @@ public class Seer extends GameRole {
 	protected void onNightEnds() {
 		// tell the seer the role of their peek target
 		getEngine().getBot().sendMessage(getPlayer(), currentPeekTarget.getName() + " is a " + currentPeekTarget.getRole());
-
+		peeks.put(currentPeekTarget, currentPeekTarget.getRole());
 		currentPeekTarget = null;
 	}
 
@@ -44,6 +51,17 @@ public class Seer extends GameRole {
 		}
 
 		return true;
+	}
+
+	@Override
+	protected void onStatus() {
+		super.onStatus();
+		listPeeks();
+	}
+
+	private void listPeeks() {
+		for (Player p : peeks.keySet())
+			getEngine().getBot().sendMessage(getPlayer(), p.getName() + " is a " + peeks.get(p));
 	}
 
 	@Override
@@ -63,18 +81,23 @@ public class Seer extends GameRole {
 
 		@Override
 		protected void execute(WolfBot bot, String sender, String command, List<String> args) {
-			Player peekTarget = getEngine().getPlayer(args.get(0));
-			if (peekTarget == null) {
-				throw new WolfException("No such player: " + args.get(0));
+			if (command.equals("sitrep"))
+				onStatus();
+			else if (command.equals("peek")) {
+				Player peekTarget = getEngine().getPlayer(args.get(0));
+				if (peekTarget == null) {
+					throw new WolfException("No such player: " + args.get(0));
+				}
+
+				if (!peekTarget.isAlive()) {
+					throw new WolfException("You can only peek players that are alive!");
+				}
+
+				currentPeekTarget = peekTarget;
+
+				getEngine().getBot()
+						.sendMessage(sender, "Your peek has been received and will be revealed to you at the end of the night.");
 			}
-
-			if (!peekTarget.isAlive()) {
-				throw new WolfException("You can only peek players that are alive!");
-			}
-
-			currentPeekTarget = peekTarget;
-
-			getEngine().getBot().sendMessage(sender, "Your peek has been received and will be revealed to you at the end of the night.");
 		}
 	};
 

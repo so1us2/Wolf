@@ -45,6 +45,10 @@ public abstract class GameRole {
 		// Subclasses may override
 	}
 
+	protected void onStatus() {
+		getEngine().getBot().sendMessage(getPlayer(), "You are a " + getPlayer().getRole());
+	}
+
 	protected Collection<? extends BotAction> getCurrentActions() {
 		// Subclasses may override
 		return Collections.emptyList();

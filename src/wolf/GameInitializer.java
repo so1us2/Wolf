@@ -3,6 +3,8 @@ package wolf;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
 import wolf.action.init.AbstractInitAction;
 import wolf.action.init.JoinAction;
 import wolf.action.init.LeaveAction;
@@ -12,6 +14,8 @@ import wolf.action.init.LoadPresetAction;
 import wolf.action.init.PregameStatusAction;
 import wolf.action.init.SetRoleCountAction;
 import wolf.action.init.StartGameAction;
+import wolf.engine.Player;
+import wolf.engine.WolfProperty;
 import wolf.role.GameRole;
 
 import com.google.common.collect.Lists;
@@ -22,6 +26,9 @@ import com.google.common.collect.Maps;
  */
 public class GameInitializer implements GameHandler {
 
+	@SuppressWarnings("unused")
+	private static final Logger logger = Logger.getLogger(GameInitializer.class);
+
 	private final List<AbstractInitAction> actions = Lists.newArrayList(new JoinAction(), new LeaveAction(), new LoadPresetAction(),
 			new SetRoleCountAction(), new StartGameAction(), new PregameStatusAction(), new ListPlayerAction(), new ListRolesAction());
 
@@ -29,10 +36,16 @@ public class GameInitializer implements GameHandler {
 
 	private final Map<Class<? extends GameRole>, Integer> roleCountMap = Maps.newLinkedHashMap();
 
+	private Map<String, WolfProperty> properties = WolfProperty.createDefaults();
+
 	public GameInitializer() {
 		for (AbstractInitAction action : actions) {
 			action.setInitializer(this);
 		}
+	}
+
+	public Map<String, WolfProperty> getProperties() {
+		return properties;
 	}
 
 	public Map<String, Player> getNamePlayerMap() {

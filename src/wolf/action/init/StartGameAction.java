@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import wolf.WolfBot;
-import wolf.WolfEngine;
 import wolf.WolfException;
+import wolf.engine.WolfEngine;
 import wolf.role.GameRole;
 
 public class StartGameAction extends AbstractInitAction {

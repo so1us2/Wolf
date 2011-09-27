@@ -5,8 +5,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import wolf.Player;
 import wolf.WolfBot;
+import wolf.engine.Player;
 
 import com.google.common.base.Joiner;
 

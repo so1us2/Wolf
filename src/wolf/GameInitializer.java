@@ -11,6 +11,7 @@ import wolf.action.init.LeaveAction;
 import wolf.action.init.ListPlayerAction;
 import wolf.action.init.ListRolesAction;
 import wolf.action.init.LoadPresetAction;
+import wolf.action.init.NullGameAction;
 import wolf.action.init.PregameStatusAction;
 import wolf.action.init.SetRoleCountAction;
 import wolf.action.init.StartGameAction;
@@ -30,13 +31,14 @@ public class GameInitializer implements GameHandler {
 	private static final Logger logger = Logger.getLogger(GameInitializer.class);
 
 	private final List<AbstractInitAction> actions = Lists.newArrayList(new JoinAction(), new LeaveAction(), new LoadPresetAction(),
-			new SetRoleCountAction(), new StartGameAction(), new PregameStatusAction(), new ListPlayerAction(), new ListRolesAction());
+			new SetRoleCountAction(), new StartGameAction(), new PregameStatusAction(), new ListPlayerAction(), new ListRolesAction(),
+			new NullGameAction());
 
 	private final Map<String, Player> namePlayerMap = Maps.newLinkedHashMap();
 
 	private final Map<Class<? extends GameRole>, Integer> roleCountMap = Maps.newLinkedHashMap();
 
-	private Map<String, WolfProperty> properties = WolfProperty.createDefaults();
+	private final Map<String, WolfProperty> properties = WolfProperty.createDefaults();
 
 	public GameInitializer() {
 		for (AbstractInitAction action : actions) {

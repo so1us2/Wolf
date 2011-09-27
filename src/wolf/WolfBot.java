@@ -27,9 +27,9 @@ public class WolfBot extends PircBot {
 	private GameHandler currentHandler = null;
 
 	public void transition(GameHandler nextHandler) {
-		if (nextHandler == null) {
-			throw new IllegalArgumentException();
-		}
+		// if (nextHandler == null) {
+		// throw new IllegalArgumentException();
+		// }
 
 		this.currentHandler = nextHandler;
 	}
@@ -99,7 +99,8 @@ public class WolfBot extends PircBot {
 
 	public void deVoiceAll() {
 		for (User user : getUsers(channel)) {
-			deVoice(channel, user.getNick());
+			if (user.hasVoice())
+				deVoice(channel, user.getNick());
 		}
 	}
 

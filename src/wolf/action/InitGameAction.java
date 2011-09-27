@@ -9,7 +9,7 @@ public class InitGameAction extends BotAction {
 
 	@Override
 	public String getCommandName() {
-		return "setup";
+		return "newgame";
 	}
 
 	@Override

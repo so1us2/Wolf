@@ -1,9 +1,9 @@
 package wolf.action.init;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import wolf.WolfBot;
 import wolf.role.GameRole;
@@ -21,13 +21,18 @@ public class PregameStatusAction extends AbstractInitAction {
 		Map<Class<? extends GameRole>, Integer> roleCounts = initializer.getRoleCountMap();
 		int numPlayers = initializer.getNamePlayerMap().size();
 
-		bot.sendMessage("You have " + numPlayers + " players. You need " + roleCounts.size() + " total players.");
-		printRoles(bot);
+		Collection<Integer> counts = roleCounts.values();
+
+		int i = 0;
+
+		for (Integer c : counts) {
+			i += c;
+		}
+
+		bot.sendMessage("You have " + numPlayers + " players. You need " + i + " total players.");
 	}
 
 	protected void printRoles(WolfBot bot) {
-
-		Set<Entry<Class<? extends GameRole>, Integer>> roleCounts = initializer.getRoleCountMap().entrySet();
 
 		for (Entry<Class<? extends GameRole>, Integer> entry : initializer.getRoleCountMap().entrySet()) {
 			bot.sendMessage(entry.getKey() + ": " + entry.getValue());

@@ -18,9 +18,13 @@ public class ListPlayerAction extends AbstractInitAction {
 
 		Collection<Player> players = initializer.getNamePlayerMap().values();
 
+		String msg = "Players: ";
+
 		for (Player p : players) {
-			bot.sendMessage(p.getName());
+			msg.concat(p.getName() + ", ");
 		}
+
+		bot.sendMessage(msg);
 	}
 
 }

@@ -85,11 +85,19 @@ public class WolfTestBot extends org.jibble.pircbot.PircBot {
 
 		if (admins.contains(sender)) {
 			if (command.equals("!newmonkey")) {
-				try {
-					for (int i = 0; i < numBots; i++) {
-						new WolfTestBot();
-					}
-				} catch (Exception e) {
+				for (int i = 0; i < numBots; i++) {
+					Thread t = new Thread(new Runnable() {
+						@Override
+						public void run() {
+							try {
+								new WolfTestBot();
+							} catch (Exception e) {
+								e.printStackTrace();
+							}
+						}
+					});
+					t.setDaemon(true);
+					t.start();
 				}
 				sendMessage(sender, "Creating " + numBots + " monkeys!");
 			} else if (command.equals("!message")) {

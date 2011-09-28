@@ -22,7 +22,7 @@ import com.google.common.collect.Multimap;
 
 public class WolfEngine implements GameHandler {
 
-	private List<AbstractInitAction> actions = Lists.newArrayList();
+	private final List<AbstractInitAction> actions = Lists.newArrayList();
 
 	private final WolfBot bot;
 
@@ -34,7 +34,7 @@ public class WolfEngine implements GameHandler {
 
 	private Faction winner = null;
 
-	private List<Spell> spells = Lists.newArrayList();
+	private final List<Spell> spells = Lists.newArrayList();
 
 	public WolfEngine(WolfBot bot, GameInitializer initializer) throws Exception {
 		this.bot = bot;
@@ -100,6 +100,14 @@ public class WolfEngine implements GameHandler {
 		}
 	}
 
+	public void roleChat(Class<? extends GameRole> targetClass, Player sender, String message) {
+		for (Player player : getAlivePlayers()) {
+			if (!player.getName().equals(sender) && targetClass.isAssignableFrom(player.getRole().getClass())) {
+				bot.sendMessage(player, "<WolfChat> " + sender + ": " + message);
+			}
+		}
+	}
+
 	private void checkForWinner() {
 		Map<Faction, Integer> factionCount = Maps.newHashMap();
 
@@ -134,6 +142,13 @@ public class WolfEngine implements GameHandler {
 		bot.sendMessage("The " + faction + " have won the game!");
 		bot.transition(null);
 		this.winner = faction;
+		printPlayers();
+	}
+
+	private void printPlayers() {
+		for (Player p : namePlayerMap.values()) {
+			bot.sendMessage(p.getName() + " - " + p.getRole() + " (" + p.getRole().getFaction() + ")");
+		}
 	}
 
 	private boolean isGameOver() {
@@ -190,6 +205,10 @@ public class WolfEngine implements GameHandler {
 		player.getRole().handlePrivateMessage(message);
 
 		checkEndOfTimePeriod();
+	}
+
+	public void wolfChat(String message) {
+
 	}
 
 	public Player getPlayer(String sender) {

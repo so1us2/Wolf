@@ -13,8 +13,10 @@ import wolf.engine.Time;
 import wolf.engine.spell.KillSpell;
 import wolf.role.GameRole;
 
+import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 
 @DisplayName(value = "Wolf", plural = "Wolves")
 public class Wolf extends GameRole {
@@ -40,6 +42,20 @@ public class Wolf extends GameRole {
 			getEngine().cast(new KillSpell(killTarget));
 		}
 		super.end(time, wolves);
+	}
+
+	@Override
+	public void handlePrivateMessage(String message) {
+		List<String> m = Lists.newArrayList(Splitter.on(' ').split(message));
+		String command = m.get(0);
+
+		if (isNight()) {
+			if (!command.startsWith("!")) {
+				getEngine().roleChat(this.getClass(), getPlayer(), message);
+				return;
+			}
+		}
+		getEngine().getBot().handleMessage(getEngine().getBot(), getCurrentActions(), null, getPlayer().getName(), message);
 	}
 
 	@Override

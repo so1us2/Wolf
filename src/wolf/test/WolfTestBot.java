@@ -16,7 +16,9 @@ public class WolfTestBot extends org.jibble.pircbot.PircBot {
 
 	public static final ImmutableList<String> admins = ImmutableList.of("satnam", "semisober");
 
-	public static final String channel = "#mtgwolf";
+	public static final String server = "efnet.bredband2.se";
+	public static final String channel = "#mtgwolf_test";
+
 	public static final int numTesters = 5;
 	public String botName;
 
@@ -32,7 +34,8 @@ public class WolfTestBot extends org.jibble.pircbot.PircBot {
 		setVerbose(true);
 		startIdentServer();
 
-		connect("irc.efnet.nl");
+		connect(server);
+		// "irc.efnet.nl"
 		joinChannel(channel);
 		messageAdmins(botName + " reporting for duty.");
 	}
@@ -64,7 +67,7 @@ public class WolfTestBot extends org.jibble.pircbot.PircBot {
 
 		if (admins.contains(sender)) {
 			if (command.equals("!monkeys")) {
-				sendMessage(message.substring(message.indexOf(" ")));
+				sendMessage(message.substring(message.indexOf(" ") + 1));
 			}
 		}
 	}
@@ -101,7 +104,7 @@ public class WolfTestBot extends org.jibble.pircbot.PircBot {
 				}
 				sendMessage(sender, "Creating " + numBots + " monkeys!");
 			} else if (command.equals("!message")) {
-				sendMessage(m.get(1), message.substring(message.indexOf(m.get(1)) + m.get(1).length()));
+				sendMessage(m.get(1), message.substring(message.indexOf(m.get(1)) + m.get(1).length() + 1));
 			} else {
 				sendMessage(message);
 			}
@@ -113,7 +116,9 @@ public class WolfTestBot extends org.jibble.pircbot.PircBot {
 	public static void main(String[] args) throws Exception {
 		BasicConfigurator.configure();
 
-		new WolfTestBot();
+		for (int i = 0; i < WolfTestBot.numTesters; i++) {
+			new WolfTestBot();
+		}
 	}
 
 }

@@ -47,7 +47,7 @@ public class Seer extends GameRole {
 			return false;
 		}
 
-		return true;
+		return super.isFinished();
 	}
 
 	@Override

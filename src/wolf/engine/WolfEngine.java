@@ -10,6 +10,7 @@ import wolf.GameInitializer;
 import wolf.WolfBot;
 import wolf.WolfException;
 import wolf.action.init.AbstractInitAction;
+import wolf.engine.spell.KillSpell;
 import wolf.engine.spell.Spell;
 import wolf.role.GameRole;
 
@@ -80,6 +81,20 @@ public class WolfEngine implements GameHandler {
 			roleMembers.put(player.getRole().getClass(), player.getRole());
 		}
 
+		if (getTime() == Time.Day) {
+			Player majorityVote = getMajorityVote();
+			if (majorityVote == null) {
+				bot.sendMessage("No majority was reached.");
+				for (Player player : getAlivePlayers()) {
+					player.getRole().setVoteTarget(null);
+				}
+				return;
+			} else {
+				bot.sendMessage("A verdict was reached and " + majorityVote + " was lynched.");
+				cast(new KillSpell(majorityVote));
+			}
+		}
+
 		for (Class<? extends GameRole> roleClass : roleMembers.keySet()) {
 			Collection<GameRole> members = roleMembers.get(roleClass);
 			members.iterator().next().end(time, members);
@@ -98,6 +113,11 @@ public class WolfEngine implements GameHandler {
 				throw new IllegalStateException("Don't know how to end: " + time);
 			}
 		}
+	}
+
+	private Player getMajorityVote() {
+		// TODO implement this
+		return null;
 	}
 
 	public void roleChat(Class<? extends GameRole> targetClass, Player sender, String message) {

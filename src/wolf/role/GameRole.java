@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 
 import wolf.WolfBot;
+import wolf.WolfException;
 import wolf.action.BotAction;
 import wolf.arch.Utils;
 import wolf.engine.Faction;
@@ -27,6 +28,8 @@ public abstract class GameRole {
 	private WolfEngine engine;
 	private Player player;
 
+	private Player voteTarget;
+
 	public abstract Faction getFaction();
 
 	protected void onDayBegins() {
@@ -34,7 +37,7 @@ public abstract class GameRole {
 	}
 
 	protected void onDayEnds() {
-		// Subclasses may override
+		voteTarget = null;
 	}
 
 	protected void onNightBegins() {
@@ -51,10 +54,18 @@ public abstract class GameRole {
 
 	protected Collection<? extends BotAction> getCurrentActions() {
 		// Subclasses may override
-		return Collections.emptyList();
+		if (isDay()) {
+			return Collections.singletonList(voteAction);
+		} else {
+			return Collections.emptyList();
+		}
 	}
 
 	public boolean isFinished() {
+		if (isDay()) {
+			return voteTarget != null;
+		}
+
 		// Subclasses may override
 		return true;
 	}
@@ -109,10 +120,53 @@ public abstract class GameRole {
 		this.engine = engine;
 	}
 
+	public void setVoteTarget(Player voteTarget) {
+		this.voteTarget = voteTarget;
+	}
+
+	public Player getVoteTarget() {
+		return voteTarget;
+	}
+
 	@Override
 	public String toString() {
 		return Utils.getDisplayName(getClass(), false);
 	}
+
+	private final BotAction voteAction = new BotAction(1) {
+		@Override
+		public String getCommandName() {
+			return "vote";
+		}
+
+		@Override
+		protected void execute(WolfBot bot, String sender, String command, List<String> args) {
+			Player voteTarget = getEngine().getPlayer(args.get(0));
+
+			if (voteTarget == null) {
+				throw new WolfException("No such player: " + args.get(0));
+			}
+
+			if (!voteTarget.isAlive()) {
+				throw new WolfException("You can only vote players that are alive!");
+			}
+
+			if (voteTarget == GameRole.this.voteTarget) {
+				throw new WolfException("You've already voted for " + voteTarget);
+			}
+
+			Player oldVoteTarget = getVoteTarget();
+			setVoteTarget(voteTarget);
+
+			getEngine().getBot().sendMessage(sender, "Your vote for " + voteTarget.getName() + " has been received.");
+
+			if (oldVoteTarget == null) {
+				getEngine().getBot().sendMessage("Someone voted.");
+			} else {
+				getEngine().getBot().sendMessage("Someone changed their vote.");
+			}
+		}
+	};
 
 	@SuppressWarnings("unchecked")
 	public static final List<Class<? extends GameRole>> roles = Lists.newArrayList(Civilian.class, Hunter.class, Priest.class, Seer.class,

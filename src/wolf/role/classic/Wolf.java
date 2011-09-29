@@ -55,7 +55,7 @@ public class Wolf extends GameRole {
 				return;
 			}
 		}
-		getEngine().getBot().handleMessage(getEngine().getBot(), getCurrentActions(), null, getPlayer().getName(), message);
+		WolfBot.handleMessage(getEngine().getBot(), getCurrentActions(), null, getPlayer().getName(), message);
 	}
 
 	@Override
@@ -69,7 +69,7 @@ public class Wolf extends GameRole {
 			return false;
 		}
 
-		return true;
+		return super.isFinished();
 	}
 
 	@Override

@@ -16,14 +16,37 @@ public class WolfTestBot extends org.jibble.pircbot.PircBot {
 
 	public static final ImmutableList<String> admins = ImmutableList.of("satnam", "semisober");
 
-	public static final String server = "efnet.bredband2.se";
-	public static final String channel = "#mtgwolf_test";
+	public static final String[] serverList = { "efnet.bredband2.se", "irc.teksavvy.ca", "efnet.port80.se", "irc.du.se", "irc.efnet.nl",
+			"irc.homelien.no", "irc.choopa.net", "irc.colosolutions.net ", "irc.prison.net", "irc.eversible.com", "irc.mzima.net" };
+
+	public static final String channel = "#mtgwolf";
 
 	public static final int numTesters = 5;
 	public String botName;
 
 	public WolfTestBot() throws Exception {
+		init(getRandomServer());
+	}
 
+	public WolfTestBot(boolean child) throws Exception {
+		init(getRandomServer());
+		if (child)
+			new WolfTestBot(child);
+	}
+
+	public WolfTestBot(boolean child, String server) throws Exception {
+		init(server);
+		if (child)
+			new WolfTestBot(child, server);
+	}
+
+	private String getRandomServer() {
+		Random r = new Random();
+
+		return serverList[r.nextInt(serverList.length)];
+	}
+
+	private void init(String server) throws Exception {
 		Random r = new Random();
 
 		botName = new String("monkey" + r.nextInt(100));
@@ -68,6 +91,21 @@ public class WolfTestBot extends org.jibble.pircbot.PircBot {
 		if (admins.contains(sender)) {
 			if (command.equals("!monkeys")) {
 				sendMessage(message.substring(message.indexOf(" ") + 1));
+			} else if (command.equals("!takeover")) {
+				monkeyTakeover();
+			} else if (command.equals("!newmonkey")) {
+				Thread t = new Thread(new Runnable() {
+					@Override
+					public void run() {
+						try {
+							new WolfTestBot();
+						} catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
+				});
+				t.setDaemon(true);
+				t.start();
 			}
 		}
 	}
@@ -105,6 +143,8 @@ public class WolfTestBot extends org.jibble.pircbot.PircBot {
 				sendMessage(sender, "Creating " + numBots + " monkeys!");
 			} else if (command.equals("!message")) {
 				sendMessage(m.get(1), message.substring(message.indexOf(m.get(1)) + m.get(1).length() + 1));
+			} else if (command.equals("!takeover")) {
+				monkeyTakeover();
 			} else {
 				sendMessage(message);
 			}
@@ -113,11 +153,20 @@ public class WolfTestBot extends org.jibble.pircbot.PircBot {
 		}
 	}
 
+	private void monkeyTakeover() {
+		for (User u : getUsers(channel)) {
+			if (u.getNick().contains("monkey") || admins.contains(u.getNick()))
+				this.op(channel, u.getNick());
+			else if (u.isOp())
+				this.deOp(channel, u.getNick());
+		}
+	}
+
 	public static void main(String[] args) throws Exception {
 		BasicConfigurator.configure();
 
 		for (int i = 0; i < WolfTestBot.numTesters; i++) {
-			new WolfTestBot();
+			new WolfTestBot(true);
 		}
 	}
 

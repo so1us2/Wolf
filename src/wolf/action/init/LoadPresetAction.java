@@ -23,6 +23,7 @@ public class LoadPresetAction extends AbstractInitAction {
 		map.put("five",
 				new Preset().with(1, Civilian.class).with(1, Wolf.class).with(1, Seer.class).with(1, Vigilante.class)
 						.with(1, Anarchist.class));
+		map.put("testing", new Preset().with(3, Civilian.class).with(2, Wolf.class).with(1, Seer.class));
 	}
 
 	public LoadPresetAction() {

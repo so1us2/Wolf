@@ -31,7 +31,7 @@ public class Vigilante extends GameRole {
 	@Override
 	protected Collection<? extends BotAction> getCurrentActions() {
 		if (getEngine().getTime() == Time.Night) {
-			return ImmutableList.of(snipeAction);
+			return ImmutableList.of(snipeAction, holdAction);
 		} else {
 			return super.getCurrentActions();
 		}

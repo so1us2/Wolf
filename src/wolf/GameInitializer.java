@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 
 import wolf.action.init.AbstractInitAction;
 import wolf.action.init.JoinAction;
+import wolf.action.init.KickPlayerAction;
 import wolf.action.init.LeaveAction;
 import wolf.action.init.ListPlayerAction;
 import wolf.action.init.ListRolesAction;
@@ -32,7 +33,7 @@ public class GameInitializer implements GameHandler {
 
 	private final List<AbstractInitAction> actions = Lists.newArrayList(new JoinAction(), new LeaveAction(), new LoadPresetAction(),
 			new SetRoleCountAction(), new StartGameAction(), new PregameStatusAction(), new ListPlayerAction(), new ListRolesAction(),
-			new NullGameAction());
+			new NullGameAction(), new KickPlayerAction());
 
 	private final Map<String, Player> namePlayerMap = Maps.newLinkedHashMap();
 
@@ -66,6 +67,13 @@ public class GameInitializer implements GameHandler {
 	@Override
 	public void onPrivateMessage(WolfBot bot, String sender, String login, String hostname, String message) {
 		bot.sendMessage(sender, "Private messages don't do anything right now.");
+	}
+
+	@Override
+	public void onPart(WolfBot bot, String channel, String sender, String login, String hostname) {
+		if (namePlayerMap.remove(sender) != null) {
+			bot.sendMessage(sender + " has left the game.");
+		}
 	}
 
 }

@@ -30,9 +30,13 @@ public abstract class GameRole {
 
 	private Player voteTarget;
 
+	private boolean isProtected = false;
+
 	public abstract Faction getFaction();
 
 	protected void onDayBegins() {
+		isProtected = false;
+
 		// Subclasses may override
 	}
 
@@ -128,6 +132,14 @@ public abstract class GameRole {
 		return voteTarget;
 	}
 
+	public void setProtected(boolean isProtected) {
+		this.isProtected = isProtected;
+	}
+
+	public boolean isProtected() {
+		return isProtected;
+	}
+
 	@Override
 	public String toString() {
 		return Utils.getDisplayName(getClass(), false);
@@ -156,7 +168,9 @@ public abstract class GameRole {
 			}
 
 			Player oldVoteTarget = getVoteTarget();
+
 			setVoteTarget(voteTarget);
+			getEngine().getVotingHistory().record(getPlayer(), voteTarget);
 
 			getEngine().getBot().sendMessage(sender, "Your vote for " + voteTarget.getName() + " has been received.");
 

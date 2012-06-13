@@ -8,6 +8,7 @@ import wolf.WolfException;
 import wolf.role.GameRole;
 import wolf.role.classic.Anarchist;
 import wolf.role.classic.Civilian;
+import wolf.role.classic.Priest;
 import wolf.role.classic.Seer;
 import wolf.role.classic.Vigilante;
 import wolf.role.classic.Wolf;
@@ -23,7 +24,7 @@ public class LoadPresetAction extends AbstractInitAction {
 		map.put("five",
 				new Preset().with(1, Civilian.class).with(1, Wolf.class).with(1, Seer.class).with(1, Vigilante.class)
 						.with(1, Anarchist.class));
-		map.put("testing", new Preset().with(3, Civilian.class).with(2, Wolf.class).with(1, Seer.class));
+		map.put("testing", new Preset().with(2, Civilian.class).with(1, Wolf.class).with(1, Seer.class).with(1, Priest.class));
 	}
 
 	public LoadPresetAction() {

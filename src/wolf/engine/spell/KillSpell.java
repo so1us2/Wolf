@@ -3,7 +3,7 @@ package wolf.engine.spell;
 import wolf.engine.Player;
 import wolf.engine.WolfEngine;
 
-public class KillSpell implements Spell {
+public class KillSpell extends Spell {
 
 	private final Player target;
 
@@ -21,7 +21,14 @@ public class KillSpell implements Spell {
 			return;
 		}
 
+		if (target.getRole().isProtected()) {
+			engine.getBot().sendMessage("No one died.");
+			return;
+		}
+
 		target.kill();
+
+		engine.getBot().sendMessage(target.getName() + " was killed.");
 	}
 
 }

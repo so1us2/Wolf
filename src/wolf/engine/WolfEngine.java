@@ -1,6 +1,7 @@
 package wolf.engine;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -30,6 +31,8 @@ public class WolfEngine implements GameHandler {
 	private final Map<String, Player> namePlayerMap;
 	private final Map<String, WolfProperty> properties;
 
+	private VotingHistory votingHistory;
+
 	private Time time;
 	int dayNumber = 0;
 
@@ -58,6 +61,7 @@ public class WolfEngine implements GameHandler {
 
 		if (time == Time.Day) {
 			dayNumber++;
+			votingHistory = new VotingHistory();
 			bot.sendMessage("Day " + dayNumber + " dawns on the village.");
 		} else {
 			bot.sendMessage("The world grows dark as the villagers drift to sleep.");
@@ -88,9 +92,12 @@ public class WolfEngine implements GameHandler {
 				for (Player player : getAlivePlayers()) {
 					player.getRole().setVoteTarget(null);
 				}
+				votingHistory.nextRound();
 				return;
 			} else {
+				votingHistory.print(bot);
 				bot.sendMessage("A verdict was reached and " + majorityVote + " was lynched.");
+				votingHistory = null;
 				cast(new KillSpell(majorityVote));
 			}
 		}
@@ -116,7 +123,25 @@ public class WolfEngine implements GameHandler {
 	}
 
 	private Player getMajorityVote() {
-		// TODO implement this
+		Map<Player, Integer> playerVotes = Maps.newHashMap();
+
+		for (Player player : getAlivePlayers()) {
+			Player target = player.getRole().getVoteTarget();
+			Integer i = playerVotes.get(target);
+			if (i == null) {
+				i = 0;
+			}
+			playerVotes.put(target, i + 1);
+		}
+
+		int votesNeededToWin = (int) Math.ceil(Iterables.size(getAlivePlayers()) / 2.0);
+
+		for (Entry<Player, Integer> e : playerVotes.entrySet()) {
+			if (e.getValue() >= votesNeededToWin) {
+				return e.getKey();
+			}
+		}
+
 		return null;
 	}
 
@@ -131,30 +156,26 @@ public class WolfEngine implements GameHandler {
 	private void checkForWinner() {
 		Map<Faction, Integer> factionCount = Maps.newHashMap();
 
+		for (Faction faction : Faction.values()) {
+			factionCount.put(faction, 0);
+		}
+
 		for (Player player : getAlivePlayers()) {
 			Faction faction = player.getRole().getFaction();
 			Integer i = factionCount.get(faction);
-			if (i == null) {
-				factionCount.put(faction, 1);
-			} else {
-				factionCount.put(faction, i + 1);
-			}
+			factionCount.put(faction, i + 1);
 		}
 
-		if (factionCount.containsKey(Faction.WOLVES) && factionCount.containsKey(Faction.VILLAGERS)) {
-			// see if there are more wolves than villagers
-			if (factionCount.get(Faction.WOLVES) >= factionCount.get(Faction.VILLAGERS)) {
-				setWinner(Faction.WOLVES);
-				return;
-			}
+		// see if there are more wolves than villagers
+		if (factionCount.get(Faction.WOLVES) >= factionCount.get(Faction.VILLAGERS)) {
+			setWinner(Faction.WOLVES);
+			return;
 		}
 
-		if (factionCount.containsKey(Faction.VILLAGERS) && factionCount.containsKey(Faction.WOLVES)) {
-			// see if there are no more wolves left
-			if (factionCount.get(Faction.WOLVES) == 0) {
-				setWinner(Faction.VILLAGERS);
-				return;
-			}
+		// see if there are no more wolves left
+		if (factionCount.get(Faction.WOLVES) == 0) {
+			setWinner(Faction.VILLAGERS);
+			return;
 		}
 	}
 
@@ -222,13 +243,27 @@ public class WolfEngine implements GameHandler {
 			throw new WolfException("You are not part of the game.");
 		}
 
+		if (!player.isAlive()) {
+			throw new WolfException("You are dead.");
+		}
+
 		player.getRole().handlePrivateMessage(message);
 
 		checkEndOfTimePeriod();
 	}
 
+	@Override
+	public void onPart(WolfBot bot, String channel, String sender, String login, String hostname) {
+		// Will need to handle a player leaving mid game.
+
+	}
+
 	public void wolfChat(String message) {
 
+	}
+
+	public VotingHistory getVotingHistory() {
+		return votingHistory;
 	}
 
 	public Player getPlayer(String sender) {
@@ -263,6 +298,8 @@ public class WolfEngine implements GameHandler {
 	private void executeSpells() {
 		List<Spell> toExecute = Lists.newArrayList(spells);
 		this.spells.clear();
+
+		Collections.sort(toExecute);
 
 		for (Spell spell : toExecute) {
 			spell.execute(this);

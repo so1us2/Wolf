@@ -12,38 +12,39 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 
-public class WolfTestBot extends org.jibble.pircbot.PircBot {
+public class MonkeyBot extends org.jibble.pircbot.PircBot {
 
 	public static final ImmutableList<String> admins = ImmutableList.of("satnam", "semisober");
 
 	public static final String[] serverList = { "efnet.bredband2.se", "irc.teksavvy.ca", "efnet.port80.se", "irc.du.se", "irc.efnet.nl",
 			"irc.homelien.no", "irc.choopa.net", "irc.colosolutions.net ", "irc.prison.net", "irc.eversible.com", "irc.mzima.net" };
 
-	public static final String channel = "#mtgwolf";
+	public static final String channel = "#mtgwolf_test";
 
-	public static final int numTesters = 5;
+	public static final int numTesters = 1;
 	public String botName;
 
-	public WolfTestBot() throws Exception {
+	public MonkeyBot() throws Exception {
 		init(getRandomServer());
 	}
 
-	public WolfTestBot(boolean child) throws Exception {
+	public MonkeyBot(boolean child) throws Exception {
 		init(getRandomServer());
 		if (child)
-			new WolfTestBot(child);
+			new MonkeyBot(child);
 	}
 
-	public WolfTestBot(boolean child, String server) throws Exception {
+	public MonkeyBot(boolean child, String server) throws Exception {
 		init(server);
 		if (child)
-			new WolfTestBot(child, server);
+			new MonkeyBot(child, server);
 	}
 
 	private String getRandomServer() {
-		Random r = new Random();
-
-		return serverList[r.nextInt(serverList.length)];
+		return serverList[10];
+		// Random r = new Random();
+		//
+		// return serverList[r.nextInt(serverList.length)];
 	}
 
 	private void init(String server) throws Exception {
@@ -60,7 +61,11 @@ public class WolfTestBot extends org.jibble.pircbot.PircBot {
 		connect(server);
 		// "irc.efnet.nl"
 		joinChannel(channel);
-		messageAdmins(botName + " reporting for duty.");
+	}
+
+	@Override
+	protected void onJoin(String channel, String sender, String login, String hostname) {
+		// messageAdmins(botName + " reporting for duty.");
 	}
 
 	/**
@@ -93,12 +98,14 @@ public class WolfTestBot extends org.jibble.pircbot.PircBot {
 				sendMessage(message.substring(message.indexOf(" ") + 1));
 			} else if (command.equals("!takeover")) {
 				monkeyTakeover();
+			} else if (command.equals("!message")) {
+				sendMessage(m.get(1), message.substring(message.indexOf(m.get(1)) + m.get(1).length() + 1));
 			} else if (command.equals("!newmonkey")) {
 				Thread t = new Thread(new Runnable() {
 					@Override
 					public void run() {
 						try {
-							new WolfTestBot();
+							new MonkeyBot();
 						} catch (Exception e) {
 							e.printStackTrace();
 						}
@@ -131,7 +138,7 @@ public class WolfTestBot extends org.jibble.pircbot.PircBot {
 						@Override
 						public void run() {
 							try {
-								new WolfTestBot();
+								new MonkeyBot();
 							} catch (Exception e) {
 								e.printStackTrace();
 							}
@@ -154,19 +161,19 @@ public class WolfTestBot extends org.jibble.pircbot.PircBot {
 	}
 
 	private void monkeyTakeover() {
-		for (User u : getUsers(channel)) {
-			if (u.getNick().contains("monkey") || admins.contains(u.getNick()))
-				this.op(channel, u.getNick());
-			else if (u.isOp())
-				this.deOp(channel, u.getNick());
-		}
+		// for (User u : getUsers(channel)) {
+		// if (u.getNick().contains("monkey") || admins.contains(u.getNick()))
+		// this.op(channel, u.getNick());
+		// else if (u.isOp())
+		// this.deOp(channel, u.getNick());
+		// }
 	}
 
 	public static void main(String[] args) throws Exception {
 		BasicConfigurator.configure();
 
-		for (int i = 0; i < WolfTestBot.numTesters; i++) {
-			new WolfTestBot(true);
+		for (int i = 0; i < MonkeyBot.numTesters; i++) {
+			new MonkeyBot(false);
 		}
 	}
 

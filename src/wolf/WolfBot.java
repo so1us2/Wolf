@@ -22,7 +22,7 @@ public class WolfBot extends PircBot {
 	public static final List<BotAction> actions = Lists.<BotAction> newArrayList(new InitGameAction(), new ShutdownAction());
 
 	public static final String channel = "#mtgwolf_test";
-	public static final String botName = "Overseer";
+	public static final String botName = "StoryTeller";
 
 	private GameHandler currentHandler = null;
 
@@ -59,6 +59,22 @@ public class WolfBot extends PircBot {
 				e.printStackTrace();
 			}
 			sendMessage(sender, "Problem: " + e.getMessage());
+		}
+	}
+
+	@Override
+	protected void onPart(String channel, String sender, String login, String hostname) {
+
+		try {
+			if (currentHandler != null) {
+				currentHandler.onPart(this, channel, sender, login, hostname);
+				return;
+			}
+		} catch (RuntimeException e) {
+			if (!(e instanceof WolfException)) {
+				e.printStackTrace();
+			}
+			sendMessage("Problem: " + e.getMessage());
 		}
 	}
 
@@ -120,7 +136,7 @@ public class WolfBot extends PircBot {
 		setVerbose(true);
 		startIdentServer();
 
-		connect("irc.efnet.nl");
+		connect("irc.mzima.net");
 		joinChannel(channel);
 	}
 

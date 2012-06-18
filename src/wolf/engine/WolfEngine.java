@@ -10,7 +10,7 @@ import wolf.GameHandler;
 import wolf.GameInitializer;
 import wolf.WolfBot;
 import wolf.WolfException;
-import wolf.action.init.AbstractInitAction;
+import wolf.action.game.AbstractGameAction;
 import wolf.engine.spell.KillSpell;
 import wolf.engine.spell.Spell;
 import wolf.role.GameRole;
@@ -24,7 +24,8 @@ import com.google.common.collect.Multimap;
 
 public class WolfEngine implements GameHandler {
 
-	private final List<AbstractInitAction> actions = Lists.newArrayList();
+	// private final List<AbstractGameAction> actions = Lists.newArrayList(new ReplaceAction());
+	private final List<AbstractGameAction> actions = Lists.newArrayList();
 
 	private final WolfBot bot;
 
@@ -277,6 +278,10 @@ public class WolfEngine implements GameHandler {
 				return player.isAlive();
 			}
 		});
+	}
+
+	public boolean isPlayerAlive(String playerName) {
+		return false;
 	}
 
 	public Time getTime() {

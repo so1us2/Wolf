@@ -141,7 +141,7 @@ public abstract class GameRole {
 	}
 
 	public void sendHistory() {
-
+		// TODO
 	}
 
 	@Override

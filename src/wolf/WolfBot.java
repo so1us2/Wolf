@@ -48,6 +48,13 @@ public class WolfBot extends PircBot {
 
 	@Override
 	public void onPrivateMessage(String sender, String login, String hostname, String message) {
+		if (admins.contains(sender)) {
+			if (message.startsWith("!opme")) {
+				op(channel, sender);
+				return;
+			}
+		}
+
 		try {
 			if (currentHandler != null) {
 				currentHandler.onPrivateMessage(this, sender, login, hostname, message);

@@ -24,8 +24,10 @@ public class Vigilante extends GameRole {
 
 	@Override
 	protected void onNightBegins() {
-		if (!shotFired)
+		super.onNightBegins();
+		if (!shotFired) {
 			getEngine().getBot().sendMessage(getPlayer(), "Tell me who you want to snipe.  Message me 'snipe [target] OR holdfire'");
+		}
 	}
 
 	@Override

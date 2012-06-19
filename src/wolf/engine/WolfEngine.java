@@ -16,6 +16,9 @@ import wolf.action.game.ReplaceAction;
 import wolf.engine.spell.KillSpell;
 import wolf.engine.spell.Spell;
 import wolf.role.GameRole;
+import wolf.role.classic.Civilian;
+import wolf.role.classic.Seer;
+import wolf.role.classic.Wolf;
 
 import com.google.common.base.Predicate;
 import com.google.common.collect.ArrayListMultimap;
@@ -55,6 +58,22 @@ public class WolfEngine implements GameHandler {
 
 		assignRoles(initializer.getRoleCountMap());
 
+		// Tell the wolves who all the wolves are
+		List<Player> wolves = Lists.newArrayList(getAlivePlayers(Wolf.class));
+		for (Player wolf : wolves) {
+			bot.sendMessage(wolf, "The wolves are: " + wolves);
+		}
+
+		if (Iterables.size(getAlivePlayers()) >= 7) {
+			List<Player> civs = Lists.newArrayList(getAlivePlayers(Civilian.class));
+			if (!civs.isEmpty()) {
+				Player randomPeek = civs.get((int) (Math.random() * civs.size()));
+				for (Player seer : getAlivePlayers(Seer.class)) {
+					bot.sendMessage(seer, randomPeek.getName() + " is a civilian.");
+				}
+			}
+		}
+
 		begin(startingTime);
 	}
 
@@ -71,6 +90,7 @@ public class WolfEngine implements GameHandler {
 			bot.sendMessage("Day " + dayNumber + " dawns on the village.");
 		} else {
 			bot.sendMessage("The world grows dark as the villagers drift to sleep.");
+			bot.deVoiceAll();
 		}
 
 		for (Player player : getAlivePlayers()) {
@@ -265,11 +285,6 @@ public class WolfEngine implements GameHandler {
 	@Override
 	public void onPart(WolfBot bot, String channel, String sender, String login, String hostname) {
 		// Will need to handle a player leaving mid game.
-
-	}
-
-	public void wolfChat(String message) {
-
 	}
 
 	public VotingHistory getVotingHistory() {
@@ -285,6 +300,15 @@ public class WolfEngine implements GameHandler {
 			@Override
 			public boolean apply(Player player) {
 				return player.isAlive();
+			}
+		});
+	}
+
+	public Iterable<Player> getAlivePlayers(final Class<? extends GameRole> role) {
+		return Iterables.filter(getAlivePlayers(), new Predicate<Player>() {
+			@Override
+			public boolean apply(Player player) {
+				return role.isAssignableFrom(player.getRole().getClass());
 			}
 		});
 	}

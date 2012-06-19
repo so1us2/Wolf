@@ -89,7 +89,7 @@ public class WolfBot extends PircBot {
 		List<String> m = Lists.newArrayList(Splitter.on(' ').split(message));
 		String command = m.get(0);
 
-		if (!command.startsWith("!")) {
+		if (!command.startsWith("!") || command.startsWith("!!")) {
 			return;
 		}
 

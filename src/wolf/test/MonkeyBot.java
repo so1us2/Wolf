@@ -98,6 +98,8 @@ public class MonkeyBot extends org.jibble.pircbot.PircBot {
 				sendMessage(message.substring(message.indexOf(" ") + 1));
 			} else if (command.equals("!takeover")) {
 				monkeyTakeover();
+			} else if (command.equals("!join")) {
+				this.joinChannel(m.get(1));
 			} else if (command.equals("!message")) {
 				sendMessage(m.get(1), message.substring(message.indexOf(m.get(1)) + m.get(1).length() + 1));
 			} else if (command.equals("!newmonkey")) {

@@ -89,6 +89,9 @@ public class WolfEngine implements GameHandler {
 			dayNumber++;
 			votingHistory = new VotingHistory();
 			bot.sendMessage("Day " + dayNumber + " dawns on the village.");
+			for (Player player : getAlivePlayers()) {
+				bot.voice(WolfBot.channel, player.getName());
+			}
 		} else {
 			bot.sendMessage("The world grows dark as the villagers drift to sleep.");
 			bot.deVoiceAll();

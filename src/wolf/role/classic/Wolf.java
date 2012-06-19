@@ -44,7 +44,12 @@ public class Wolf extends GameRole {
 					break;
 				}
 			}
-			getEngine().cast(new KillSpell(toKill));
+			KillSpell spell = new KillSpell(toKill);
+			String message = toKill.getName() + " was a " + toKill.getRole() + ".";
+			for (GameRole wolf : wolves) {
+				spell.getMessages().put(wolf.getPlayer(), message);
+			}
+			getEngine().cast(spell);
 		}
 		super.end(time, wolves);
 	}
@@ -76,6 +81,7 @@ public class Wolf extends GameRole {
 					return true;
 				}
 			}
+			return false;
 		}
 
 		return super.isFinished();

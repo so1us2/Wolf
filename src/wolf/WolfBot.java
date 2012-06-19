@@ -21,8 +21,8 @@ public class WolfBot extends PircBot {
 	public static final ImmutableList<String> admins = ImmutableList.of("satnam", "semisober", "tomm");
 	public static final List<BotAction> actions = Lists.<BotAction> newArrayList(new InitGameAction(), new ShutdownAction());
 
-	public static final String channel = "#mtgwolf";
-	public static final String botName = "Narrator";
+	public static final String channel = "#mtgwolf_jason";
+	public static final String botName = "JasonTest";
 
 	private GameHandler currentHandler = null;
 

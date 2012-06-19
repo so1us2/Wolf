@@ -127,6 +127,11 @@ public class WolfEngine implements GameHandler {
 			} else {
 				votingHistory.print(bot);
 				bot.sendMessage("A verdict was reached and " + majorityVote + " was lynched.");
+				if (majorityVote.getRole().getFaction() == Faction.WOLVES) {
+					bot.sendMessage(majorityVote + " was a WOLF.");
+				} else {
+					bot.sendMessage(majorityVote + " was a villager.");
+				}
 				votingHistory = null;
 				cast(new KillSpell(majorityVote));
 			}

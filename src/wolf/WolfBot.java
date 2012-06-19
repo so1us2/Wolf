@@ -64,7 +64,6 @@ public class WolfBot extends PircBot {
 
 	@Override
 	protected void onPart(String channel, String sender, String login, String hostname) {
-
 		try {
 			if (currentHandler != null) {
 				currentHandler.onPart(this, channel, sender, login, hostname);
@@ -127,6 +126,15 @@ public class WolfBot extends PircBot {
 
 	public void sendMessage(Player player, String message) {
 		super.sendMessage(player.getName(), message);
+	}
+
+	public User getUser(String nick) {
+		for (User user : getUsers(channel)) {
+			if (user.getNick().equalsIgnoreCase(nick)) {
+				return user;
+			}
+		}
+		return null;
 	}
 
 	public WolfBot() throws Exception {

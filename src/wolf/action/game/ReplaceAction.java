@@ -22,45 +22,39 @@ public class ReplaceAction extends AbstractGameAction {
 
 	@Override
 	protected void execute(WolfBot bot, String sender, String command, List<String> args) {
+		String fromPlayer = args.get(0);
+		String toPlayer = args.get(1);
 
-		if (engine.getPlayer(args.get(1)) != null) {
-			throw new WolfException(args.get(1) + " is already in the game.");
+		if (engine.getPlayer(toPlayer) != null) {
+			throw new WolfException(toPlayer + " is already in the game.");
 		}
 
-		// check if subbed in player is in channel -- has to be easier way. No Contains method?
-		boolean found = false;
-
-		for (User u : bot.getUsers(WolfBot.channel)) {
-			if (u.getNick().equals(args.get(1))) {
-				found = true;
-			}
-		}
-
-		if (!found) {
-			throw new WolfException("Cannot sub in " + args.get(1) + " as player is not in the game channel.");
+		User toUser = bot.getUser(toPlayer);
+		if (toUser == null) {
+			throw new WolfException("Could not find player: " + toPlayer);
 		}
 
 		Map<String, Player> map = engine.getNamePlayerMap();
-		Player player = map.remove(args.get(0).toLowerCase());
+		Player player = map.remove(fromPlayer.toLowerCase());
 
 		if (player == null) {
-			throw new WolfException(args.get(0) + " not in game.");
+			throw new WolfException(fromPlayer + " not in game.");
 		}
 
-		Player newPlayer = new Player(args.get(1));
+		Player newPlayer = new Player(toPlayer);
 		newPlayer.setRole(player.getRole());
 
-		map.put(args.get(1).toLowerCase(), newPlayer);
+		map.put(toPlayer.toLowerCase(), newPlayer);
 
-		bot.deOp(WolfBot.channel, args.get(1));
-		bot.voice(WolfBot.channel, args.get(1));
-		bot.deVoice(WolfBot.channel, args.get(0));
+		bot.deVoice(WolfBot.channel, fromPlayer);
+		bot.deOp(WolfBot.channel, toPlayer);
+		bot.voice(WolfBot.channel, toPlayer);
 
-		bot.sendMessage(args.get(1), "You have replaced " + args.get(0) + ". You are a " + newPlayer.getRole() + ".");
+		bot.sendMessage(toPlayer, "You have replaced " + fromPlayer + ". You are a " + newPlayer.getRole() + ".");
 		// If player is taking over a role that has info, need to share that info.
 		newPlayer.getRole().sendHistory();
 
-		bot.sendMessage(args.get(1) + " has replaced " + args.get(0) + ".");
-
+		bot.sendMessage(toPlayer + " has replaced " + fromPlayer + ".");
 	}
+
 }

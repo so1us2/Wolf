@@ -41,6 +41,12 @@ public class Priest extends GameRole {
 	}
 
 	@Override
+	protected void onNightBegins() {
+		super.onNightBegins();
+		getEngine().getBot().sendMessage(getPlayer(), "Tell me who you want to peek.  Message me '!peek [target]'");
+	}
+
+	@Override
 	protected void onNightEnds() {
 		protects.put(currentProtectTarget, currentProtectTarget.getRole().toString());
 		currentProtectTarget = null;

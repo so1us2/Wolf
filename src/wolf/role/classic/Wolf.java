@@ -31,7 +31,7 @@ public class Wolf extends GameRole {
 	protected void onNightBegins() {
 		super.onNightBegins();
 
-		getEngine().getBot().sendMessage(getPlayer(), "Tell me who you want to kill.  Message me '/kill [target]'");
+		getEngine().getBot().sendMessage(getPlayer(), "Tell me who you want to kill.  Message me '!kill [target]'");
 	}
 
 	@Override

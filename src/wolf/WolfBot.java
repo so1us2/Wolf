@@ -18,7 +18,7 @@ import com.google.common.collect.Lists;
 
 public class WolfBot extends PircBot {
 
-	public static final ImmutableList<String> admins = ImmutableList.of("satnam", "semisober");
+	public static final ImmutableList<String> admins = ImmutableList.of("satnam", "semisober", "tomm");
 	public static final List<BotAction> actions = Lists.<BotAction> newArrayList(new InitGameAction(), new ShutdownAction());
 
 	public static final String channel = "#mtgwolf_test";

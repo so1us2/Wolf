@@ -15,7 +15,6 @@ import wolf.role.GameRole;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 @DisplayName(value = "Wolf", plural = "Wolves")
@@ -38,10 +37,14 @@ public class Wolf extends GameRole {
 	@Override
 	public void end(Time time, Collection<GameRole> wolves) {
 		if (time == Time.Night) {
-			// choose a random target from the collection of wolves
-			Wolf chosen = (Wolf) Iterables.get(wolves, (int) Math.random() * wolves.size());
-			Player killTarget = chosen.currentKillTarget;
-			getEngine().cast(new KillSpell(killTarget));
+			Player toKill = null;
+			for (GameRole wolf : wolves) {
+				toKill = ((Wolf) wolf).currentKillTarget;
+				if (toKill != null) {
+					break;
+				}
+			}
+			getEngine().cast(new KillSpell(toKill));
 		}
 		super.end(time, wolves);
 	}
@@ -67,8 +70,12 @@ public class Wolf extends GameRole {
 
 	@Override
 	public boolean isFinished() {
-		if (isNight() && currentKillTarget == null) {
-			return false;
+		if (isNight()) {
+			for (Player player : getEngine().getAlivePlayers(Wolf.class)) {
+				if (((Wolf) player.getRole()).currentKillTarget != null) {
+					return true;
+				}
+			}
 		}
 
 		return super.isFinished();

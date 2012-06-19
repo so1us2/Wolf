@@ -2,6 +2,7 @@ package wolf.role.classic;
 
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import wolf.WolfBot;
 import wolf.WolfException;
@@ -14,11 +15,14 @@ import wolf.engine.spell.ProtectSpell;
 import wolf.role.GameRole;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
 
 @DisplayName(value = "Priest", plural = "Priests")
 public class Priest extends GameRole {
 
 	private Player currentProtectTarget;
+
+	private final Map<Player, String> protects = Maps.newHashMap();
 
 	@Override
 	protected Collection<? extends BotAction> getCurrentActions() {
@@ -38,7 +42,14 @@ public class Priest extends GameRole {
 
 	@Override
 	protected void onNightEnds() {
+		protects.put(currentProtectTarget, currentProtectTarget.getRole().toString());
 		currentProtectTarget = null;
+	}
+
+	@Override
+	public void sendHistory() {
+		for (Player p : protects.keySet())
+			getEngine().getBot().sendMessage(getPlayer(), p.getName() + " is a " + protects.get(p));
 	}
 
 	@Override

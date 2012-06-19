@@ -11,6 +11,8 @@ import wolf.GameInitializer;
 import wolf.WolfBot;
 import wolf.WolfException;
 import wolf.action.game.AbstractGameAction;
+import wolf.action.game.ListPlayersAction;
+import wolf.action.game.ReplaceAction;
 import wolf.engine.spell.KillSpell;
 import wolf.engine.spell.Spell;
 import wolf.role.GameRole;
@@ -24,8 +26,7 @@ import com.google.common.collect.Multimap;
 
 public class WolfEngine implements GameHandler {
 
-	// private final List<AbstractGameAction> actions = Lists.newArrayList(new ReplaceAction());
-	private final List<AbstractGameAction> actions = Lists.newArrayList();
+	private final List<AbstractGameAction> actions = Lists.newArrayList(new ReplaceAction(), new ListPlayersAction());
 
 	private final WolfBot bot;
 
@@ -45,6 +46,10 @@ public class WolfEngine implements GameHandler {
 		this.bot = bot;
 		this.namePlayerMap = initializer.getNamePlayerMap();
 		this.properties = initializer.getProperties();
+
+		for (AbstractGameAction action : actions) {
+			action.setEngine(this);
+		}
 
 		Time startingTime = getProperty(WolfProperty.STARTING_TIME);
 
@@ -152,6 +157,10 @@ public class WolfEngine implements GameHandler {
 				bot.sendMessage(player, "<WolfChat> " + sender + ": " + message);
 			}
 		}
+	}
+
+	public Map<String, Player> getNamePlayerMap() {
+		return namePlayerMap;
 	}
 
 	private void checkForWinner() {

@@ -15,7 +15,7 @@ public abstract class AbstractGameAction extends BotAction {
 		super(numArgs);
 	}
 
-	public void setHandler(WolfEngine engine) {
+	public void setEngine(WolfEngine engine) {
 		this.engine = engine;
 	}
 

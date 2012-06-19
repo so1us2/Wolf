@@ -140,6 +140,10 @@ public abstract class GameRole {
 		return isProtected;
 	}
 
+	public void sendHistory() {
+
+	}
+
 	@Override
 	public String toString() {
 		return Utils.getDisplayName(getClass(), false);

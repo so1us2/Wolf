@@ -62,6 +62,11 @@ public class Seer extends GameRole {
 	}
 
 	@Override
+	public void sendHistory() {
+		listPeeks();
+	}
+
+	@Override
 	protected Collection<? extends BotAction> getCurrentActions() {
 		if (getEngine().getTime() == Time.Night) {
 			return ImmutableList.of(peekAction);

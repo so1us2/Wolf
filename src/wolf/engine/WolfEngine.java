@@ -86,6 +86,7 @@ public class WolfEngine implements GameHandler {
 		this.time = time;
 
 		if (time == Time.Day) {
+			bot.setMode(WolfBot.channel, "-m");
 			dayNumber++;
 			votingHistory = new VotingHistory();
 			bot.sendMessage("Day " + dayNumber + " dawns on the village.");
@@ -125,6 +126,7 @@ public class WolfEngine implements GameHandler {
 				votingHistory.nextRound();
 				return;
 			} else {
+				bot.setMode(WolfBot.channel, "+m");
 				votingHistory.print(bot);
 				bot.sendMessage("A verdict was reached and " + majorityVote + " was lynched.");
 				if (majorityVote.getRole().getFaction() == Faction.WOLVES) {
@@ -154,6 +156,8 @@ public class WolfEngine implements GameHandler {
 			} else {
 				throw new IllegalStateException("Don't know how to end: " + time);
 			}
+		} else {
+			bot.setMode(WolfBot.channel, "-m");
 		}
 	}
 
@@ -178,6 +182,17 @@ public class WolfEngine implements GameHandler {
 		}
 
 		return null;
+	}
+
+	public int getNumVotes() {
+		int count = 0;
+
+		for (Player player : getAlivePlayers()) {
+			if (player.getRole().getVoteTarget() != null) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 	public void roleChat(Class<? extends GameRole> targetClass, Player sender, String message) {

@@ -70,6 +70,7 @@ public class WolfEngine implements GameHandler {
 				Player randomPeek = civs.get((int) (Math.random() * civs.size()));
 				for (Player seer : getAlivePlayers(Seer.class)) {
 					bot.sendMessage(seer, randomPeek.getName() + " is a civilian.");
+					((Seer) seer.getRole()).addPeek(randomPeek);
 				}
 			}
 		}

@@ -18,16 +18,20 @@ import com.google.common.collect.Lists;
 
 public class WolfBot extends PircBot {
 
-	public static final ImmutableList<String> admins = ImmutableList.of("satnam", "semisober", "tomm");
+	public static final ImmutableList<String> admins = ImmutableList.of("satnam", "semisober", "tomm", "leesharpe");
 	public static final List<BotAction> actions = Lists.<BotAction> newArrayList(new InitGameAction(), new ShutdownAction());
 
-	public static final String channel = "#mtgwolf_test";
-	public static final String botName = "Narrator";
+	public static final String channel = "#mtgwolf2";
+	public static final List<String> botNames = Lists.<String> newArrayList("Narrator", "Storytell", "Overseer");
 
 	private GameHandler currentHandler = null;
 
 	public void transition(GameHandler nextHandler) {
 		this.currentHandler = nextHandler;
+	}
+
+	public GameHandler getHandler() {
+		return currentHandler;
 	}
 
 	@Override
@@ -82,6 +86,11 @@ public class WolfBot extends PircBot {
 			}
 			sendMessage("Problem: " + e.getMessage());
 		}
+	}
+
+	@Override
+	protected void onQuit(String channel, String sender, String login, String hostname) {
+		onPart(channel, sender, login, hostname);
 	}
 
 	public static void handleMessage(WolfBot bot, Collection<? extends BotAction> possibleActions, String channel, String sender,
@@ -145,7 +154,7 @@ public class WolfBot extends PircBot {
 	}
 
 	public WolfBot() throws Exception {
-		setName(botName);
+		setName(botNames.get(1));
 		setLogin(getName());
 
 		setVerbose(true);
@@ -153,6 +162,7 @@ public class WolfBot extends PircBot {
 
 		connect("irc.mzima.net");
 		joinChannel(channel);
+		sendMessage("Gleemax", "op stanford");
 	}
 
 	public static void main(String[] args) throws Exception {

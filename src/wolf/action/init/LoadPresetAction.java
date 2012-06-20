@@ -20,7 +20,7 @@ public class LoadPresetAction extends AbstractInitAction {
 	private static Map<String, Preset> map = Maps.newLinkedHashMap();
 
 	static {
-		map.put("classic", new Preset().with(6, Civilian.class).with(2, Wolf.class).with(1, Seer.class));
+		map.put("classic", new Preset().with(4, Civilian.class).with(2, Wolf.class).with(1, Seer.class));
 		map.put("five",
 				new Preset().with(1, Civilian.class).with(1, Wolf.class).with(1, Seer.class).with(1, Vigilante.class)
 						.with(1, Anarchist.class));
@@ -54,7 +54,7 @@ public class LoadPresetAction extends AbstractInitAction {
 		Preset preset = map.get(presetName.toLowerCase());
 
 		if (preset == null) {
-			throw new WolfException("There is no preset with the name: " + presetName);
+			throw new WolfException("There is no preset with the name: " + presetName + ". " + getHelperText());
 		}
 
 		Map<Class<? extends GameRole>, Integer> roleCountMap = initializer.getRoleCountMap();

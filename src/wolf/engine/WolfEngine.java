@@ -13,6 +13,7 @@ import wolf.WolfException;
 import wolf.action.game.AbstractGameAction;
 import wolf.action.game.ListPlayersAction;
 import wolf.action.game.ReplaceAction;
+import wolf.action.game.VoteCountAction;
 import wolf.engine.spell.KillSpell;
 import wolf.engine.spell.Spell;
 import wolf.role.GameRole;
@@ -31,7 +32,8 @@ import com.google.common.collect.Multimap;
 
 public class WolfEngine implements GameHandler {
 
-	private final List<AbstractGameAction> actions = Lists.newArrayList(new ReplaceAction(), new ListPlayersAction());
+	private final List<AbstractGameAction> actions = Lists
+			.newArrayList(new ReplaceAction(), new ListPlayersAction(), new VoteCountAction());
 
 	private final WolfBot bot;
 
@@ -41,11 +43,27 @@ public class WolfEngine implements GameHandler {
 	private VotingHistory votingHistory;
 
 	private Time time;
+
+	private long gameStartTime = 0;
+	private final long dayStartTime = 0;
+
 	int dayNumber = 0;
 
 	private Faction winner = null;
 
 	private final List<Spell> spells = Lists.newArrayList();
+
+	public long getGameStartTime() {
+		return gameStartTime;
+	}
+
+	public long getDayStartTime() {
+		return dayStartTime;
+	}
+
+	public void setGameStartTime() {
+		gameStartTime = System.currentTimeMillis();
+	}
 
 	public WolfEngine(WolfBot bot, GameInitializer initializer) throws Exception {
 		this.bot = bot;
@@ -107,7 +125,7 @@ public class WolfEngine implements GameHandler {
 		this.time = time;
 
 		if (time == Time.Day) {
-			bot.setMode(WolfBot.channel, "-m");
+
 			dayNumber++;
 			votingHistory = new VotingHistory();
 			bot.sendMessage("Day " + dayNumber + " dawns on the village.");
@@ -147,7 +165,6 @@ public class WolfEngine implements GameHandler {
 				votingHistory.nextRound();
 				return;
 			} else {
-				bot.setMode(WolfBot.channel, "+m");
 				votingHistory.print(bot);
 				bot.sendMessage("A verdict was reached and " + majorityVote + " was lynched.");
 				// if (majorityVote.getRole().getFaction() == Faction.WOLVES) {
@@ -180,8 +197,6 @@ public class WolfEngine implements GameHandler {
 			} else {
 				throw new IllegalStateException("Don't know how to end: " + time);
 			}
-		} else {
-			bot.setMode(WolfBot.channel, "-m");
 		}
 	}
 
@@ -276,6 +291,7 @@ public class WolfEngine implements GameHandler {
 		bot.transition(null);
 		this.winner = faction;
 		printPlayers();
+		bot.setMode(WolfBot.channel, "-m");
 	}
 
 	private void printPlayers() {

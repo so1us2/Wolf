@@ -209,6 +209,21 @@ public abstract class GameRole {
 		}
 	};
 
+	private final BotAction unvoteAction = new BotAction(0) {
+		@Override
+		public String getCommandName() {
+			return "unvote";
+		}
+
+		@Override
+		protected void execute(WolfBot bot, String sender, String command, List<String> args) {
+			if (getVoteTarget() != null) {
+				getEngine().getBot().sendMessage("Someone removed their vote.");
+			}
+			setVoteTarget(null);
+		}
+	};
+
 	@SuppressWarnings("unchecked")
 	public static final List<Class<? extends GameRole>> roles = Lists.newArrayList(Civilian.class, Hunter.class, Priest.class, Seer.class,
 			Vigilante.class, Wolf.class, Demon.class, Twin.class, Anarchist.class);

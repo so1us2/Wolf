@@ -35,16 +35,36 @@ public class GameInitializer implements GameHandler {
 			new SetRoleCountAction(), new StartGameAction(), new PregameStatusAction(), new ListPlayerAction(), new ListRolesAction(),
 			new NullGameAction(), new KickPlayerAction());
 
+	private final WolfBot bot;
+
 	private final Map<String, Player> namePlayerMap = Maps.newLinkedHashMap();
 
 	private final Map<Class<? extends GameRole>, Integer> roleCountMap = Maps.newLinkedHashMap();
 
 	private final Map<String, WolfProperty> properties = WolfProperty.createDefaults();
 
-	public GameInitializer() {
+	public GameInitializer(WolfBot newBot) {
 		for (AbstractInitAction action : actions) {
 			action.setInitializer(this);
 		}
+
+		this.bot = newBot;
+
+		Thread t = new Thread() {
+			@Override
+			public void run() {
+				while (bot.getHandler() instanceof GameInitializer) {
+					// do announcement
+					try {
+						Thread.sleep(15000); // sleep 1 second
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		};
+
+		t.run();
 	}
 
 	public Map<String, WolfProperty> getProperties() {
@@ -71,6 +91,8 @@ public class GameInitializer implements GameHandler {
 
 	@Override
 	public void onPart(WolfBot bot, String channel, String sender, String login, String hostname) {
+
+		bot.sendMessage("sender: " + sender + " login: " + login);
 		if (namePlayerMap.remove(sender) != null) {
 			bot.sendMessage(sender + " has left the game.");
 		}

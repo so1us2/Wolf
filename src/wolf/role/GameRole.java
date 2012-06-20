@@ -23,6 +23,7 @@ import wolf.role.classic.Seer;
 import wolf.role.classic.Vigilante;
 import wolf.role.classic.Wolf;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
@@ -66,7 +67,7 @@ public abstract class GameRole {
 	protected Collection<? extends BotAction> getCurrentActions() {
 		// Subclasses may override
 		if (isDay()) {
-			return Collections.singletonList(voteAction);
+			return ImmutableList.<BotAction> of(voteAction, unvoteAction);
 		} else {
 			return Collections.emptyList();
 		}

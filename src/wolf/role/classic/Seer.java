@@ -35,13 +35,13 @@ public class Seer extends GameRole {
 	}
 
 	public void addPeek(Player p) {
-		peeks.put(p, p.getRole().toString());
+		peeks.put(p, p.getRole().onPeek());
 	}
 
 	@Override
 	protected void onNightEnds() {
 		// tell the seer the role of their peek target
-		getEngine().getBot().sendMessage(getPlayer(), currentPeekTarget.getName() + " is a " + currentPeekTarget.getRole());
+		getEngine().getBot().sendMessage(getPlayer(), currentPeekTarget.getName() + " is a " + currentPeekTarget.getRole().onPeek());
 		addPeek(currentPeekTarget);
 		currentPeekTarget = null;
 	}

@@ -16,6 +16,8 @@ import wolf.action.game.ReplaceAction;
 import wolf.engine.spell.KillSpell;
 import wolf.engine.spell.Spell;
 import wolf.role.GameRole;
+import wolf.role.advanced.Demon;
+import wolf.role.advanced.Twin;
 import wolf.role.classic.Civilian;
 import wolf.role.classic.Seer;
 import wolf.role.classic.Wolf;
@@ -57,11 +59,21 @@ public class WolfEngine implements GameHandler {
 		Time startingTime = getProperty(WolfProperty.STARTING_TIME);
 
 		assignRoles(initializer.getRoleCountMap());
+		gameStartActions();
 
+		begin(startingTime);
+	}
+
+	private void gameStartActions() {
 		// Tell the wolves who all the wolves are
 		List<Player> wolves = Lists.newArrayList(getAlivePlayers(Wolf.class));
 		for (Player wolf : wolves) {
 			bot.sendMessage(wolf, "The wolves are: " + wolves);
+		}
+
+		List<Player> twins = Lists.newArrayList(getAlivePlayers(Twin.class));
+		for (Player twin : twins) {
+			bot.sendMessage(twin, "The twins are: " + twins);
 		}
 
 		if (Iterables.size(getAlivePlayers()) >= 7) {
@@ -75,7 +87,16 @@ public class WolfEngine implements GameHandler {
 			}
 		}
 
-		begin(startingTime);
+		if (!Iterables.isEmpty(getAlivePlayers(Demon.class))) {
+			List<Player> civs = Lists.newArrayList(getAlivePlayers(Faction.VILLAGERS));
+			if (!civs.isEmpty()) {
+				Player randomPlayer = civs.get((int) (Math.random() * civs.size()));
+				for (Player demon : getAlivePlayers(Demon.class)) {
+					bot.sendMessage(demon, randomPlayer.getName() + " is your phylactery.");
+					((Demon) demon.getRole()).setPhylactery(randomPlayer);
+				}
+			}
+		}
 	}
 
 	private void begin(Time time) {
@@ -129,11 +150,14 @@ public class WolfEngine implements GameHandler {
 				bot.setMode(WolfBot.channel, "+m");
 				votingHistory.print(bot);
 				bot.sendMessage("A verdict was reached and " + majorityVote + " was lynched.");
-				if (majorityVote.getRole().getFaction() == Faction.WOLVES) {
-					bot.sendMessage(majorityVote + " was a WOLF.");
-				} else {
-					bot.sendMessage(majorityVote + " was a villager.");
-				}
+				// if (majorityVote.getRole().getFaction() == Faction.WOLVES) {
+				// bot.sendMessage(majorityVote + " was a WOLF.");
+				// } else {
+				// bot.sendMessage(majorityVote + " was a villager.");
+				// }
+
+				bot.sendMessage(majorityVote + " was a " + majorityVote.getRole().getDayKillNotice());
+
 				votingHistory = null;
 				cast(new KillSpell(majorityVote));
 			}
@@ -184,6 +208,21 @@ public class WolfEngine implements GameHandler {
 		return null;
 	}
 
+	public Map<Faction, Integer> getFactionCounts() {
+		Map<Faction, Integer> ret = Maps.newHashMap();
+
+		for (Faction f : Faction.values()) {
+			ret.put(f, 0);
+		}
+
+		for (Player p : getAlivePlayers()) {
+			Integer c = ret.get(p.getRole().getFaction());
+			ret.put(p.getRole().getFaction(), ++c);
+		}
+
+		return ret;
+	}
+
 	public int getNumVotes() {
 		int count = 0;
 
@@ -195,10 +234,10 @@ public class WolfEngine implements GameHandler {
 		return count;
 	}
 
-	public void roleChat(Class<? extends GameRole> targetClass, Player sender, String message) {
+	public void roleChat(Class<? extends GameRole> targetClass, Player sender, String prefix, String message) {
 		for (Player player : getAlivePlayers()) {
 			if (!player.getName().equals(sender) && targetClass.isAssignableFrom(player.getRole().getClass())) {
-				bot.sendMessage(player, "<WolfChat> " + sender + ": " + message);
+				bot.sendMessage(player, prefix + sender + ": " + message);
 			}
 		}
 	}
@@ -208,28 +247,27 @@ public class WolfEngine implements GameHandler {
 	}
 
 	private void checkForWinner() {
-		Map<Faction, Integer> factionCount = Maps.newHashMap();
+		Map<Faction, Integer> factionCount = getFactionCounts();
 
-		for (Faction faction : Faction.values()) {
-			factionCount.put(faction, 0);
-		}
+		int numAlive = Iterables.size(getAlivePlayers());
 
-		for (Player player : getAlivePlayers()) {
-			Faction faction = player.getRole().getFaction();
-			Integer i = factionCount.get(faction);
-			factionCount.put(faction, i + 1);
-		}
-
-		// see if there are more wolves than villagers
-		if (factionCount.get(Faction.WOLVES) >= factionCount.get(Faction.VILLAGERS)) {
-			setWinner(Faction.WOLVES);
-			return;
-		}
-
-		// see if there are no more wolves left
-		if (factionCount.get(Faction.WOLVES) == 0) {
+		if (factionCount.get(Faction.VILLAGERS) == numAlive) {
 			setWinner(Faction.VILLAGERS);
 			return;
+		}
+
+		if (factionCount.get(Faction.NEUTRAL) == 0) {
+			if (factionCount.get(Faction.WOLVES) >= factionCount.get(Faction.VILLAGERS)) {
+				setWinner(Faction.WOLVES);
+				return;
+			}
+		}
+
+		if (factionCount.get(Faction.WOLVES) == 0) {
+			if (factionCount.get(Faction.NEUTRAL) >= factionCount.get(Faction.VILLAGERS)) {
+				setWinner(Faction.NEUTRAL);
+				return;
+			}
 		}
 	}
 
@@ -333,6 +371,15 @@ public class WolfEngine implements GameHandler {
 			@Override
 			public boolean apply(Player player) {
 				return role.isAssignableFrom(player.getRole().getClass());
+			}
+		});
+	}
+
+	public Iterable<Player> getAlivePlayers(final Faction faction) {
+		return Iterables.filter(getAlivePlayers(), new Predicate<Player>() {
+			@Override
+			public boolean apply(Player player) {
+				return faction == player.getRole().getFaction();
 			}
 		});
 	}

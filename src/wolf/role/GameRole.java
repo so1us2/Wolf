@@ -13,6 +13,9 @@ import wolf.engine.Faction;
 import wolf.engine.Player;
 import wolf.engine.Time;
 import wolf.engine.WolfEngine;
+import wolf.role.advanced.Demon;
+import wolf.role.advanced.Twin;
+import wolf.role.classic.Anarchist;
 import wolf.role.classic.Civilian;
 import wolf.role.classic.Hunter;
 import wolf.role.classic.Priest;
@@ -52,6 +55,10 @@ public abstract class GameRole {
 		// Subclasses may override
 	}
 
+	public String onPeek() {
+		return getFaction().toString();
+	}
+
 	protected void onStatus() {
 		getEngine().getBot().sendMessage(getPlayer(), "You are a " + getPlayer().getRole());
 	}
@@ -63,6 +70,22 @@ public abstract class GameRole {
 		} else {
 			return Collections.emptyList();
 		}
+	}
+
+	public String getDayKillNotice() {
+		return this.getFaction().toString();
+	}
+
+	public String getNightKillNotice() {
+		return toString();
+	}
+
+	public String diedAtNightNotice() {
+		return "died during the night.";
+	}
+
+	public int getMinPlayers() {
+		return 1;
 	}
 
 	public boolean isFinished() {
@@ -188,7 +211,7 @@ public abstract class GameRole {
 
 	@SuppressWarnings("unchecked")
 	public static final List<Class<? extends GameRole>> roles = Lists.newArrayList(Civilian.class, Hunter.class, Priest.class, Seer.class,
-			Vigilante.class, Wolf.class);
+			Vigilante.class, Wolf.class, Demon.class, Twin.class, Anarchist.class);
 
 	public static final Map<String, Class<? extends GameRole>> typeRoleMap = Maps.newHashMap();
 

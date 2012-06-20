@@ -33,6 +33,17 @@ public class StartGameAction extends AbstractInitAction {
 			throw new WolfException("You currently have " + numPlayers + ", which is too many. Once there are " + neededPlayers
 					+ " you may start the game.");
 		}
+
+		// for (Class<? extends GameRole> r : roleCounts.keySet()) {
+		// int c = roleCounts.get(r);
+		//
+		// if (c > 0) {
+		// if (c < r.getMinPlayers()) {
+		// throw new WolfException(r.getName() + " requires " + r.getMinPlayers() + " players to include in the game.");
+		// }
+		// }
+		// }
+
 		bot.setMode(WolfBot.channel, "+m");
 		bot.sendMessage("The game has begun!");
 

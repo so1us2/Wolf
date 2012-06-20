@@ -19,6 +19,18 @@ public class SetRoleCountAction extends AbstractInitAction {
 	}
 
 	@Override
+	public String getHelperText() {
+
+		String msg = "Supported roles: ";
+
+		for (String s : GameRole.typeRoleMap.keySet()) {
+			msg = msg.concat(s + ", ");
+		}
+
+		return msg;
+	}
+
+	@Override
 	protected void execute(WolfBot bot, String sender, String command, List<String> args) {
 		String roleName = args.get(0);
 		int num = Integer.valueOf(args.get(1));

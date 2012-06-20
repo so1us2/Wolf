@@ -37,6 +37,17 @@ public class LoadPresetAction extends AbstractInitAction {
 	}
 
 	@Override
+	public String getHelperText() {
+		String msg = "Supported Game Types: ";
+
+		for (String s : map.keySet()) {
+			msg = msg.concat(s + ", ");
+		}
+
+		return msg;
+	}
+
+	@Override
 	protected void execute(WolfBot bot, String sender, String command, List<String> args) {
 		String presetName = args.get(0);
 

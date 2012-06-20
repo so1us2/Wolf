@@ -4,9 +4,11 @@ import java.util.Collection;
 import java.util.List;
 
 import wolf.WolfBot;
+import wolf.WolfException;
 import wolf.action.BotAction;
 import wolf.arch.DisplayName;
 import wolf.engine.Faction;
+import wolf.engine.Player;
 import wolf.engine.Time;
 import wolf.role.GameRole;
 
@@ -16,6 +18,7 @@ import com.google.common.collect.ImmutableList;
 public class Vigilante extends GameRole {
 
 	boolean shotFired = false;
+	protected Player currentKillTarget;
 
 	@Override
 	public Faction getFaction() {
@@ -26,8 +29,13 @@ public class Vigilante extends GameRole {
 	protected void onNightBegins() {
 		super.onNightBegins();
 		if (!shotFired) {
-			getEngine().getBot().sendMessage(getPlayer(), "Tell me who you want to snipe.  Message me 'snipe [target] OR holdfire'");
+			getEngine().getBot().sendMessage(getPlayer(), "Tell me who you want to snipe.  Message me '!snipe [target] OR !holdfire'");
 		}
+	}
+
+	@Override
+	protected void onNightEnds() {
+		currentKillTarget = null;
 	}
 
 	@Override
@@ -47,19 +55,34 @@ public class Vigilante extends GameRole {
 
 		@Override
 		protected void execute(WolfBot bot, String sender, String command, List<String> args) {
-			String peekTarget = args.get(0);
+			Player killTarget = getEngine().getPlayer(args.get(0));
+
+			if (shotFired) {
+				throw new WolfException("You are out of bullets.");
+			}
+
+			if (killTarget == null) {
+				throw new WolfException("No such player: " + args.get(0));
+			}
+
+			if (!killTarget.isAlive()) {
+				throw new WolfException("You can only kill players that are alive!");
+			}
+
+			currentKillTarget = killTarget;
+
+			getEngine().getBot().sendMessage(sender, "Your wish to kill " + killTarget.getName() + " has been received.");
 		}
 	};
 
 	private final BotAction holdAction = new BotAction(1) {
 		@Override
 		public String getCommandName() {
-			return "snipe";
+			return "holdAction";
 		}
 
 		@Override
 		protected void execute(WolfBot bot, String sender, String command, List<String> args) {
-			String peekTarget = args.get(0);
 		}
 	};
 

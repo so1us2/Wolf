@@ -12,4 +12,9 @@ public class Anarchist extends GameRole {
 		return Faction.WOLVES;
 	}
 
+	@Override
+	public String onPeek() {
+		return "Anarchist";
+	}
+
 }

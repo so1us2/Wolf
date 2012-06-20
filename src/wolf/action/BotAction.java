@@ -7,7 +7,7 @@ import wolf.WolfException;
 
 public abstract class BotAction {
 
-	private int minArguments, maxArguments;
+	private final int minArguments, maxArguments;
 
 	public BotAction() {
 		this(0);
@@ -30,10 +30,15 @@ public abstract class BotAction {
 		}
 
 		if (args.size() < minArguments || args.size() > maxArguments) {
-			throw new WolfException(getArgumentsError());
+			// throw new WolfException(getArgumentsError());
+			throw new WolfException(getHelperText());
 		}
 
 		execute(bot, sender, command, args);
+	}
+
+	public String getHelperText() {
+		return getArgumentsError();
 	}
 
 	protected String getArgumentsError() {

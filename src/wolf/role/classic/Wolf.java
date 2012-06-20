@@ -35,6 +35,11 @@ public class Wolf extends GameRole {
 	}
 
 	@Override
+	public String diedAtNightNotice() {
+		return "died during the night and was a wolf.";
+	}
+
+	@Override
 	public void end(Time time, Collection<GameRole> wolves) {
 		if (time == Time.Night) {
 			Player toKill = null;
@@ -45,7 +50,7 @@ public class Wolf extends GameRole {
 				}
 			}
 			KillSpell spell = new KillSpell(toKill);
-			String message = toKill.getName() + " was a " + toKill.getRole() + ".";
+			String message = toKill.getName() + " was a " + toKill.getRole().getNightKillNotice() + ".";
 			for (GameRole wolf : wolves) {
 				spell.getMessages().put(wolf.getPlayer(), message);
 			}
@@ -61,7 +66,7 @@ public class Wolf extends GameRole {
 
 		if (isNight()) {
 			if (!command.startsWith("!")) {
-				getEngine().roleChat(this.getClass(), getPlayer(), message);
+				getEngine().roleChat(this.getClass(), getPlayer(), "<WolfChat>", message);
 				return;
 			}
 		}

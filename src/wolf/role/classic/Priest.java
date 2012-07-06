@@ -21,6 +21,7 @@ import com.google.common.collect.Maps;
 public class Priest extends GameRole {
 
 	private Player currentProtectTarget;
+	private Player lastProtectTarget = null;
 
 	private final Map<Player, String> protects = Maps.newHashMap();
 
@@ -49,7 +50,9 @@ public class Priest extends GameRole {
 	@Override
 	protected void onNightEnds() {
 		protects.put(currentProtectTarget, currentProtectTarget.getRole().toString());
+		lastProtectTarget = currentProtectTarget;
 		currentProtectTarget = null;
+
 	}
 
 	@Override
@@ -89,13 +92,13 @@ public class Priest extends GameRole {
 				throw new WolfException("You can only protect players that are alive!");
 			}
 
-			// if (target == getEngine().getPlayer(sender)) {
-			// throw new WolfException("You cannot protect yourself.");
-			// }
-			//
-			// // if (target == protects.keySet().iterator().) {
-			// throw new WolfException("You cannot protect the same person twice in a row.");
-			// }
+			if (target == getEngine().getPlayer(sender)) {
+				throw new WolfException("You cannot protect yourself.");
+			}
+
+			if (target == lastProtectTarget) {
+				throw new WolfException("You cannot protect the same person twice in a row.");
+			}
 
 			currentProtectTarget = target;
 

@@ -17,7 +17,10 @@ public class InitGameAction extends BotAction {
 		bot.deVoiceAll();
 
 		bot.transition(new GameInitializer(bot));
-		bot.sendMessage("New game is forming!");
+		bot.sendMessage("New game is forming -- type !join");
+		if (bot.getHandler() instanceof GameInitializer) {
+			((GameInitializer) bot.getHandler()).startAdvertising();
+		}
 	}
 
 }

@@ -4,6 +4,8 @@ import java.util.List;
 
 import wolf.WolfBot;
 
+import com.google.common.collect.Iterables;
+
 public class VoteCountAction extends AbstractGameAction {
 
 	@Override
@@ -13,7 +15,8 @@ public class VoteCountAction extends AbstractGameAction {
 
 	@Override
 	protected void execute(WolfBot bot, String sender, String command, List<String> args) {
-		bot.sendMessage(WolfBot.channel, engine.getNumVotes() + " players have voted.");
+		bot.sendMessage(WolfBot.channel, engine.getNumVotes() + " of " + Iterables.size(getEngine().getAlivePlayers())
+				+ " players have voted.");
 	}
 
 }

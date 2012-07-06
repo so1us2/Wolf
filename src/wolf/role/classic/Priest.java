@@ -89,6 +89,14 @@ public class Priest extends GameRole {
 				throw new WolfException("You can only protect players that are alive!");
 			}
 
+			if (target == getEngine().getPlayer(sender)) {
+				throw new WolfException("You cannot protect yourself.");
+			}
+
+			if (target == getEngine().getPlayer(protects.get(protects.size() - 1))) {
+				throw new WolfException("You cannot protect the same person twice in a row.");
+			}
+
 			currentProtectTarget = target;
 
 			getEngine().getBot().sendMessage(sender, "Your wish to protect " + target.getName() + " has been received.");

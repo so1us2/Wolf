@@ -37,6 +37,8 @@ public class GameInitializer implements GameHandler {
 
 	private final WolfBot bot;
 
+	private final Thread advertisment;
+
 	private final Map<String, Player> namePlayerMap = Maps.newLinkedHashMap();
 
 	private final Map<Class<? extends GameRole>, Integer> roleCountMap = Maps.newLinkedHashMap();
@@ -50,21 +52,29 @@ public class GameInitializer implements GameHandler {
 
 		this.bot = newBot;
 
-		Thread t = new Thread() {
+		advertisment = new Thread() {
 			@Override
 			public void run() {
-				while (bot.getHandler() instanceof GameInitializer) {
-					// do announcement
+				while (true) {
 					try {
-						Thread.sleep(15000); // sleep 1 second
+						Thread.sleep(20000); // sleep 1 second
 					} catch (Exception e) {
 						e.printStackTrace();
 					}
+					bot.sendMessage("Game is forming - !join to join.");
 				}
 			}
 		};
 
-		t.run();
+	}
+
+	public void startAdvertising() {
+		// advertisment.run();
+	}
+
+	@SuppressWarnings("deprecation")
+	public void stopAdvertising() {
+		advertisment.stop();
 	}
 
 	public Map<String, WolfProperty> getProperties() {
@@ -91,10 +101,11 @@ public class GameInitializer implements GameHandler {
 
 	@Override
 	public void onPart(WolfBot bot, String channel, String sender, String login, String hostname) {
-
-		bot.sendMessage("sender: " + sender + " login: " + login);
-		if (namePlayerMap.remove(sender) != null) {
-			bot.sendMessage(sender + " has left the game.");
+		bot.sendMessage("Login: " + login);
+		bot.sendMessage("sender: " + sender);
+		bot.sendMessage("hostname:" + hostname);
+		if (namePlayerMap.remove(login) != null) {
+			bot.sendMessage(login + " has left the game.");
 		}
 	}
 

@@ -3,6 +3,7 @@ package wolf.action.init;
 import java.util.List;
 import java.util.Map;
 
+import wolf.GameInitializer;
 import wolf.WolfBot;
 import wolf.WolfException;
 import wolf.engine.WolfEngine;
@@ -48,6 +49,9 @@ public class StartGameAction extends AbstractInitAction {
 		bot.sendMessage("The game has begun!");
 
 		try {
+			if (bot.getHandler() instanceof GameInitializer) {
+				((GameInitializer) bot.getHandler()).stopAdvertising();
+			}
 			bot.transition(new WolfEngine(bot, initializer));
 		} catch (Exception e) {
 			throw new RuntimeException(e);

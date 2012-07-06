@@ -21,7 +21,7 @@ public class WolfBot extends PircBot {
 	public static final ImmutableList<String> admins = ImmutableList.of("satnam", "semisober", "tomm", "leesharpe");
 	public static final List<BotAction> actions = Lists.<BotAction> newArrayList(new InitGameAction(), new ShutdownAction());
 
-	public static final String channel = "#mtgwolf2";
+	public static final String channel = "#mtgwolf";
 	public static final List<String> botNames = Lists.<String> newArrayList("Narrator", "Storytell", "Overseer");
 
 	private GameHandler currentHandler = null;
@@ -37,6 +37,11 @@ public class WolfBot extends PircBot {
 	@Override
 	public void onMessage(String channel, String sender, String login, String hostname, String message) {
 		try {
+
+			if (message.equals("!rules")) {
+				// printRules(sender);
+			}
+
 			if (currentHandler != null) {
 				currentHandler.onMessage(this, channel, sender, login, hostname, message);
 				return;
@@ -48,6 +53,10 @@ public class WolfBot extends PircBot {
 			}
 			sendMessage("Problem: " + e.getMessage());
 		}
+	}
+
+	public void printRules(String sender) {
+
 	}
 
 	@Override
@@ -154,7 +163,7 @@ public class WolfBot extends PircBot {
 	}
 
 	public WolfBot() throws Exception {
-		setName(botNames.get(1));
+		setName(botNames.get(0));
 		setLogin(getName());
 
 		setVerbose(true);

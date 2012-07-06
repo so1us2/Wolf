@@ -19,4 +19,8 @@ public abstract class AbstractGameAction extends BotAction {
 		this.engine = engine;
 	}
 
+	public WolfEngine getEngine() {
+		return engine;
+	}
+
 }

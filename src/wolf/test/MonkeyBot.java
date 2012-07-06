@@ -19,7 +19,7 @@ public class MonkeyBot extends org.jibble.pircbot.PircBot {
 	public static final String[] serverList = { "efnet.bredband2.se", "irc.teksavvy.ca", "efnet.port80.se", "irc.du.se", "irc.efnet.nl",
 			"irc.homelien.no", "irc.choopa.net", "irc.colosolutions.net ", "irc.prison.net", "irc.eversible.com", "irc.mzima.net" };
 
-	public static final String channel = "#mtgwolf2";
+	public static final String channel = "#mtgwolf";
 
 	public static final int numTesters = 1;
 	public String botName;

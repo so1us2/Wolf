@@ -82,7 +82,7 @@ public abstract class GameRole {
 	}
 
 	public String diedAtNightNotice() {
-		return "died during the night.";
+		return " died during the night.";
 	}
 
 	public int getMinPlayers() {

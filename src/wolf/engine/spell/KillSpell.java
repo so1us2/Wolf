@@ -4,6 +4,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import wolf.engine.Player;
+import wolf.engine.Time;
 import wolf.engine.WolfEngine;
 
 import com.google.common.collect.Maps;
@@ -38,7 +39,9 @@ public class KillSpell extends Spell {
 
 		target.kill();
 
-		engine.getBot().sendMessage(target.getName() + target.getRole().diedAtNightNotice());
+		if (engine.getTime().equals(Time.Night)) {
+			engine.getBot().sendMessage(target.getName() + target.getRole().diedAtNightNotice());
+		}
 
 		for (Entry<Player, String> e : messages.entrySet()) {
 			engine.getBot().sendMessage(e.getKey(), e.getValue());

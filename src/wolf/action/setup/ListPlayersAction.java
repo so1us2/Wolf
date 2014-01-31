@@ -18,4 +18,9 @@ public class ListPlayersAction extends SetupAction {
     getBot().sendMessage(getStage().getPlayers().size() + " Players: " + s);
   }
 
+  @Override
+  public String getDescription() {
+    return "Lists all players registered for the game.";
+  }
+
 }

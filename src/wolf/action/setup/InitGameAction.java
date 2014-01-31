@@ -22,4 +22,9 @@ public class InitGameAction extends Action {
     getBot().setStage(new SetupStage(stage.getBot()));
   }
 
+  @Override
+  public String getDescription() {
+    return "Begins setup for a new game.";
+  }
+
 }

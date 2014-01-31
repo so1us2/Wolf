@@ -21,4 +21,9 @@ public class JoinAction extends SetupAction {
     getBot().sendMessage(invoker.getName() + " joined the game.");
   }
 
+  @Override
+  public String getDescription() {
+    return "Joins the game.";
+  }
+
 }

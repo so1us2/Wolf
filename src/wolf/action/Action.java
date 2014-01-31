@@ -37,6 +37,8 @@ public abstract class Action {
   }
 
   protected abstract void execute(Player invoker, List<String> args);
+  
+  public abstract String getDescription();
 
   public String getName() {
     return name;

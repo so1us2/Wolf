@@ -8,10 +8,6 @@ public class GameConfig {
 
   private Map<Role, Integer> roles;
 
-  public GameConfig(Map<Role, Integer> roles) {
-    this.roles = roles;
-  }
-
   public GameConfig() {
     roles = Maps.newLinkedHashMap();
   }
@@ -24,7 +20,7 @@ public class GameConfig {
     roles.put(role, n);
   }
 
-  public void replaceRoles(Map<Role, Integer> newRoles) {
+  public void setRoles(Map<Role, Integer> newRoles) {
     roles.clear();
     roles.putAll(newRoles);
   }

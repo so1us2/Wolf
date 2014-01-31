@@ -16,7 +16,7 @@ public class LeaveAction extends SetupAction {
   protected void execute(Player invoker, List<String> args) {
     boolean added = getStage().getPlayers().add(invoker);
     if (added) {
-      throw new WolfException(invoker.getName() + " not in game!");
+      throw new WolfException(invoker.getName() + " isn't in the game!");
     }
     getBot().sendMessage(invoker.getName() + " left the game.");
   }

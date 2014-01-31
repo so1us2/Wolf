@@ -25,10 +25,11 @@ public class LoadConfigAction extends SetupAction {
 
   @Override
   protected void execute(Player invoker, List<String> args) {
-    if (!configs.containsKey(args.get(0))) {
-      getBot().sendMessage(args.get(0) + " is an invalid configuration.");
+    String configName = args.get(0);
+    if (!configs.containsKey(configName)) {
+      getBot().sendMessage(configName + " is an invalid configuration.");
     }
-    this.getStage().replaceRoles(configs.get(args.get(0)));
+    this.getStage().setAllRoles(configs.get(configName));
   }
 
   @Override

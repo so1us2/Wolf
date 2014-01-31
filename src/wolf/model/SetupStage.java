@@ -36,16 +36,12 @@ public class SetupStage extends Stage {
     return players;
   }
 
-  public Map<Role, Integer> getRoles() {
-    return config.getRoles();
-  }
-
   public void setRole(Role role, int num) {
     config.setRole(role, num);
   }
 
-  public void replaceRoles(Map<Role, Integer> newRoles) {
-    config.replaceRoles(newRoles);
+  public void setAllRoles(Map<Role, Integer> newRoles) {
+    config.setRoles(newRoles);
   }
 
   @Override

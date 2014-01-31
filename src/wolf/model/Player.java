@@ -1,5 +1,7 @@
 package wolf.model;
 
+import com.google.common.base.Objects;
+
 public class Player {
 
   private final String name;
@@ -16,6 +18,20 @@ public class Player {
 
   public boolean isAdmin() {
     return admin;
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (!(obj instanceof Player)) {
+      return false;
+    }
+    Player p = (Player) obj;
+    return Objects.equal(name, p.name);
+  }
+
+  @Override
+  public int hashCode() {
+    return name.hashCode();
   }
 
 }

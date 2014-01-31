@@ -1,11 +1,12 @@
 package wolf.action;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
 import wolf.WolfException;
+import wolf.model.GameModel;
 import wolf.model.Player;
-
-import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class Action {
 
@@ -17,7 +18,7 @@ public abstract class Action {
     this.numArgs = numArgs;
   }
 
-  public void apply(Player invoker, List<String> args) {
+  public void apply(GameModel model, Player invoker, List<String> args) {
     checkNotNull(invoker);
     checkNotNull(args);
 
@@ -29,10 +30,10 @@ public abstract class Action {
       throw new WolfException("You must be an admin to do that.");
     }
 
-    execute(invoker, args);
+    execute(model, invoker, args);
   }
 
-  protected abstract void execute(Player invoker, List<String> args);
+  protected abstract void execute(GameModel model, Player invoker, List<String> args);
 
   public String getName() {
     return name;
@@ -43,6 +44,11 @@ public abstract class Action {
   }
 
   protected boolean requiresAdmin() {
+    // subclasses can override
+    return false;
+  }
+
+  protected boolean isPrivateAction() {
     // subclasses can override
     return false;
   }

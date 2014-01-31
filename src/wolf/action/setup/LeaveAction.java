@@ -3,23 +3,22 @@ package wolf.action.setup;
 import java.util.List;
 
 import wolf.WolfException;
-import wolf.model.GameModel;
-import wolf.model.GameSetupStage;
 import wolf.model.Player;
+import wolf.model.SetupStage;
 
 public class LeaveAction extends SetupAction {
 
-  public LeaveAction(GameSetupStage stage) {
+  public LeaveAction(SetupStage stage) {
     super(stage, "leave", 0);
   }
 
   @Override
-  protected void execute(GameModel model, Player invoker, List<String> args) {
+  protected void execute(Player invoker, List<String> args) {
     boolean added = getStage().getPlayers().add(invoker);
     if (added) {
       throw new WolfException(invoker.getName() + " not in game!");
     }
-    model.getBot().sendMessage(invoker.getName() + " left the game.");
+    getBot().sendMessage(invoker.getName() + " left the game.");
   }
   
   @Override

@@ -6,7 +6,6 @@ import java.util.Set;
 
 import wolf.action.Action;
 import wolf.action.setup.CommandsAction;
-import wolf.action.setup.InitGameAction;
 import wolf.action.setup.JoinAction;
 import wolf.action.setup.LeaveAction;
 import wolf.action.setup.ListConfigsAction;
@@ -28,7 +27,6 @@ public class SetupStage extends Stage {
 
     actions.add(new JoinAction(this));
     actions.add(new CommandsAction(this));
-    actions.add(new InitGameAction());
     actions.add(new LeaveAction(this));
     actions.add(new LoadConfigAction(this));
     actions.add(new ListConfigsAction(this));

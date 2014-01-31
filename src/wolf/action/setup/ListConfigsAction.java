@@ -3,19 +3,18 @@ package wolf.action.setup;
 import java.util.List;
 import java.util.Map.Entry;
 
-import wolf.model.GameModel;
-import wolf.model.GameSetupStage;
 import wolf.model.Player;
 import wolf.model.Role;
+import wolf.model.SetupStage;
 
 public class ListConfigsAction extends SetupAction {
 
-  public ListConfigsAction(GameSetupStage stage) {
+  public ListConfigsAction(SetupStage stage) {
     super(stage, "configs", 0);
   }
 
   @Override
-  protected void execute(GameModel model, Player invoker, List<String> args) {
+  protected void execute(Player invoker, List<String> args) {
     for (String s : LoadConfigAction.configs.keySet()) {
       StringBuilder output = new StringBuilder();
       output.append(s).append(": ");
@@ -23,7 +22,7 @@ public class ListConfigsAction extends SetupAction {
         output.append(e.getKey()).append(" (").append(e.getValue()).append("), ");
       }
       output.setLength(output.length() - 2);
-      model.getBot().sendMessage(output.toString());
+      getBot().sendMessage(output.toString());
     }
   }
 

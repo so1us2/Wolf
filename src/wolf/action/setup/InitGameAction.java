@@ -3,19 +3,23 @@ package wolf.action.setup;
 import java.util.List;
 
 import wolf.action.Action;
-import wolf.model.GameModel;
-import wolf.model.GameSetupStage;
+import wolf.model.SetupStage;
+import wolf.model.InitialStage;
 import wolf.model.Player;
 
 public class InitGameAction extends Action {
 
-  public InitGameAction() {
-    super("newgame", 0);
+  private final InitialStage stage;
+
+  public InitGameAction(InitialStage stage) {
+    super(stage, "newgame", 0);
+
+    this.stage = stage;
   }
 
   @Override
-  protected void execute(GameModel model, Player invoker, List<String> args) {
-    model.setStage(new GameSetupStage());
+  protected void execute(Player invoker, List<String> args) {
+    getBot().setStage(new SetupStage(stage.getBot()));
   }
 
 }

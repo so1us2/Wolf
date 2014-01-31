@@ -1,15 +1,19 @@
 package wolf.bot;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
-import wolf.model.GameModel;
+import wolf.WolfException;
+import wolf.model.InitialStage;
+import wolf.model.Stage;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 
 public class NarratorBot extends WolfBot {
 
-  private GameModel model = new GameModel(this);
+  private Stage stage = new InitialStage(this);
 
   public NarratorBot() {
     super("Narrator");
@@ -35,7 +39,23 @@ public class NarratorBot extends WolfBot {
     String command = m.get(0).substring(1);
     List<String> args = m.subList(1, m.size());
 
-    model.handle(sender, command, args, isPrivate);
+    try {
+      stage.handle(this, sender, command, args, isPrivate);
+    } catch (WolfException e) {
+      if (isPrivate) {
+        sendMessage(sender, e.getMessage());
+      } else {
+        sendMessage(e.getMessage());
+      }
+    }
+  }
+
+  public void setStage(Stage stage) {
+    this.stage = checkNotNull(stage);
+  }
+
+  public Stage getStage() {
+    return stage;
   }
 
   public static void main(String[] args) {

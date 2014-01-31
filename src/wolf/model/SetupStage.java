@@ -5,17 +5,20 @@ import java.util.Set;
 
 import wolf.action.Action;
 import wolf.action.setup.JoinAction;
+import wolf.bot.NarratorBot;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
-public class GameSetupStage extends Stage {
+public class SetupStage extends Stage {
 
   private final List<Action> actions = Lists.newArrayList();
   private final Set<Player> players = Sets.newLinkedHashSet();
 
-  public GameSetupStage() {
+  public SetupStage(NarratorBot bot) {
+    super(bot);
+
     actions.add(new JoinAction(this));
   }
 

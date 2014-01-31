@@ -14,8 +14,9 @@ import wolf.action.setup.ListConfigsAction;
 import wolf.action.setup.ListPlayersAction;
 import wolf.action.setup.ListRolesAction;
 import wolf.action.setup.LoadConfigAction;
+import wolf.action.setup.SetRoleAction;
 import wolf.action.setup.StartGameAction;
-import wolf.bot.NarratorBot;
+import wolf.bot.IBot;
 
 public class SetupStage extends Stage {
 
@@ -23,7 +24,7 @@ public class SetupStage extends Stage {
   private final Set<Player> players = Sets.newLinkedHashSet();
   private final GameConfig config = new GameConfig();
 
-  public SetupStage(NarratorBot bot) {
+  public SetupStage(IBot bot) {
     super(bot);
 
     actions.add(new JoinAction(this));
@@ -33,6 +34,7 @@ public class SetupStage extends Stage {
     actions.add(new ListConfigsAction(this));
     actions.add(new ListPlayersAction(this));
     actions.add(new ListRolesAction(this));
+    actions.add(new SetRoleAction(this));
     actions.add(new StartGameAction(this));
   }
 

@@ -17,7 +17,7 @@ public class SetRoleAction extends SetupAction {
   protected void execute(Player invoker, List<String> args) {
     Role role; 
     try {
-      role = Role.valueOf(args.get(0));
+      role = Role.valueOf(args.get(0).toUpperCase());
     } catch (IllegalArgumentException e) {
       throw new WolfException("There is no role \'" + args.get(0) + "\'.");
     }

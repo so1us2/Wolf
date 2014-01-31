@@ -4,7 +4,7 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import wolf.WolfException;
-import wolf.bot.NarratorBot;
+import wolf.bot.IBot;
 import wolf.model.Player;
 import wolf.model.Stage;
 
@@ -22,7 +22,7 @@ public abstract class Action {
     this.argNames = ImmutableList.copyOf(argsNames);
   }
 
-  public void apply(Player invoker, List<String> args) {
+  public void apply(Player invoker, List<String> args, boolean isPrivate) {
     checkNotNull(invoker);
     checkNotNull(args);
 
@@ -66,13 +66,22 @@ public abstract class Action {
     return false;
   }
 
-  public boolean isPrivateAction() {
+  public boolean canBeSentPrivately() {
     // subclasses can override
     return false;
   }
 
-  public NarratorBot getBot() {
+  public boolean canBeSentPublicly() {
+    // subclasses can override
+    return true;
+  }
+
+  public IBot getBot() {
     return stage.getBot();
+  }
+
+  public Stage getStage() {
+    return stage;
   }
 
 }

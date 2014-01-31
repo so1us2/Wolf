@@ -1,17 +1,17 @@
 package wolf.bot;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.List;
 
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
 import wolf.WolfException;
 import wolf.model.InitialStage;
 import wolf.model.Stage;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
+import static com.google.common.base.Preconditions.checkNotNull;
 
-public class NarratorBot extends WolfBot {
+public class NarratorBot extends WolfBot implements IBot {
 
   private Stage stage = new InitialStage(this);
 
@@ -29,7 +29,13 @@ public class NarratorBot extends WolfBot {
     onMessage(sender, message, true);
   }
 
-  private void onMessage(String sender, String message, boolean isPrivate) {
+  @Override
+  public void onMessage(String sender, String message, boolean isPrivate) {
+    handle(this, sender, message, isPrivate);
+  }
+
+  @VisibleForTesting
+  public static void handle(IBot bot, String sender, String message, boolean isPrivate) {
     if (!message.startsWith("!")) {
       return;
     }
@@ -40,12 +46,12 @@ public class NarratorBot extends WolfBot {
     List<String> args = m.subList(1, m.size());
 
     try {
-      stage.handle(this, sender, command, args, isPrivate);
+      bot.getStage().handle(bot, sender, command, args, isPrivate);
     } catch (WolfException e) {
       if (isPrivate) {
-        sendMessage(sender, e.getMessage());
+        bot.sendMessage(sender, e.getMessage());
       } else {
-        sendMessage(e.getMessage());
+        bot.sendMessage(e.getMessage());
       }
     }
   }

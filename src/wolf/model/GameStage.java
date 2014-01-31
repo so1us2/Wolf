@@ -11,7 +11,7 @@ import com.google.common.collect.Maps;
 import wolf.WolfException;
 import wolf.action.Action;
 import wolf.action.game.VoteAction;
-import wolf.bot.NarratorBot;
+import wolf.bot.IBot;
 
 public class GameStage extends Stage {
 
@@ -21,7 +21,7 @@ public class GameStage extends Stage {
 
   private final Set<Player> players;
 
-  public GameStage(NarratorBot bot, GameConfig config, Set<Player> players) {
+  public GameStage(IBot bot, GameConfig config, Set<Player> players) {
     super(bot);
 
     this.players = ImmutableSet.copyOf(players);

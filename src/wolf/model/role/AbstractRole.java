@@ -14,4 +14,12 @@ public abstract class AbstractRole {
     return role;
   }
 
+  public void onDayBegins() {}
+
+  public void onDayEnds() {}
+
+  public void onNightBegins() {}
+
+  public void onNightEnds() {}
+
 }

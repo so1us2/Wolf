@@ -40,6 +40,10 @@ public abstract class Action {
   
   public abstract String getDescription();
 
+  public String getUsage() {
+      return "!" + getName();
+  }
+
   public String getName() {
     return name;
   }

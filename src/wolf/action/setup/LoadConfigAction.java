@@ -37,5 +37,10 @@ public class LoadConfigAction extends SetupAction {
     return "Load a preset configuration of roles.";
   }
 
+  @Override
+  public String getUsage() {
+    return "!" + getName() + " <configName>";
+  }
+
 
 }

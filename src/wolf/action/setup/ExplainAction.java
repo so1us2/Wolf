@@ -36,11 +36,10 @@ public class ExplainAction extends SetupAction {
   protected void execute(Player invoker, List<String> args) {
     String topic = args.get(0);
 
-    if(!topics.containsKey(topic)) {
+    if (!topics.containsKey(topic)) {
       StringBuilder output = new StringBuilder();
       output.append("Unsupported Topic. Please try: ").append(topics.keySet());
       throw new WolfException(output.toString());
-      // getBot().sendMessage(output.toString());
     } else {
       getBot().sendMessage(topic + ": " + topics.get(topic));
     }

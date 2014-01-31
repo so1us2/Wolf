@@ -29,7 +29,6 @@ public class LoadConfigAction extends SetupAction {
     String configName = args.get(0);
     if (!configs.containsKey(configName)) {
       throw new WolfException(configName + " is an invalid configuration.");
-      // getBot().sendMessage(configName + " is an invalid configuration.");
     }
     this.getStage().setAllRoles(configs.get(configName));
   }

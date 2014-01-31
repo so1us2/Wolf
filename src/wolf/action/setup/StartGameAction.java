@@ -17,10 +17,8 @@ public class StartGameAction extends SetupAction {
   protected void execute(Player invoker, List<String> args) {
     if (getStage().getPlayersNeeded() == 0) {
       throw new WolfException("No game configuration loaded.");
-      // getBot().sendMessage("No game configuration loaded.");
     } else if (getStage().getPlayersNeeded() != getStage().getPlayers().size()) {
       throw new WolfException("Number of players does not match number of roles.");
-      // getBot().sendMessage("Number of players does not match number of roles.");
     } else {
       startGame();
     }

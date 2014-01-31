@@ -20,8 +20,6 @@ public class SetRoleAction extends SetupAction {
       role = Role.valueOf(args.get(0));
     } catch (IllegalArgumentException e) {
       throw new WolfException("There is no role \'" + args.get(0) + "\'.");
-      // getBot().sendMessage("There is no role \'" + args.get(0) + "\'.");
-      // return;
     }
 
     int num;
@@ -29,8 +27,6 @@ public class SetRoleAction extends SetupAction {
       num = Integer.parseInt(args.get(1));
     } catch (NumberFormatException e) {
       throw new WolfException(args.get(1) + " is not a valid number.");
-      // getBot().sendMessage(args.get(1) + " is not a valid number.");
-      // return;
     }
 
     getStage().setRole(role, num);

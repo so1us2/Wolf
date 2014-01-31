@@ -9,6 +9,8 @@ import wolf.action.setup.CommandsAction;
 import wolf.action.setup.JoinAction;
 import wolf.action.setup.LeaveAction;
 import wolf.action.setup.ListConfigsAction;
+import wolf.action.setup.ListPlayersAction;
+import wolf.action.setup.ListRolesAction;
 import wolf.action.setup.LoadConfigAction;
 import wolf.bot.NarratorBot;
 
@@ -30,12 +32,18 @@ public class SetupStage extends Stage {
     actions.add(new LeaveAction(this));
     actions.add(new LoadConfigAction(this));
     actions.add(new ListConfigsAction(this));
+    actions.add(new ListPlayersAction(this));
+    actions.add(new ListRolesAction(this));
   }
 
   public Set<Player> getPlayers() {
     return players;
   }
 
+  public Map<Role, Integer> getRoles() {
+    return config.getRoles();
+  }
+  
   public void setRole(Role role, int num) {
     config.setRole(role, num);
   }

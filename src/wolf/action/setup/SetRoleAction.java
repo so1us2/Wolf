@@ -2,6 +2,7 @@ package wolf.action.setup;
 
 import java.util.List;
 
+import wolf.WolfException;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.SetupStage;
@@ -18,16 +19,18 @@ public class SetRoleAction extends SetupAction {
     try {
       role = Role.valueOf(args.get(0));
     } catch (IllegalArgumentException e) {
-      getBot().sendMessage("There is no role \'" + args.get(0) + "\'.");
-      return;
+      throw new WolfException("There is no role \'" + args.get(0) + "\'.");
+      // getBot().sendMessage("There is no role \'" + args.get(0) + "\'.");
+      // return;
     }
 
     int num;
     try {
       num = Integer.parseInt(args.get(1));
     } catch (NumberFormatException e) {
-      getBot().sendMessage(args.get(1) + " is not a valid number.");
-      return;
+      throw new WolfException(args.get(1) + " is not a valid number.");
+      // getBot().sendMessage(args.get(1) + " is not a valid number.");
+      // return;
     }
 
     getStage().setRole(role, num);

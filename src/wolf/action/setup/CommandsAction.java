@@ -16,7 +16,7 @@ public class CommandsAction extends SetupAction {
   protected void execute(Player invoker, List<String> args) {
     getBot().sendMessage("Sending a list of supported commands to you now, " + invoker.getName());
     for (Action a : this.getStage().getAvailableActions()) {
-      getBot().sendMessage(invoker.getName(), "!" + a.getName() + ": " + a.getDescription());
+      getBot().sendMessage(invoker.getName(), a.getDescription() + " - " + a.getDescription());
     }
   }
 

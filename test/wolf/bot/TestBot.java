@@ -35,7 +35,7 @@ public class TestBot implements IBot {
     return stage;
   }
 
-  public void onMessage(String sender, String message) {
+  public void msg(String sender, String message) {
     onMessage(sender, message, false);
   }
 

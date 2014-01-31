@@ -47,4 +47,8 @@ public class GameStage extends Stage {
     throw new WolfException("No such player: " + name);
   }
 
+  public Set<Player> getPlayers() {
+    return ImmutableSet.copyOf(players);
+  }
+
 }

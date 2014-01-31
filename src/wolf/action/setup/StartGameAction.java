@@ -25,6 +25,8 @@ public class StartGameAction extends SetupAction {
   }
 
   private void startGame() {
+    getBot().sendMessage("The game has begun.");
+
     getBot().setStage(new GameStage(getBot(), getStage().getConfig(), getStage().getPlayers()));
   }
 

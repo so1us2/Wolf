@@ -9,25 +9,25 @@ import wolf.engine.Player;
 
 public class JoinAction extends AbstractInitAction {
 
-	@Override
-	public String getCommandName() {
-		return "join";
-	}
+  @Override
+  public String getCommandName() {
+    return "join";
+  }
 
-	@Override
-	protected void execute(WolfBot bot, String sender, String command, List<String> args) {
-		Map<String, Player> map = initializer.getNamePlayerMap();
-		Player player = map.get(sender.toLowerCase());
+  @Override
+  protected void execute(WolfBot bot, String sender, String command, List<String> args) {
+    Map<String, Player> map = initializer.getNamePlayerMap();
+    Player player = map.get(sender.toLowerCase());
 
-		if (player != null) {
-			throw new WolfException(sender + " has already joined.");
-		}
+    if (player != null) {
+      throw new WolfException(sender + " has already joined.");
+    }
 
-		map.put(sender.toLowerCase(), new Player(sender));
+    map.put(sender.toLowerCase(), new Player(sender));
 
-		bot.deOp(WolfBot.channel, sender);
-		bot.voice(WolfBot.channel, sender);
+    bot.deOp(WolfBot.channel, sender);
+    bot.voice(WolfBot.channel, sender);
 
-		bot.sendMessage(sender + " joined the game.");
-	}
+    bot.sendMessage(sender + " joined the game.");
+  }
 }

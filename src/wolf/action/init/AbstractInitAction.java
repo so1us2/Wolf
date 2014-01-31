@@ -5,18 +5,18 @@ import wolf.action.BotAction;
 
 public abstract class AbstractInitAction extends BotAction {
 
-	protected GameInitializer initializer;
+  protected GameInitializer initializer;
 
-	public AbstractInitAction() {
-		super();
-	}
+  public AbstractInitAction() {
+    super();
+  }
 
-	public AbstractInitAction(int numArgs) {
-		super(numArgs);
-	}
+  public AbstractInitAction(int numArgs) {
+    super(numArgs);
+  }
 
-	public void setInitializer(GameInitializer initializer) {
-		this.initializer = initializer;
-	}
+  public void setInitializer(GameInitializer initializer) {
+    this.initializer = initializer;
+  }
 
 }

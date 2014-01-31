@@ -11,50 +11,52 @@ import wolf.role.GameRole;
 
 public class StartGameAction extends AbstractInitAction {
 
-	@Override
-	public String getCommandName() {
-		return "start";
-	}
+  @Override
+  public String getCommandName() {
+    return "start";
+  }
 
-	@Override
-	protected void execute(WolfBot bot, String sender, String command, List<String> args) {
-		Map<Class<? extends GameRole>, Integer> roleCounts = initializer.getRoleCountMap();
-		int numPlayers = initializer.getNamePlayerMap().size();
+  @Override
+  protected void execute(WolfBot bot, String sender, String command, List<String> args) {
+    Map<Class<? extends GameRole>, Integer> roleCounts = initializer.getRoleCountMap();
+    int numPlayers = initializer.getNamePlayerMap().size();
 
-		int neededPlayers = 0;
-		for (Integer val : roleCounts.values()) {
-			neededPlayers += val;
-		}
+    int neededPlayers = 0;
+    for (Integer val : roleCounts.values()) {
+      neededPlayers += val;
+    }
 
-		if (numPlayers < neededPlayers) {
-			throw new WolfException("You only have " + numPlayers + ", but you need " + neededPlayers + " to start the game.");
-		}
+    if (numPlayers < neededPlayers) {
+      throw new WolfException("You only have " + numPlayers + ", but you need " + neededPlayers
+          + " to start the game.");
+    }
 
-		if (numPlayers > neededPlayers) {
-			throw new WolfException("You currently have " + numPlayers + ", which is too many. Once there are " + neededPlayers
-					+ " you may start the game.");
-		}
+    if (numPlayers > neededPlayers) {
+      throw new WolfException("You currently have " + numPlayers
+          + ", which is too many. Once there are " + neededPlayers + " you may start the game.");
+    }
 
-		// for (Class<? extends GameRole> r : roleCounts.keySet()) {
-		// int c = roleCounts.get(r);
-		//
-		// if (c > 0) {
-		// if (c < r.getMinPlayers()) {
-		// throw new WolfException(r.getName() + " requires " + r.getMinPlayers() + " players to include in the game.");
-		// }
-		// }
-		// }
+    // for (Class<? extends GameRole> r : roleCounts.keySet()) {
+    // int c = roleCounts.get(r);
+    //
+    // if (c > 0) {
+    // if (c < r.getMinPlayers()) {
+    // throw new WolfException(r.getName() + " requires " + r.getMinPlayers() +
+    // " players to include in the game.");
+    // }
+    // }
+    // }
 
-		bot.setMode(WolfBot.channel, "+m");
-		bot.sendMessage("The game has begun!");
+    bot.setMode(WolfBot.channel, "+m");
+    bot.sendMessage("The game has begun!");
 
-		try {
-			if (bot.getHandler() instanceof GameInitializer) {
-				((GameInitializer) bot.getHandler()).stopAdvertising();
-			}
-			bot.transition(new WolfEngine(bot, initializer));
-		} catch (Exception e) {
-			throw new RuntimeException(e);
-		}
-	}
+    try {
+      if (bot.getHandler() instanceof GameInitializer) {
+        ((GameInitializer) bot.getHandler()).stopAdvertising();
+      }
+      bot.transition(new WolfEngine(bot, initializer));
+    } catch (Exception e) {
+      throw new RuntimeException(e);
+    }
+  }
 }

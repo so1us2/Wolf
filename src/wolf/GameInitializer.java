@@ -28,85 +28,88 @@ import com.google.common.collect.Maps;
  */
 public class GameInitializer implements GameHandler {
 
-	@SuppressWarnings("unused")
-	private static final Logger logger = Logger.getLogger(GameInitializer.class);
+  @SuppressWarnings("unused")
+  private static final Logger logger = Logger.getLogger(GameInitializer.class);
 
-	private final List<AbstractInitAction> actions = Lists.newArrayList(new JoinAction(), new LeaveAction(), new LoadPresetAction(),
-			new SetRoleCountAction(), new StartGameAction(), new PregameStatusAction(), new ListPlayerAction(), new ListRolesAction(),
-			new NullGameAction(), new KickPlayerAction());
+  private final List<AbstractInitAction> actions = Lists.newArrayList(new JoinAction(),
+      new LeaveAction(), new LoadPresetAction(), new SetRoleCountAction(), new StartGameAction(),
+      new PregameStatusAction(), new ListPlayerAction(), new ListRolesAction(),
+      new NullGameAction(), new KickPlayerAction());
 
-	private final WolfBot bot;
+  private final WolfBot bot;
 
-	private final Thread advertisment;
+  private final Thread advertisment;
 
-	private final Map<String, Player> namePlayerMap = Maps.newLinkedHashMap();
+  private final Map<String, Player> namePlayerMap = Maps.newLinkedHashMap();
 
-	private final Map<Class<? extends GameRole>, Integer> roleCountMap = Maps.newLinkedHashMap();
+  private final Map<Class<? extends GameRole>, Integer> roleCountMap = Maps.newLinkedHashMap();
 
-	private final Map<String, WolfProperty> properties = WolfProperty.createDefaults();
+  private final Map<String, WolfProperty> properties = WolfProperty.createDefaults();
 
-	public GameInitializer(WolfBot newBot) {
-		for (AbstractInitAction action : actions) {
-			action.setInitializer(this);
-		}
+  public GameInitializer(WolfBot newBot) {
+    for (AbstractInitAction action : actions) {
+      action.setInitializer(this);
+    }
 
-		this.bot = newBot;
+    this.bot = newBot;
 
-		advertisment = new Thread() {
-			@Override
-			public void run() {
-				while (true) {
-					try {
-						Thread.sleep(20000); // sleep 1 second
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
-					bot.sendMessage("Game is forming - !join to join.");
-				}
-			}
-		};
+    advertisment = new Thread() {
+      @Override
+      public void run() {
+        while (true) {
+          try {
+            Thread.sleep(20000); // sleep 1 second
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+          bot.sendMessage("Game is forming - !join to join.");
+        }
+      }
+    };
 
-	}
+  }
 
-	public void startAdvertising() {
-		// advertisment.run();
-	}
+  public void startAdvertising() {
+    // advertisment.run();
+  }
 
-	@SuppressWarnings("deprecation")
-	public void stopAdvertising() {
-		advertisment.stop();
-	}
+  @SuppressWarnings("deprecation")
+  public void stopAdvertising() {
+    advertisment.stop();
+  }
 
-	public Map<String, WolfProperty> getProperties() {
-		return properties;
-	}
+  public Map<String, WolfProperty> getProperties() {
+    return properties;
+  }
 
-	public Map<String, Player> getNamePlayerMap() {
-		return namePlayerMap;
-	}
+  public Map<String, Player> getNamePlayerMap() {
+    return namePlayerMap;
+  }
 
-	public Map<Class<? extends GameRole>, Integer> getRoleCountMap() {
-		return roleCountMap;
-	}
+  public Map<Class<? extends GameRole>, Integer> getRoleCountMap() {
+    return roleCountMap;
+  }
 
-	@Override
-	public void onMessage(WolfBot bot, String channel, String sender, String login, String hostname, String message) {
-		WolfBot.handleMessage(bot, actions, channel, sender, message);
-	}
+  @Override
+  public void onMessage(WolfBot bot, String channel, String sender, String login, String hostname,
+      String message) {
+    WolfBot.handleMessage(bot, actions, channel, sender, message);
+  }
 
-	@Override
-	public void onPrivateMessage(WolfBot bot, String sender, String login, String hostname, String message) {
-		bot.sendMessage(sender, "Private messages don't do anything right now.");
-	}
+  @Override
+  public void onPrivateMessage(WolfBot bot, String sender, String login, String hostname,
+      String message) {
+    bot.sendMessage(sender, "Private messages don't do anything right now.");
+  }
 
-	@Override
-	public void onPart(WolfBot bot, String channel, String sender, String login, String hostname) {
-		bot.sendMessage("Login: " + login);
-		bot.sendMessage("sender: " + sender);
-		bot.sendMessage("hostname:" + hostname);
-		if (namePlayerMap.remove(login) != null) {
-			bot.sendMessage(login + " has left the game.");
-		}
-	}
+  @Override
+  public void onPart(WolfBot bot, String channel, String sender, String login, String hostname) {
+    bot.sendMessage("Login: " + login);
+    bot.sendMessage("sender: " + sender);
+    bot.sendMessage("hostname:" + hostname);
+    if (namePlayerMap.remove(login) != null) {
+      bot.sendMessage(login + " has left the game.");
+    }
+  }
 
 }

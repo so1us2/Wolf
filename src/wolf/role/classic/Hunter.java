@@ -7,9 +7,9 @@ import wolf.role.GameRole;
 @DisplayName(value = "Hunter", plural = "Hunters")
 public class Hunter extends GameRole {
 
-	@Override
-	public Faction getFaction() {
-		return Faction.VILLAGERS;
-	}
+  @Override
+  public Faction getFaction() {
+    return Faction.VILLAGERS;
+  }
 
 }

@@ -17,65 +17,66 @@ import com.google.common.collect.Maps;
 
 public class LoadPresetAction extends AbstractInitAction {
 
-	private static Map<String, Preset> map = Maps.newLinkedHashMap();
+  private static Map<String, Preset> map = Maps.newLinkedHashMap();
 
-	static {
-		map.put("classic", new Preset().with(4, Civilian.class).with(2, Wolf.class).with(1, Seer.class));
-		map.put("five",
-				new Preset().with(1, Civilian.class).with(1, Wolf.class).with(1, Seer.class).with(1, Vigilante.class)
-						.with(1, Anarchist.class));
-		map.put("testing", new Preset().with(2, Civilian.class).with(1, Wolf.class).with(1, Seer.class).with(1, Priest.class));
-	}
+  static {
+    map.put("classic", new Preset().with(4, Civilian.class).with(2, Wolf.class).with(1, Seer.class));
+    map.put("five", new Preset().with(1, Civilian.class).with(1, Wolf.class).with(1, Seer.class)
+        .with(1, Vigilante.class).with(1, Anarchist.class));
+    map.put("testing", new Preset().with(2, Civilian.class).with(1, Wolf.class).with(1, Seer.class)
+        .with(1, Priest.class));
+  }
 
-	public LoadPresetAction() {
-		super(1);
-	}
+  public LoadPresetAction() {
+    super(1);
+  }
 
-	@Override
-	public String getCommandName() {
-		return "load";
-	}
+  @Override
+  public String getCommandName() {
+    return "load";
+  }
 
-	@Override
-	public String getHelperText() {
-		String msg = "Supported Game Types: ";
+  @Override
+  public String getHelperText() {
+    String msg = "Supported Game Types: ";
 
-		for (String s : map.keySet()) {
-			msg = msg.concat(s + ", ");
-		}
+    for (String s : map.keySet()) {
+      msg = msg.concat(s + ", ");
+    }
 
-		return msg;
-	}
+    return msg;
+  }
 
-	@Override
-	protected void execute(WolfBot bot, String sender, String command, List<String> args) {
-		String presetName = args.get(0);
+  @Override
+  protected void execute(WolfBot bot, String sender, String command, List<String> args) {
+    String presetName = args.get(0);
 
-		Preset preset = map.get(presetName.toLowerCase());
+    Preset preset = map.get(presetName.toLowerCase());
 
-		if (preset == null) {
-			throw new WolfException("There is no preset with the name: " + presetName + ". " + getHelperText());
-		}
+    if (preset == null) {
+      throw new WolfException("There is no preset with the name: " + presetName + ". "
+          + getHelperText());
+    }
 
-		Map<Class<? extends GameRole>, Integer> roleCountMap = initializer.getRoleCountMap();
-		roleCountMap.clear();
-		roleCountMap.putAll(preset.roleCountMap);
-		bot.sendMessage("Loaded " + presetName.toLowerCase());
-	}
+    Map<Class<? extends GameRole>, Integer> roleCountMap = initializer.getRoleCountMap();
+    roleCountMap.clear();
+    roleCountMap.putAll(preset.roleCountMap);
+    bot.sendMessage("Loaded " + presetName.toLowerCase());
+  }
 
-	private static class Preset {
+  private static class Preset {
 
-		private final Map<Class<? extends GameRole>, Integer> roleCountMap = Maps.newLinkedHashMap();
+    private final Map<Class<? extends GameRole>, Integer> roleCountMap = Maps.newLinkedHashMap();
 
-		public Preset with(int num, Class<? extends GameRole> role) {
-			if (num > 0) {
-				roleCountMap.put(role, num);
-			} else {
-				roleCountMap.remove(role);
-			}
-			return this;
-		}
+    public Preset with(int num, Class<? extends GameRole> role) {
+      if (num > 0) {
+        roleCountMap.put(role, num);
+      } else {
+        roleCountMap.remove(role);
+      }
+      return this;
+    }
 
-	}
+  }
 
 }

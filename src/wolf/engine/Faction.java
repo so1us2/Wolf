@@ -2,19 +2,19 @@ package wolf.engine;
 
 public enum Faction {
 
-	VILLAGERS, WOLVES, NEUTRAL;
+  VILLAGERS, WOLVES, NEUTRAL;
 
-	@Override
-	public String toString() {
+  @Override
+  public String toString() {
 
-		if (this == VILLAGERS) {
-			return "Villagers";
-		} else if (this == WOLVES) {
-			return "Wolves";
-		} else if (this == NEUTRAL) {
-			return "Neutral";
-		} else
-			return "None";
-	};
+    if (this == VILLAGERS) {
+      return "Villagers";
+    } else if (this == WOLVES) {
+      return "Wolves";
+    } else if (this == NEUTRAL) {
+      return "Neutral";
+    } else
+      return "None";
+  };
 
 }

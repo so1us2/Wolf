@@ -9,23 +9,23 @@ import wolf.engine.Player;
 
 public class LeaveAction extends AbstractInitAction {
 
-	@Override
-	public String getCommandName() {
-		return "leave";
-	}
+  @Override
+  public String getCommandName() {
+    return "leave";
+  }
 
-	@Override
-	protected void execute(WolfBot bot, String sender, String command, List<String> args) {
-		Map<String, Player> map = initializer.getNamePlayerMap();
-		Player player = map.get(sender.toLowerCase());
+  @Override
+  protected void execute(WolfBot bot, String sender, String command, List<String> args) {
+    Map<String, Player> map = initializer.getNamePlayerMap();
+    Player player = map.get(sender.toLowerCase());
 
-		if (player == null) {
-			throw new WolfException(sender + " can't leave a game they haven't joined.");
-		}
+    if (player == null) {
+      throw new WolfException(sender + " can't leave a game they haven't joined.");
+    }
 
-		map.remove(sender.toLowerCase());
-		bot.deVoice(WolfBot.channel, sender);
-		bot.sendMessage(sender + " left the game.");
-	}
+    map.remove(sender.toLowerCase());
+    bot.deVoice(WolfBot.channel, sender);
+    bot.sendMessage(sender + " left the game.");
+  }
 
 }

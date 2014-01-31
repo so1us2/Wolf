@@ -5,20 +5,20 @@ import wolf.engine.WolfEngine;
 
 public class ProtectSpell extends Spell {
 
-	private final Player target;
+  private final Player target;
 
-	public ProtectSpell(Player target) {
-		this.target = target;
-	}
+  public ProtectSpell(Player target) {
+    this.target = target;
+  }
 
-	@Override
-	public void execute(WolfEngine engine) {
-		target.getRole().setProtected(true);
-	}
+  @Override
+  public void execute(WolfEngine engine) {
+    target.getRole().setProtected(true);
+  }
 
-	@Override
-	public int getPriority() {
-		return 10;
-	}
+  @Override
+  public int getPriority() {
+    return 10;
+  }
 
 }

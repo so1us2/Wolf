@@ -17,73 +17,74 @@ import com.google.common.collect.ImmutableList;
 @DisplayName(value = "Vigilante", plural = "Vigilantes")
 public class Vigilante extends GameRole {
 
-	boolean shotFired = false;
-	protected Player currentKillTarget;
+  boolean shotFired = false;
+  protected Player currentKillTarget;
 
-	@Override
-	public Faction getFaction() {
-		return Faction.VILLAGERS;
-	}
+  @Override
+  public Faction getFaction() {
+    return Faction.VILLAGERS;
+  }
 
-	@Override
-	protected void onNightBegins() {
-		super.onNightBegins();
-		if (!shotFired) {
-			getEngine().getBot().sendMessage(getPlayer(), "Tell me who you want to snipe.  Message me '!snipe [target] OR !holdfire'");
-		}
-	}
+  @Override
+  protected void onNightBegins() {
+    super.onNightBegins();
+    if (!shotFired) {
+      getEngine().getBot().sendMessage(getPlayer(),
+          "Tell me who you want to snipe.  Message me '!snipe [target] OR !holdfire'");
+    }
+  }
 
-	@Override
-	protected void onNightEnds() {
-		currentKillTarget = null;
-	}
+  @Override
+  protected void onNightEnds() {
+    currentKillTarget = null;
+  }
 
-	@Override
-	protected Collection<? extends BotAction> getCurrentActions() {
-		if (getEngine().getTime() == Time.Night) {
-			return ImmutableList.of(snipeAction, holdAction);
-		} else {
-			return super.getCurrentActions();
-		}
-	}
+  @Override
+  protected Collection<? extends BotAction> getCurrentActions() {
+    if (getEngine().getTime() == Time.Night) {
+      return ImmutableList.of(snipeAction, holdAction);
+    } else {
+      return super.getCurrentActions();
+    }
+  }
 
-	private final BotAction snipeAction = new BotAction(1) {
-		@Override
-		public String getCommandName() {
-			return "snipe";
-		}
+  private final BotAction snipeAction = new BotAction(1) {
+    @Override
+    public String getCommandName() {
+      return "snipe";
+    }
 
-		@Override
-		protected void execute(WolfBot bot, String sender, String command, List<String> args) {
-			Player killTarget = getEngine().getPlayer(args.get(0));
+    @Override
+    protected void execute(WolfBot bot, String sender, String command, List<String> args) {
+      Player killTarget = getEngine().getPlayer(args.get(0));
 
-			if (shotFired) {
-				throw new WolfException("You are out of bullets.");
-			}
+      if (shotFired) {
+        throw new WolfException("You are out of bullets.");
+      }
 
-			if (killTarget == null) {
-				throw new WolfException("No such player: " + args.get(0));
-			}
+      if (killTarget == null) {
+        throw new WolfException("No such player: " + args.get(0));
+      }
 
-			if (!killTarget.isAlive()) {
-				throw new WolfException("You can only kill players that are alive!");
-			}
+      if (!killTarget.isAlive()) {
+        throw new WolfException("You can only kill players that are alive!");
+      }
 
-			currentKillTarget = killTarget;
+      currentKillTarget = killTarget;
 
-			getEngine().getBot().sendMessage(sender, "Your wish to kill " + killTarget.getName() + " has been received.");
-		}
-	};
+      getEngine().getBot().sendMessage(sender,
+          "Your wish to kill " + killTarget.getName() + " has been received.");
+    }
+  };
 
-	private final BotAction holdAction = new BotAction(1) {
-		@Override
-		public String getCommandName() {
-			return "holdAction";
-		}
+  private final BotAction holdAction = new BotAction(1) {
+    @Override
+    public String getCommandName() {
+      return "holdAction";
+    }
 
-		@Override
-		protected void execute(WolfBot bot, String sender, String command, List<String> args) {
-		}
-	};
+    @Override
+    protected void execute(WolfBot bot, String sender, String command, List<String> args) {}
+  };
 
 }

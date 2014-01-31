@@ -7,9 +7,9 @@ import wolf.role.GameRole;
 @DisplayName(value = "Civilian", plural = "Civilians")
 public class Civilian extends GameRole {
 
-	@Override
-	public Faction getFaction() {
-		return Faction.VILLAGERS;
-	}
+  @Override
+  public Faction getFaction() {
+    return Faction.VILLAGERS;
+  }
 
 }

@@ -10,33 +10,33 @@ import wolf.role.GameRole;
 
 public class PregameStatusAction extends AbstractInitAction {
 
-	@Override
-	public String getCommandName() {
-		return "status";
-	}
+  @Override
+  public String getCommandName() {
+    return "status";
+  }
 
-	@Override
-	protected void execute(WolfBot bot, String sender, String command, List<String> args) {
+  @Override
+  protected void execute(WolfBot bot, String sender, String command, List<String> args) {
 
-		Map<Class<? extends GameRole>, Integer> roleCounts = initializer.getRoleCountMap();
-		int numPlayers = initializer.getNamePlayerMap().size();
+    Map<Class<? extends GameRole>, Integer> roleCounts = initializer.getRoleCountMap();
+    int numPlayers = initializer.getNamePlayerMap().size();
 
-		Collection<Integer> counts = roleCounts.values();
+    Collection<Integer> counts = roleCounts.values();
 
-		int i = 0;
+    int i = 0;
 
-		for (Integer c : counts) {
-			i += c;
-		}
+    for (Integer c : counts) {
+      i += c;
+    }
 
-		bot.sendMessage("You have " + numPlayers + " players. You need " + i + " total players.");
-	}
+    bot.sendMessage("You have " + numPlayers + " players. You need " + i + " total players.");
+  }
 
-	protected void printRoles(WolfBot bot) {
+  protected void printRoles(WolfBot bot) {
 
-		for (Entry<Class<? extends GameRole>, Integer> entry : initializer.getRoleCountMap().entrySet()) {
-			bot.sendMessage(entry.getKey() + ": " + entry.getValue());
-		}
+    for (Entry<Class<? extends GameRole>, Integer> entry : initializer.getRoleCountMap().entrySet()) {
+      bot.sendMessage(entry.getKey() + ": " + entry.getValue());
+    }
 
-	}
+  }
 }

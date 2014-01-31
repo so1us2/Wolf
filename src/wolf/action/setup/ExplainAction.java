@@ -49,4 +49,9 @@ public class ExplainAction extends SetupAction {
     return "Get an explanation for different game parameters.";
   }
 
+  @Override
+  public String getUsage() {
+    return "!" + getName() + " <topic>";
+  }
+
 }

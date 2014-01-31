@@ -12,6 +12,7 @@ import wolf.action.setup.ListConfigsAction;
 import wolf.action.setup.ListPlayersAction;
 import wolf.action.setup.ListRolesAction;
 import wolf.action.setup.LoadConfigAction;
+import wolf.action.setup.StartGameAction;
 import wolf.bot.NarratorBot;
 
 import com.google.common.collect.ImmutableList;
@@ -34,10 +35,20 @@ public class SetupStage extends Stage {
     actions.add(new ListConfigsAction(this));
     actions.add(new ListPlayersAction(this));
     actions.add(new ListRolesAction(this));
+    actions.add(new StartGameAction(this));
   }
 
   public Set<Player> getPlayers() {
     return players;
+  }
+
+  public int getPlayersNeeded() {
+    int n = 0;
+    for (Integer i : config.getRoles().values()) {
+      n += i;
+    }
+
+    return n;
   }
 
   public Map<Role, Integer> getRoles() {

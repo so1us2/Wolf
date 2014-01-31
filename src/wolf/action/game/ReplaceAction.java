@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Map;
 
 import org.jibble.pircbot.User;
-
 import wolf.WolfBot;
 import wolf.WolfException;
 import wolf.engine.Player;
@@ -25,7 +24,7 @@ public class ReplaceAction extends AbstractGameAction {
     String fromPlayer = args.get(0);
     String toPlayer = args.get(1);
 
-    if (engine.getPlayer(toPlayer) != null) {
+    if (getEngine().getPlayer(toPlayer) != null) {
       throw new WolfException(toPlayer + " is already in the game.");
     }
 
@@ -34,7 +33,7 @@ public class ReplaceAction extends AbstractGameAction {
       throw new WolfException("Could not find player: " + toPlayer);
     }
 
-    Map<String, Player> map = engine.getNamePlayerMap();
+    Map<String, Player> map = getEngine().getNamePlayerMap();
     Player player = map.remove(fromPlayer.toLowerCase());
 
     if (player == null) {

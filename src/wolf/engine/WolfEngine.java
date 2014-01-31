@@ -6,6 +6,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.google.common.base.Predicate;
+import com.google.common.base.Throwables;
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
 import wolf.GameHandler;
 import wolf.GameInitializer;
 import wolf.WolfBot;
@@ -23,13 +30,6 @@ import wolf.role.classic.Civilian;
 import wolf.role.classic.Seer;
 import wolf.role.classic.Wolf;
 
-import com.google.common.base.Predicate;
-import com.google.common.collect.ArrayListMultimap;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-
 public class WolfEngine implements GameHandler {
 
   private final List<AbstractGameAction> actions = Lists.newArrayList(new ReplaceAction(),
@@ -44,28 +44,13 @@ public class WolfEngine implements GameHandler {
 
   private Time time;
 
-  private long gameStartTime = 0;
-  private final long dayStartTime = 0;
-
   int dayNumber = 0;
 
   private Faction winner = null;
 
   private final List<Spell> spells = Lists.newArrayList();
 
-  public long getGameStartTime() {
-    return gameStartTime;
-  }
-
-  public long getDayStartTime() {
-    return dayStartTime;
-  }
-
-  public void setGameStartTime() {
-    gameStartTime = System.currentTimeMillis();
-  }
-
-  public WolfEngine(WolfBot bot, GameInitializer initializer) throws Exception {
+  public WolfEngine(WolfBot bot, GameInitializer initializer) {
     this.bot = bot;
     this.namePlayerMap = initializer.getNamePlayerMap();
     this.properties = initializer.getProperties();
@@ -76,7 +61,12 @@ public class WolfEngine implements GameHandler {
 
     Time startingTime = getProperty(WolfProperty.STARTING_TIME);
 
-    assignRoles(initializer.getRoleCountMap());
+    try {
+      assignRoles(initializer.getRoleCountMap());
+    } catch (Exception e) {
+      throw Throwables.propagate(e);
+    }
+
     gameStartActions();
 
     begin(startingTime);

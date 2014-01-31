@@ -3,8 +3,9 @@ package wolf;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.apache.log4j.Logger;
-
 import wolf.action.init.AbstractInitAction;
 import wolf.action.init.JoinAction;
 import wolf.action.init.KickPlayerAction;
@@ -19,9 +20,6 @@ import wolf.action.init.StartGameAction;
 import wolf.engine.Player;
 import wolf.engine.WolfProperty;
 import wolf.role.GameRole;
-
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 
 /**
  * The GameInitializer is for setting up the game (everything that happens before the game actually begins).
@@ -38,8 +36,6 @@ public class GameInitializer implements GameHandler {
 
   private final WolfBot bot;
 
-  private final Thread advertisment;
-
   private final Map<String, Player> namePlayerMap = Maps.newLinkedHashMap();
 
   private final Map<Class<? extends GameRole>, Integer> roleCountMap = Maps.newLinkedHashMap();
@@ -52,30 +48,6 @@ public class GameInitializer implements GameHandler {
     }
 
     this.bot = newBot;
-
-    advertisment = new Thread() {
-      @Override
-      public void run() {
-        while (true) {
-          try {
-            Thread.sleep(20000); // sleep 1 second
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-          bot.sendMessage("Game is forming - !join to join.");
-        }
-      }
-    };
-
-  }
-
-  public void startAdvertising() {
-    // advertisment.run();
-  }
-
-  @SuppressWarnings("deprecation")
-  public void stopAdvertising() {
-    advertisment.stop();
   }
 
   public Map<String, WolfProperty> getProperties() {

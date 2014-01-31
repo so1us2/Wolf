@@ -3,18 +3,16 @@ package wolf;
 import java.util.Collection;
 import java.util.List;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import org.apache.log4j.BasicConfigurator;
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
-
 import wolf.action.BotAction;
 import wolf.action.InitGameAction;
 import wolf.action.ShutdownAction;
 import wolf.engine.Player;
-
-import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
 public class WolfBot extends PircBot {
 
@@ -23,7 +21,10 @@ public class WolfBot extends PircBot {
   public static final List<BotAction> actions = Lists.<BotAction>newArrayList(new InitGameAction(),
       new ShutdownAction());
 
-  public static final String channel = "#mtgwolf";
+  private static final boolean test = true;
+
+  public static final String channel = test ? "#wolftest" : "#mtgwolf";
+
   public static final List<String> botNames = Lists.<String>newArrayList("Narrator", "Storytell",
       "Overseer");
 
@@ -40,11 +41,6 @@ public class WolfBot extends PircBot {
   @Override
   public void onMessage(String channel, String sender, String login, String hostname, String message) {
     try {
-
-      if (message.equals("!rules")) {
-        // printRules(sender);
-      }
-
       if (currentHandler != null) {
         currentHandler.onMessage(this, channel, sender, login, hostname, message);
         return;
@@ -56,10 +52,6 @@ public class WolfBot extends PircBot {
       }
       sendMessage("Problem: " + e.getMessage());
     }
-  }
-
-  public void printRules(String sender) {
-
   }
 
   @Override
@@ -172,7 +164,7 @@ public class WolfBot extends PircBot {
     setVerbose(true);
     startIdentServer();
 
-    connect("irc.mzima.net");
+    connect("irc.colosolutions.net");
     joinChannel(channel);
     sendMessage("Gleemax", "op stanford");
   }

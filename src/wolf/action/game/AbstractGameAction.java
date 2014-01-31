@@ -5,7 +5,7 @@ import wolf.engine.WolfEngine;
 
 public abstract class AbstractGameAction extends BotAction {
 
-  protected WolfEngine engine;
+  private WolfEngine engine;
 
   public AbstractGameAction() {
     super();

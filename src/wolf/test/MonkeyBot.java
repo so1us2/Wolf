@@ -3,14 +3,12 @@ package wolf.test;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.log4j.BasicConfigurator;
-import org.jibble.pircbot.User;
-
-import wolf.engine.Player;
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import org.apache.log4j.BasicConfigurator;
+import org.jibble.pircbot.User;
+import wolf.engine.Player;
 
 public class MonkeyBot extends org.jibble.pircbot.PircBot {
 
@@ -21,30 +19,21 @@ public class MonkeyBot extends org.jibble.pircbot.PircBot {
       "efnet.port80.se", "irc.du.se", "irc.efnet.nl", "irc.homelien.no", "irc.choopa.net",
       "irc.colosolutions.net ", "irc.prison.net", "irc.eversible.com", "irc.mzima.net"};
 
-  public static final String channel = "#mtgwolf";
+  public static final String channel = "#wolftest";
 
-  public static final int numTesters = 1;
+  public static final int numTesters = 4;
   public String botName;
 
   public MonkeyBot() throws Exception {
-    init(getRandomServer());
+    this(getRandomServer());
   }
 
-  public MonkeyBot(boolean child) throws Exception {
-    init(getRandomServer());
-    if (child) new MonkeyBot(child);
-  }
-
-  public MonkeyBot(boolean child, String server) throws Exception {
+  public MonkeyBot(String server) throws Exception {
     init(server);
-    if (child) new MonkeyBot(child, server);
   }
 
-  private String getRandomServer() {
-    return serverList[10];
-    // Random r = new Random();
-    //
-    // return serverList[r.nextInt(serverList.length)];
+  private static String getRandomServer() {
+    return serverList[1];
   }
 
   private void init(String server) throws Exception {
@@ -102,7 +91,9 @@ public class MonkeyBot extends org.jibble.pircbot.PircBot {
         this.disconnect();
         this.dispose();
       } else if (command.equals("!join")) {
-        this.joinChannel(m.get(1));
+        if (m.size() > 0) {
+          this.joinChannel(m.get(1));
+        }
       } else if (command.equals("!message")) {
         sendMessage(m.get(1), message.substring(message.indexOf(m.get(1)) + m.get(1).length() + 1));
       } else if (command.equals("!newmonkey")) {
@@ -178,7 +169,7 @@ public class MonkeyBot extends org.jibble.pircbot.PircBot {
     BasicConfigurator.configure();
 
     for (int i = 0; i < MonkeyBot.numTesters; i++) {
-      new MonkeyBot(false);
+      new MonkeyBot();
     }
   }
 

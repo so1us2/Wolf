@@ -3,7 +3,6 @@ package wolf.action.init;
 import java.util.List;
 import java.util.Map;
 
-import wolf.GameInitializer;
 import wolf.WolfBot;
 import wolf.WolfException;
 import wolf.engine.WolfEngine;
@@ -36,24 +35,10 @@ public class StartGameAction extends AbstractInitAction {
           + ", which is too many. Once there are " + neededPlayers + " you may start the game.");
     }
 
-    // for (Class<? extends GameRole> r : roleCounts.keySet()) {
-    // int c = roleCounts.get(r);
-    //
-    // if (c > 0) {
-    // if (c < r.getMinPlayers()) {
-    // throw new WolfException(r.getName() + " requires " + r.getMinPlayers() +
-    // " players to include in the game.");
-    // }
-    // }
-    // }
-
     bot.setMode(WolfBot.channel, "+m");
     bot.sendMessage("The game has begun!");
 
     try {
-      if (bot.getHandler() instanceof GameInitializer) {
-        ((GameInitializer) bot.getHandler()).stopAdvertising();
-      }
       bot.transition(new WolfEngine(bot, initializer));
     } catch (Exception e) {
       throw new RuntimeException(e);

@@ -3,6 +3,7 @@ package wolf.action.setup;
 import java.util.List;
 import java.util.Map;
 
+import wolf.WolfException;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.SetupStage;
@@ -27,7 +28,8 @@ public class LoadConfigAction extends SetupAction {
   protected void execute(Player invoker, List<String> args) {
     String configName = args.get(0);
     if (!configs.containsKey(configName)) {
-      getBot().sendMessage(configName + " is an invalid configuration.");
+      throw new WolfException(configName + " is an invalid configuration.");
+      // getBot().sendMessage(configName + " is an invalid configuration.");
     }
     this.getStage().setAllRoles(configs.get(configName));
   }

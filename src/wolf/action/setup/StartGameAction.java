@@ -2,6 +2,7 @@ package wolf.action.setup;
 
 import java.util.List;
 
+import wolf.WolfException;
 import wolf.model.GameStage;
 import wolf.model.Player;
 import wolf.model.SetupStage;
@@ -15,9 +16,11 @@ public class StartGameAction extends SetupAction {
   @Override
   protected void execute(Player invoker, List<String> args) {
     if (getStage().getPlayersNeeded() == 0) {
-      getBot().sendMessage("No game configuration loaded.");
+      throw new WolfException("No game configuration loaded.");
+      // getBot().sendMessage("No game configuration loaded.");
     } else if (getStage().getPlayersNeeded() != getStage().getPlayers().size()) {
-      getBot().sendMessage("Number of players does not match number of roles.");
+      throw new WolfException("Number of players does not match number of roles.");
+      // getBot().sendMessage("Number of players does not match number of roles.");
     } else {
       startGame();
     }

@@ -3,6 +3,7 @@ package wolf.action.setup;
 import java.util.List;
 import java.util.Map;
 
+import wolf.WolfException;
 import wolf.model.Player;
 import wolf.model.SetupStage;
 
@@ -38,7 +39,8 @@ public class ExplainAction extends SetupAction {
     if(!topics.containsKey(topic)) {
       StringBuilder output = new StringBuilder();
       output.append("Unsupported Topic. Please try: ").append(topics.keySet());
-      getBot().sendMessage(output.toString());
+      throw new WolfException(output.toString());
+      // getBot().sendMessage(output.toString());
     } else {
       getBot().sendMessage(topic + ": " + topics.get(topic));
     }

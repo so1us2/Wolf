@@ -1,9 +1,11 @@
 package wolf.model;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import wolf.action.Action;
 import wolf.action.setup.CommandsAction;
 import wolf.action.setup.JoinAction;
@@ -14,10 +16,6 @@ import wolf.action.setup.ListRolesAction;
 import wolf.action.setup.LoadConfigAction;
 import wolf.action.setup.StartGameAction;
 import wolf.bot.NarratorBot;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 
 public class SetupStage extends Stage {
 
@@ -47,22 +45,13 @@ public class SetupStage extends Stage {
     for (Integer i : config.getRoles().values()) {
       n += i;
     }
-
     return n;
   }
 
-  public Map<Role, Integer> getRoles() {
-    return config.getRoles();
+  public GameConfig getConfig() {
+    return config;
   }
   
-  public void setRole(Role role, int num) {
-    config.setRole(role, num);
-  }
-
-  public void setAllRoles(Map<Role, Integer> newRoles) {
-    config.setRoles(newRoles);
-  }
-
   @Override
   public List<Action> getAvailableActions() {
     return ImmutableList.copyOf(actions);

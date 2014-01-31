@@ -29,7 +29,7 @@ public class LoadConfigAction extends SetupAction {
     if (!configs.containsKey(configName)) {
       throw new WolfException(configName + " is an invalid configuration.");
     }
-    this.getStage().setAllRoles(configs.get(configName));
+    this.getStage().getConfig().setRoles(configs.get(configName));
   }
 
   @Override

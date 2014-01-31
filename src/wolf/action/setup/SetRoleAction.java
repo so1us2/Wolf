@@ -29,7 +29,7 @@ public class SetRoleAction extends SetupAction {
       throw new WolfException(args.get(1) + " is not a valid number.");
     }
 
-    getStage().setRole(role, num);
+    getStage().getConfig().setRole(role, num);
     getBot().sendMessage(role + " set to " + num + ".");
   }
 

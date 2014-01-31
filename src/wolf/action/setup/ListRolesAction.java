@@ -17,7 +17,7 @@ public class ListRolesAction extends SetupAction {
   @Override
   protected void execute(Player invoker, List<String> args) {
 
-    Map<Role, Integer> roles = getStage().getRoles();
+    Map<Role, Integer> roles = getStage().getConfig().getRoles();
 
     if (roles.isEmpty()) {
       getBot().sendMessage("No roles have been setup yet.");

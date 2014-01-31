@@ -25,7 +25,7 @@ public class StartGameAction extends SetupAction {
   }
 
   private void startGame() {
-    getBot().setStage(new GameStage(getBot()));
+    getBot().setStage(new GameStage(getBot(), getStage().getConfig(), getStage().getPlayers()));
   }
 
   @Override

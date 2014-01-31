@@ -10,7 +10,7 @@ import wolf.model.SetupStage;
 public class ListConfigsAction extends SetupAction {
 
   public ListConfigsAction(SetupStage stage) {
-    super(stage, "configs", 0);
+    super(stage, "configs");
   }
 
   @Override

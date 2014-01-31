@@ -3,13 +3,13 @@ package wolf.action.setup;
 import java.util.List;
 
 import wolf.WolfException;
-import wolf.model.SetupStage;
 import wolf.model.Player;
+import wolf.model.SetupStage;
 
 public class JoinAction extends SetupAction {
 
   public JoinAction(SetupStage stage) {
-    super(stage, "join", 0);
+    super(stage, "join");
   }
 
   @Override

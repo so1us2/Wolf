@@ -9,7 +9,7 @@ import wolf.model.SetupStage;
 public class LeaveAction extends SetupAction {
 
   public LeaveAction(SetupStage stage) {
-    super(stage, "leave", 0);
+    super(stage, "leave");
   }
 
   @Override

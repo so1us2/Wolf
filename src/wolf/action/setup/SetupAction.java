@@ -7,8 +7,8 @@ public abstract class SetupAction extends Action {
 
   private final SetupStage stage;
 
-  public SetupAction(SetupStage stage, String name, int numArgs) {
-    super(stage, name, numArgs);
+  public SetupAction(SetupStage stage, String name, String... argNames) {
+    super(stage, name, argNames);
 
     this.stage = stage;
   }

@@ -2,13 +2,13 @@ package wolf.action.setup;
 
 import java.util.List;
 
-import wolf.model.SetupStage;
 import wolf.model.Player;
+import wolf.model.SetupStage;
 
 public class ListPlayersAction extends SetupAction {
 
   public ListPlayersAction(SetupStage stage) {
-    super(stage, "players", 0);
+    super(stage, "players");
   }
 
   @Override

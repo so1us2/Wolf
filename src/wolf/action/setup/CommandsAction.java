@@ -9,7 +9,7 @@ import wolf.model.SetupStage;
 public class CommandsAction extends SetupAction {
 
   public CommandsAction(SetupStage stage) {
-    super(stage, "commands", 0);
+    super(stage, "commands");
   }
 
   @Override

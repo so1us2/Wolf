@@ -3,13 +3,12 @@ package wolf.action.setup;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.ImmutableMap;
+import com.google.common.collect.Maps;
 import wolf.WolfException;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.SetupStage;
-
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 
 public class LoadConfigAction extends SetupAction {
 
@@ -21,7 +20,7 @@ public class LoadConfigAction extends SetupAction {
   }
 
   public LoadConfigAction(SetupStage stage) {
-    super(stage, "load", 1);
+    super(stage, "load", "configName");
   }
 
   @Override
@@ -37,11 +36,5 @@ public class LoadConfigAction extends SetupAction {
   public String getDescription() {
     return "Load a preset configuration of roles.";
   }
-
-  @Override
-  public String getUsage() {
-    return "!" + getName() + " <configName>";
-  }
-
 
 }

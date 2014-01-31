@@ -10,7 +10,7 @@ import wolf.model.SetupStage;
 public class SetRoleAction extends SetupAction {
 
   public SetRoleAction(SetupStage stage) {
-    super(stage, "set", 2);
+    super(stage, "set", "role", "number");
   }
 
   @Override
@@ -36,11 +36,6 @@ public class SetRoleAction extends SetupAction {
   @Override
   public String getDescription() {
     return "Set how many of a given role is to be included.";
-  }
-
-  @Override
-  public String getUsage() {
-    return "!" + getName() + " <role> <number>";
   }
 
 }

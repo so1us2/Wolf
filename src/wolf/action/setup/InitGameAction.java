@@ -3,16 +3,16 @@ package wolf.action.setup;
 import java.util.List;
 
 import wolf.action.Action;
-import wolf.model.SetupStage;
 import wolf.model.InitialStage;
 import wolf.model.Player;
+import wolf.model.SetupStage;
 
 public class InitGameAction extends Action {
 
   private final InitialStage stage;
 
   public InitGameAction(InitialStage stage) {
-    super(stage, "newgame", 0);
+    super(stage, "newgame");
 
     this.stage = stage;
   }

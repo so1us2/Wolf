@@ -10,7 +10,7 @@ import wolf.model.SetupStage;
 public class StartGameAction extends SetupAction {
 
   public StartGameAction(SetupStage stage) {
-    super(stage, "start", 0);
+    super(stage, "start");
   }
 
   @Override

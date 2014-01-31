@@ -11,7 +11,7 @@ import wolf.model.SetupStage;
 public class ListRolesAction extends SetupAction {
 
   public ListRolesAction(SetupStage stage) {
-    super(stage, "roles", 0);
+    super(stage, "roles");
   }
 
   @Override

@@ -78,4 +78,9 @@ public class TestBot implements IBot {
     System.out.println("Unmuted " + player);
   }
 
+  @Override
+  public void unmuteAll() {
+    System.out.println("Unmuting all.");
+  }
+
 }

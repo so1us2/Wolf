@@ -42,6 +42,10 @@ public abstract class WolfBot extends PircBot {
     voice(channel, player);
   }
 
+  public void unmuteAll() {
+    setMode(channel, "-m");
+  }
+
   protected abstract void onMessage(String sender, String message);
 
   protected abstract void onPrivateMessage(String sender, String message);

@@ -16,6 +16,8 @@ public interface IBot {
 
   public void muteAll();
 
+  public void unmuteAll();
+
   public void unmute(String player);
 
 }

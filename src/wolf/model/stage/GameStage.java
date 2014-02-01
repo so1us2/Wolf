@@ -172,6 +172,7 @@ public class GameStage extends Stage {
     if (winner != null) {
       getBot().sendMessage("The " + winner.getPluralForm() + " have won the game!");
       getBot().setStage(new InitialStage(getBot()));
+      getBot().unmuteAll();
     }
 
     return winner;

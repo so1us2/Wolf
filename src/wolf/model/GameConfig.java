@@ -25,4 +25,12 @@ public class GameConfig {
     roles.putAll(newRoles);
   }
 
+  public int getPlayersNeeded() {
+    int n = 0;
+    for (Integer i : roles.values()) {
+      n += i;
+    }
+    return n;
+  }
+
 }

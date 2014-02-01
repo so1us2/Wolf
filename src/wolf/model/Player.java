@@ -1,5 +1,7 @@
 package wolf.model;
 
+import wolf.model.role.AbstractRole;
+
 import com.google.common.base.Objects;
 
 public class Player {
@@ -7,6 +9,7 @@ public class Player {
   private final String name;
   private final boolean admin;
 
+  private AbstractRole role;
   private boolean alive = true;
 
   public Player(String name, boolean admin) {
@@ -20,6 +23,22 @@ public class Player {
 
   public boolean isAdmin() {
     return admin;
+  }
+
+  public void setAlive(boolean alive) {
+    this.alive = alive;
+  }
+
+  public boolean isAlive() {
+    return alive;
+  }
+
+  public void setRole(AbstractRole role) {
+    this.role = role;
+  }
+
+  public AbstractRole getRole() {
+    return role;
   }
 
   @Override
@@ -36,12 +55,9 @@ public class Player {
     return name.hashCode();
   }
 
-  public void setAlive(boolean alive) {
-    this.alive = alive;
-  }
-
-  public boolean isAlive() {
-    return alive;
+  @Override
+  public String toString() {
+    return name;
   }
 
 }

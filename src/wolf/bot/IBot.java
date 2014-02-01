@@ -14,4 +14,8 @@ public interface IBot {
 
   public void onMessage(String sender, String message, boolean isPrivate);
 
+  public void muteAll();
+
+  public void unmute(String player);
+
 }

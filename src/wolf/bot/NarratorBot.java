@@ -2,13 +2,13 @@ package wolf.bot;
 
 import java.util.List;
 
+import wolf.WolfException;
 import wolf.model.stage.InitialStage;
 import wolf.model.stage.Stage;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import wolf.WolfException;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -38,6 +38,7 @@ public class NarratorBot extends WolfBot implements IBot {
   @VisibleForTesting
   public static void handle(IBot bot, String sender, String message, boolean isPrivate) {
     if (!message.startsWith("!")) {
+      bot.getStage().handleChat(bot, sender, message, isPrivate);
       return;
     }
 
@@ -57,10 +58,12 @@ public class NarratorBot extends WolfBot implements IBot {
     }
   }
 
+  @Override
   public void setStage(Stage stage) {
     this.stage = checkNotNull(stage);
   }
 
+  @Override
   public Stage getStage() {
     return stage;
   }

@@ -3,12 +3,12 @@ package wolf.model.stage;
 import java.util.List;
 import java.util.Set;
 
-import wolf.model.Player;
-
-import com.google.common.collect.ImmutableSet;
 import wolf.action.Action;
 import wolf.action.Visibility;
 import wolf.bot.IBot;
+import wolf.model.Player;
+
+import com.google.common.collect.ImmutableSet;
 
 public abstract class Stage {
 
@@ -20,8 +20,12 @@ public abstract class Stage {
     this.bot = bot;
   }
 
+  public void handleChat(IBot bot, String sender, String message, boolean isPrivate) {}
+
   public void handle(IBot bot, String sender, String command, List<String> args, boolean isPrivate) {
-    Action action = getActionForCommand(command);
+    Player player = getPlayer(sender);
+
+    Action action = getActionForCommand(command, player);
 
     if (action == null) {
       String message = "Invalid command: " + command;
@@ -30,7 +34,7 @@ public abstract class Stage {
       } else {
         bot.sendMessage(message);
       }
-      action = getActionForCommand("commands");
+      action = getActionForCommand("commands", player);
     }
 
     if (isPrivate && action.getVisibility() == Visibility.PUBLIC) {
@@ -39,15 +43,15 @@ public abstract class Stage {
       bot.sendMessage(sender, "The " + command + " should be sent as a private message.");
     }
 
-    action.apply(getPlayer(sender), args, isPrivate);
+    action.apply(player, args, isPrivate);
   }
 
-  protected Player getPlayer(String name) {
+  public Player getPlayer(String name) {
     return new Player(name, admins.contains(name));
   }
 
-  private Action getActionForCommand(String command) {
-    for (Action a : getAvailableActions()) {
+  private Action getActionForCommand(String command, Player player) {
+    for (Action a : getAvailableActions(player)) {
       if (a.getName().equalsIgnoreCase(command)) {
         return a;
       }
@@ -55,7 +59,7 @@ public abstract class Stage {
     return null;
   }
 
-  public abstract List<Action> getAvailableActions();
+  public abstract List<Action> getAvailableActions(Player player);
 
   public IBot getBot() {
     return bot;

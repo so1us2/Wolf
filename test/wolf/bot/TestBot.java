@@ -32,6 +32,7 @@ public class TestBot implements IBot {
     this.stage = stage;
   }
 
+  @Override
   public Stage getStage() {
     return stage;
   }
@@ -65,6 +66,16 @@ public class TestBot implements IBot {
     public String toString() {
       return to + ": " + message;
     }
+  }
+
+  @Override
+  public void muteAll() {
+    System.out.println("Muting all.");
+  }
+
+  @Override
+  public void unmute(String player) {
+    System.out.println("Unmuted " + player);
   }
 
 }

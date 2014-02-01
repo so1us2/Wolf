@@ -1,6 +1,7 @@
 package wolf.bot;
 
 import org.jibble.pircbot.PircBot;
+import org.jibble.pircbot.User;
 
 import com.google.common.base.Throwables;
 
@@ -28,6 +29,17 @@ public abstract class WolfBot extends PircBot {
   
   public void sendMessage(String message) {
     sendMessage(channel, message);
+  }
+  
+  public void muteAll(){
+    setMode(channel, "+m");
+    for (User user : getUsers(channel)) {
+      deVoice(channel, user.getNick());
+    }
+  }
+
+  public void unmute(String player) {
+    voice(channel, player);
   }
 
   protected abstract void onMessage(String sender, String message);

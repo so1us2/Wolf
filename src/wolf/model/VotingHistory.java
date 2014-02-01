@@ -2,11 +2,13 @@ package wolf.model;
 
 import java.util.List;
 
-import com.google.common.collect.Lists;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
-import wolf.bot.WolfBot;
+
+import wolf.bot.IBot;
+
+import com.google.common.collect.Lists;
 
 public class VotingHistory {
 
@@ -27,7 +29,7 @@ public class VotingHistory {
     history.add(Lists.<Vote>newArrayList());
   }
 
-  public void print(WolfBot bot) {
+  public void print(IBot bot) {
     int roundNumber = 1;
     for (List<Vote> round : history) {
       bot.sendMessage("Round " + roundNumber);
@@ -37,6 +39,11 @@ public class VotingHistory {
       }
       roundNumber++;
     }
+  }
+
+  public void reset() {
+    history.clear();
+    nextRound();
   }
 
   private static class Vote {

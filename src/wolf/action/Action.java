@@ -2,12 +2,12 @@ package wolf.action;
 
 import java.util.List;
 
-import wolf.model.stage.Stage;
-
-import com.google.common.collect.ImmutableList;
 import wolf.WolfException;
 import wolf.bot.IBot;
 import wolf.model.Player;
+import wolf.model.stage.Stage;
+
+import com.google.common.collect.ImmutableList;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -16,6 +16,10 @@ public abstract class Action {
   private final Stage stage;
   private final String name;
   private final List<String> argNames;
+
+  public Action(String name, String... argsNames) {
+    this(null, name, argsNames);
+  }
 
   public Action(Stage stage, String name, String... argsNames) {
     this.stage = stage;

@@ -4,12 +4,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Maps;
 import wolf.WolfException;
 import wolf.action.Visibility;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
+
+import com.google.common.base.Objects;
+import com.google.common.collect.Maps;
 
 public class VoteAction extends GameAction {
 
@@ -47,14 +48,25 @@ public class VoteAction extends GameAction {
    * Checks for a majority -- and if there is one, performs a lynching.
    */
   private void processVotes(Map<Player, Player> votes) {
-    Player majority = getMajorityVote(votes);
+    Player lynchTarget = getMajorityVote(votes);
 
-    if (majority == null) {
+    if (lynchTarget == null) {
       votes.clear();
       getStage().getVotingHistory().nextRound();
       getBot().sendMessage("No majority was reached.");
     } else {
-
+      lynchTarget.setAlive(false);
+      getStage().getVotingHistory().print(getBot());
+      getStage().getVotingHistory().reset();
+      getStage().getVotesToLynch().clear();
+      getBot().sendMessage("A verdict was reached and " + lynchTarget.getName() + " was lynched.");
+      getBot().sendMessage(
+          lynchTarget.getName() + " was a " + lynchTarget.getRole().getFaction().getSingularForm());
+      if (getStage().checkForWinner() != null) {
+        // game is over, don't need to do any more logic here.
+        return;
+      }
+      getStage().moveToNight();
     }
   }
 

@@ -2,11 +2,10 @@ package wolf.action.setup;
 
 import java.util.List;
 
-import wolf.model.stage.Stage;
-
 import wolf.action.Action;
 import wolf.action.Visibility;
 import wolf.model.Player;
+import wolf.model.stage.Stage;
 
 public class CommandsAction extends Action {
 
@@ -16,7 +15,7 @@ public class CommandsAction extends Action {
 
   @Override
   public void apply(Player invoker, List<String> args, boolean isPrivate) {
-    for (Action a : this.getStage().getAvailableActions()) {
+    for (Action a : this.getStage().getAvailableActions(invoker)) {
       getBot().sendMessage(invoker.getName(), a.getUsage() + " - " + a.getDescription());
     }
   }

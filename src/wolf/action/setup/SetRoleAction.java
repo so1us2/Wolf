@@ -2,10 +2,11 @@ package wolf.action.setup;
 
 import java.util.List;
 
+import wolf.model.stage.SetupStage;
+
 import wolf.WolfException;
 import wolf.model.Player;
 import wolf.model.Role;
-import wolf.model.SetupStage;
 
 public class SetRoleAction extends SetupAction {
 

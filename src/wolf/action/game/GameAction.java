@@ -1,7 +1,8 @@
 package wolf.action.game;
 
+import wolf.model.stage.GameStage;
+
 import wolf.action.Action;
-import wolf.model.GameStage;
 
 public abstract class GameAction extends Action {
 

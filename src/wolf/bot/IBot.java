@@ -1,6 +1,6 @@
 package wolf.bot;
 
-import wolf.model.Stage;
+import wolf.model.stage.Stage;
 
 public interface IBot {
 

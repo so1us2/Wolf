@@ -4,9 +4,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import wolf.model.stage.SetupStage;
+
 import wolf.model.Player;
 import wolf.model.Role;
-import wolf.model.SetupStage;
 
 public class ListRolesAction extends SetupAction {
 

@@ -2,9 +2,11 @@ package wolf.action.setup;
 
 import java.util.List;
 
+import wolf.model.stage.Stage;
+
 import wolf.action.Action;
+import wolf.action.Visibility;
 import wolf.model.Player;
-import wolf.model.Stage;
 
 public class CommandsAction extends Action {
 
@@ -30,8 +32,8 @@ public class CommandsAction extends Action {
   }
 
   @Override
-  public boolean canBeSentPrivately() {
-    return true;
+  public Visibility getVisibility() {
+    return Visibility.BOTH;
   }
 
 }

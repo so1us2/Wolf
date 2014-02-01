@@ -7,6 +7,8 @@ public class Player {
   private final String name;
   private final boolean admin;
 
+  private boolean alive = true;
+
   public Player(String name, boolean admin) {
     this.name = name;
     this.admin = admin;
@@ -32,6 +34,14 @@ public class Player {
   @Override
   public int hashCode() {
     return name.hashCode();
+  }
+
+  public void setAlive(boolean alive) {
+    this.alive = alive;
+  }
+
+  public boolean isAlive() {
+    return alive;
   }
 
 }

@@ -1,7 +1,8 @@
 package wolf.action.setup;
 
+import wolf.model.stage.SetupStage;
+
 import wolf.action.Action;
-import wolf.model.SetupStage;
 
 public abstract class SetupAction extends Action {
 

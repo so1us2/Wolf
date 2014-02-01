@@ -3,10 +3,11 @@ package wolf.action.setup;
 import java.util.List;
 import java.util.Map;
 
+import wolf.model.stage.SetupStage;
+
 import com.google.common.collect.Maps;
 import wolf.WolfException;
 import wolf.model.Player;
-import wolf.model.SetupStage;
 
 public class ExplainAction extends SetupAction {
 

@@ -2,8 +2,9 @@ package wolf.action.setup;
 
 import java.util.List;
 
+import wolf.model.stage.SetupStage;
+
 import wolf.model.Player;
-import wolf.model.SetupStage;
 
 public class ListPlayersAction extends SetupAction {
 

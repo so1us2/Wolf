@@ -1,7 +1,10 @@
-package wolf.model;
+package wolf.model.stage;
 
 import java.util.List;
 import java.util.Set;
+
+import wolf.model.GameConfig;
+import wolf.model.Player;
 
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;

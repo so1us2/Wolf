@@ -1,10 +1,11 @@
 package wolf;
 
+import wolf.model.stage.GameStage;
+
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 import wolf.bot.TestBot;
-import wolf.model.GameStage;
 
 public class BasicGameTest {
 
@@ -22,6 +23,24 @@ public class BasicGameTest {
     Assert.assertTrue(bot.getStage() instanceof GameStage);
     GameStage stage = (GameStage) bot.getStage();
     Assert.assertEquals(stage.getPlayers().size(), 5);
+  }
+
+  @Test
+  public void daytimeVoting() {
+    startGame();
+
+    bot.privMsg("Khaladin", "!vote Navani");
+    bot.privMsg("Khaladin", "!vote Shallan");
+    checkForMessage("A player switched their vote");
+
+    bot.privMsg("Shallan", "!vote Dalinar");
+    bot.privMsg("Dalinar", "!vote Dalinar");
+    bot.privMsg("Adolin", "!vote Adolin");
+
+    bot.msg("Khaladin", "!votes");
+    checkForMessage("4 of 5 players have voted");
+
+    bot.privMsg("Navani", "!vote Adolin");
   }
 
   private void startGame() {
@@ -43,6 +62,12 @@ public class BasicGameTest {
     bot.msg("Tom", "!leave");
 
     bot.msg("Khaladin", "!start");
+  }
+
+  private void checkForMessage(String s) {
+    if (!bot.getMessageLog().toString().contains(s)) {
+      throw new RuntimeException("Could not find message in the log: " + s);
+    }
   }
 
 }

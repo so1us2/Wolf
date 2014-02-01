@@ -2,10 +2,11 @@ package wolf.action.setup;
 
 import java.util.List;
 
+import wolf.model.stage.GameStage;
+import wolf.model.stage.SetupStage;
+
 import wolf.WolfException;
-import wolf.model.GameStage;
 import wolf.model.Player;
-import wolf.model.SetupStage;
 
 public class StartGameAction extends SetupAction {
 

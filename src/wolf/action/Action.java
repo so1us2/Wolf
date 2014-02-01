@@ -2,11 +2,12 @@ package wolf.action;
 
 import java.util.List;
 
+import wolf.model.stage.Stage;
+
 import com.google.common.collect.ImmutableList;
 import wolf.WolfException;
 import wolf.bot.IBot;
 import wolf.model.Player;
-import wolf.model.Stage;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -32,6 +33,10 @@ public abstract class Action {
 
     if (requiresAdmin() && !invoker.isAdmin()) {
       throw new WolfException("You must be an admin to do that.");
+    }
+
+    if (!invoker.isAlive()) {
+      throw new WolfException("You cannot do anything while dead.");
     }
 
     execute(invoker, args);
@@ -66,14 +71,8 @@ public abstract class Action {
     return false;
   }
 
-  public boolean canBeSentPrivately() {
-    // subclasses can override
-    return false;
-  }
-
-  public boolean canBeSentPublicly() {
-    // subclasses can override
-    return true;
+  public Visibility getVisibility() {
+    return Visibility.PUBLIC;
   }
 
   public IBot getBot() {

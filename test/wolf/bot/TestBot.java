@@ -2,9 +2,10 @@ package wolf.bot;
 
 import java.util.List;
 
+import wolf.model.stage.InitialStage;
+import wolf.model.stage.Stage;
+
 import com.google.common.collect.Lists;
-import wolf.model.InitialStage;
-import wolf.model.Stage;
 
 public class TestBot implements IBot {
 
@@ -37,6 +38,10 @@ public class TestBot implements IBot {
 
   public void msg(String sender, String message) {
     onMessage(sender, message, false);
+  }
+
+  public void privMsg(String sender, String message) {
+    onMessage(sender, message, true);
   }
 
   @Override

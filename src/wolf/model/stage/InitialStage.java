@@ -1,4 +1,4 @@
-package wolf.model;
+package wolf.model.stage;
 
 import java.util.List;
 

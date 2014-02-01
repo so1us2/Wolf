@@ -6,6 +6,7 @@ import java.util.Set;
 
 import wolf.WolfException;
 import wolf.action.Action;
+import wolf.action.game.ListPlayersAction;
 import wolf.action.game.VoteAction;
 import wolf.action.game.VoteCountAction;
 import wolf.action.setup.CommandsAction;
@@ -15,16 +16,21 @@ import wolf.model.GameConfig;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.VotingHistory;
+import wolf.model.role.Priest;
 import wolf.model.role.Wolf;
 
+import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 
 import static com.google.common.collect.Iterables.filter;
 
 public class GameStage extends Stage {
+
+  public static final String NONE_DEAD_MSG = "The sun dawns and the village thanks the "
+      + "gods that not a single person was killed this night.";
 
   private final CommandsAction commandsAction = new CommandsAction(this);
   private final List<Action> daytimeActions = Lists.newArrayList();
@@ -41,11 +47,12 @@ public class GameStage extends Stage {
   public GameStage(IBot bot, GameConfig config, Set<Player> players) {
     super(bot);
 
-    this.players = ImmutableSet.copyOf(players);
+    this.players = ImmutableSortedSet.copyOf(players);
 
     daytimeActions.add(commandsAction);
     daytimeActions.add(new VoteAction(this));
     daytimeActions.add(new VoteCountAction(this));
+    daytimeActions.add(new ListPlayersAction(this));
 
     for (Player player : players) {
       player.getRole().setStage(this);
@@ -106,15 +113,34 @@ public class GameStage extends Stage {
 
     Player target = targets.get((int) (Math.random() * targets.size()));
 
-    target.setAlive(false);
+    if (isProtected(target)) {
+      getBot().sendMessage(NONE_DEAD_MSG);
+    } else {
+      target.setAlive(false);
 
-    getBot().sendMessage(
-        "The sun dawns and the village awakens to find the ripped-apart corpse of "
-            + target.getName() + ".");
+      getBot().sendMessage(
+          "The sun dawns and the village awakens to find the ripped-apart corpse of "
+              + target.getName() + ".");
+
+      if (checkForWinner() != null) {
+        return;
+      }
+    }
+
 
     daytime = true;
 
     unmutePlayers();
+  }
+
+  private boolean isProtected(Player player) {
+    for (Player p : getPlayers(Role.PRIEST)) {
+      Priest priest = (Priest) p.getRole();
+      if (Objects.equal(priest.getProtectTarget(), player)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public void moveToNight() {
@@ -202,7 +228,7 @@ public class GameStage extends Stage {
    * Returns every ALIVE player.
    */
   public Set<Player> getPlayers() {
-    return ImmutableSet.copyOf(filter(players, alive));
+    return ImmutableSortedSet.copyOf(filter(players, alive));
   }
 
   public VotingHistory getVotingHistory() {

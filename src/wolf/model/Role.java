@@ -5,7 +5,7 @@ import static wolf.model.Faction.WOLVES;
 
 public enum Role {
 
-  VILLAGER(VILLAGERS), WOLF(WOLVES), SEER(VILLAGERS), MEDIC(VILLAGERS);
+  VILLAGER(VILLAGERS), WOLF(WOLVES), SEER(VILLAGERS), PRIEST(VILLAGERS);
 
   private final Faction faction;
 

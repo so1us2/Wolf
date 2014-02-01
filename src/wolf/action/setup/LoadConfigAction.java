@@ -17,7 +17,7 @@ public class LoadConfigAction extends SetupAction {
 
   static {
     configs.put("Default",
-        ImmutableMap.of(Role.SEER, 1, Role.MEDIC, 1, Role.VILLAGER, 5, Role.WOLF, 2));
+        ImmutableMap.of(Role.SEER, 1, Role.PRIEST, 1, Role.VILLAGER, 5, Role.WOLF, 2));
   }
 
   public LoadConfigAction(SetupStage stage) {

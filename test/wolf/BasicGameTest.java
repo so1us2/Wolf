@@ -5,16 +5,10 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import wolf.bot.TestBot;
-import wolf.model.Player;
 import wolf.model.Role;
-import wolf.model.role.AbstractRole;
 import wolf.model.stage.GameStage;
 
-import com.google.common.collect.ImmutableList;
-
-public class BasicGameTest {
-
-  private TestBot bot;
+public class BasicGameTest extends SimulationTest {
 
   @BeforeMethod
   public void before() {
@@ -50,16 +44,8 @@ public class BasicGameTest {
     Assert.assertEquals(stage.getPlayers().size(), 7);
 
     // we're going to explicitly set the roles so that we can test correctly
-    for (String s : ImmutableList.of("Khaladin", "Snape")) {
-      Player player = stage.getPlayer(s);
-      player.setRole(AbstractRole.create(Role.WOLF, player));
-      player.getRole().setStage(stage);
-    }
-    for (String s : ImmutableList.of("Shallan", "Dalinar", "Adolin", "Navani", "Potter")) {
-      Player player = stage.getPlayer(s);
-      player.setRole(AbstractRole.create(Role.VILLAGER, player));
-      player.getRole().setStage(stage);
-    }
+    setRole(Role.WOLF, "Khaladin", "Snape");
+    setRole(Role.VILLAGER, "Shallan", "Dalinar", "Adolin", "Navani", "Potter");
   }
 
   @Test
@@ -153,18 +139,6 @@ public class BasicGameTest {
     bot.privMsg("Navani", "!vote Khaladin");
 
     checkForMessage("The Villagers have won the game!");
-  }
-
-  private void checkForAbsence(String s) {
-    if (bot.getMessageLog().toString().contains(s)) {
-      throw new RuntimeException("Found message that shouldn't exist: " + s);
-    }
-  }
-
-  private void checkForMessage(String s) {
-    if (!bot.getMessageLog().toString().contains(s)) {
-      throw new RuntimeException("Could not find message in the log: " + s);
-    }
   }
 
 }

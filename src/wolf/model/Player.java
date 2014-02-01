@@ -4,7 +4,7 @@ import wolf.model.role.AbstractRole;
 
 import com.google.common.base.Objects;
 
-public class Player {
+public class Player implements Comparable<Player> {
 
   private final String name;
   private final boolean admin;
@@ -58,6 +58,11 @@ public class Player {
   @Override
   public String toString() {
     return name;
+  }
+
+  @Override
+  public int compareTo(Player o) {
+    return name.compareTo(o.name);
   }
 
 }

@@ -24,7 +24,7 @@ public abstract class AbstractRole {
     roleMap.put(Role.VILLAGER, Villager.class);
     roleMap.put(Role.WOLF, Wolf.class);
     roleMap.put(Role.SEER, Seer.class);
-    roleMap.put(Role.MEDIC, Medic.class);
+    roleMap.put(Role.PRIEST, Priest.class);
   }
 
   private final Role role;

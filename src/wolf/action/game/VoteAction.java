@@ -2,8 +2,10 @@ package wolf.action.game;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import com.google.common.base.Objects;
+import com.google.common.collect.Maps;
 import wolf.WolfException;
 import wolf.action.Visibility;
 import wolf.model.Player;
@@ -45,7 +47,37 @@ public class VoteAction extends GameAction {
    * Checks for a majority -- and if there is one, performs a lynching.
    */
   private void processVotes(Map<Player, Player> votes) {
+    Player majority = getMajorityVote(votes);
 
+    if (majority == null) {
+      votes.clear();
+      getStage().getVotingHistory().nextRound();
+      getBot().sendMessage("No majority was reached.");
+    } else {
+
+    }
+  }
+
+  private Player getMajorityVote(Map<Player, Player> votes) {
+    Map<Player, Integer> voteTally = Maps.newLinkedHashMap();
+
+    for (Player target : votes.values()) {
+      Integer i = voteTally.get(target);
+      if (i == null) {
+        i = 0;
+      }
+      voteTally.put(target, i + 1);
+    }
+
+    int votesNeededToWin = (int) Math.ceil(getStage().getPlayers().size() / 2.0);
+
+    for (Entry<Player, Integer> e : voteTally.entrySet()) {
+      if (e.getValue() >= votesNeededToWin) {
+        return e.getKey();
+      }
+    }
+
+    return null;
   }
 
   @Override

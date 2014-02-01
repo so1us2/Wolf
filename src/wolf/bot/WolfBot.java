@@ -7,7 +7,7 @@ import com.google.common.base.Throwables;
 
 public abstract class WolfBot extends PircBot {
 
-  private static final String channel = "#WolfTest";
+  private static final String channel = "#MtgWolf";
   private static final String IRC_SERVER = "irc.colosolutions.net";
 
   public WolfBot(String name) {

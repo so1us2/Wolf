@@ -81,7 +81,14 @@ public class VoteAction extends GameAction {
       voteTally.put(target, i + 1);
     }
 
-    int votesNeededToWin = (int) Math.ceil(getStage().getPlayers().size() / 2.0);
+    int votesNeededToWin;
+    int numPlayers = getStage().getPlayers().size();
+
+    if (numPlayers % 2 == 0) {
+      votesNeededToWin = numPlayers / 2 + 1;
+    } else {
+      votesNeededToWin = (int) Math.ceil(numPlayers / 2.0);
+    }
 
     for (Entry<Player, Integer> e : voteTally.entrySet()) {
       if (e.getValue() >= votesNeededToWin) {

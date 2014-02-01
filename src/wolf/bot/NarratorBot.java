@@ -17,7 +17,7 @@ public class NarratorBot extends WolfBot implements IBot {
   private Stage stage = new InitialStage(this);
 
   public NarratorBot() {
-    super("Narrator");
+    super("Moderator");
   }
 
   @Override

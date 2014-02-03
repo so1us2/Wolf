@@ -9,10 +9,12 @@ import wolf.model.Player;
 import wolf.model.stage.GameStage;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 public class Seer extends AbstractRole {
 
   private Player peekTarget;
+  private List<Player> peekHistory = Lists.newArrayList();
 
   @Override
   public void onNightBegins() {
@@ -20,6 +22,18 @@ public class Seer extends AbstractRole {
 
     getBot().sendMessage(getPlayer().getName(),
         "Who do you want to peek?  Message me !peek <target>");
+  }
+  
+  @Override
+  public void onNightEnds(Player player) {
+    peekHistory.add(peekTarget);
+
+    if (peekTarget.getRole().getFaction() == Faction.WOLVES) {
+      getStage().getBot().sendMessage(player.getName(),
+          "RAWRRRR!! " + peekTarget.getName() + " is a wolf.");
+    } else {
+      getStage().getBot().sendMessage(player.getName(), peekTarget.getName() + " is a villager.");
+    }
   }
   
   @Override
@@ -37,19 +51,9 @@ public class Seer extends AbstractRole {
     protected void execute(Player invoker, List<String> args) {
       GameStage stage = Seer.this.getStage();
 
-      if (peekTarget != null) {
-        stage.getBot().sendMessage(invoker.getName(), "You've can't peek twice in one night!");
-        return;
-      }
-
       peekTarget = stage.getPlayer(args.get(0));
 
-      if (peekTarget.getRole().getFaction() == Faction.WOLVES) {
-        stage.getBot().sendMessage(invoker.getName(),
-            "RAWRRRR!! " + peekTarget.getName() + " is a wolf.");
-      } else {
-        stage.getBot().sendMessage(invoker.getName(), peekTarget.getName() + " is a villager.");
-      }
+      getStage().getBot().sendMessage(invoker.getName(), "You focus your reading on " + peekTarget);
     }
 
     @Override

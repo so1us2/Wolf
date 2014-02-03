@@ -1,5 +1,7 @@
 package wolf.model.role;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
 import wolf.action.Action;
@@ -14,8 +16,6 @@ import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 public abstract class AbstractRole {
 
   public static final BiMap<Role, Class<? extends AbstractRole>> roleMap = HashBiMap.create();
@@ -25,6 +25,7 @@ public abstract class AbstractRole {
     roleMap.put(Role.WOLF, Wolf.class);
     roleMap.put(Role.SEER, Seer.class);
     roleMap.put(Role.PRIEST, Priest.class);
+    roleMap.put(Role.VIGILANTE, Vigilante.class);
   }
 
   private final Role role;
@@ -44,6 +45,10 @@ public abstract class AbstractRole {
   }
 
   public void onNightBegins() {}
+
+  public void onNightEnds(Player player) {}
+
+  public void onPlayerSwitch() {}
 
   @Override
   public String toString() {

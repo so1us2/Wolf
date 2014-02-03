@@ -1,5 +1,7 @@
 package wolf.model.stage;
 
+import static com.google.common.collect.Iterables.filter;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -17,6 +19,7 @@ import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.VotingHistory;
 import wolf.model.role.Priest;
+import wolf.model.role.Vigilante;
 import wolf.model.role.Wolf;
 
 import com.google.common.base.Objects;
@@ -24,8 +27,6 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-
-import static com.google.common.collect.Iterables.filter;
 
 public class GameStage extends Stage {
 
@@ -100,6 +101,9 @@ public class GameStage extends Stage {
   }
 
   private void moveToDay() {
+
+    List<Player> dying = Lists.newArrayList();
+
     List<Player> targets = Lists.newArrayList();
     for (Player p : getPlayers(Role.WOLF)) {
       Wolf wolf = (Wolf) p.getRole();
@@ -111,25 +115,52 @@ public class GameStage extends Stage {
       return;
     }
 
+
+    // need to change this to majority from random choice.
     Player target = targets.get((int) (Math.random() * targets.size()));
 
+    // Handle wolf kill.
     if (isProtected(target)) {
       getBot().sendMessage(NONE_DEAD_MSG);
     } else {
-      target.setAlive(false);
+      dying.add(target);
 
-      getBot().sendMessage(
-          "The sun dawns and the village awakens to find the ripped-apart corpse of "
-              + target.getName() + ".");
+      // this is not the default mode.
+      // getBot().sendMessage(
+      // "The sun dawns and the village awakens to find the ripped-apart corpse of "
+      // + target.getName() + ".");
+    }
 
-      if (checkForWinner() != null) {
-        return;
+    for (Player p : getPlayers(Role.VIGILANTE)) {
+      Vigilante vig = (Vigilante) p.getRole();
+      if (vig.getKillTarget() != null) {
+        dying.add(vig.getKillTarget());
       }
     }
 
+    for (Player player : getPlayers()) {
+      player.getRole().onNightEnds(player);
+    }
+
+    if (!dying.isEmpty()) {
+      StringBuilder output = new StringBuilder();
+      output.append("The sun dawns and you find ");
+      for (Player p : dying) {
+        output.append(p.getName()).append(" and ");
+        p.setAlive(false);
+      }
+      output.setLength(output.length() - 4);
+      output.append("dead in the village.");
+      getBot().sendMessage(output.toString());
+    } else {
+      getBot().sendMessage("The sun dawns and no one has died in the night.");
+    }
+
+    if (checkForWinner() != null) {
+      return;
+    }
 
     daytime = true;
-
     unmutePlayers();
   }
 

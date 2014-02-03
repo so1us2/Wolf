@@ -39,10 +39,14 @@ public class Wolf extends AbstractRole {
   public void handleChat(Player sender, String message, boolean isPrivate) {
     if (getStage().isNight() && isPrivate) {
       // wolf-chat
-      for (Player wolf : getStage().getPlayers(Role.WOLF)) {
-        if (wolf != sender) {
-          getBot().sendMessage(wolf.getName(), "<WolfChat> " + sender + ": " + message);
-        }
+      wolfChat(sender, message);
+    }
+  }
+
+  public void wolfChat(Player sender, String message) {
+    for (Player wolf : getStage().getPlayers(Role.WOLF)) {
+      if (wolf != sender) {
+        getBot().sendMessage(wolf.getName(), "<WolfChat> " + sender + ": " + message);
       }
     }
   }
@@ -53,6 +57,9 @@ public class Wolf extends AbstractRole {
       GameStage stage = Wolf.this.getStage();
 
       killTarget = stage.getPlayer(args.get(0));
+
+      wolfChat(invoker, invoker + " votes to kill " + killTarget);
+
       stage.getBot().sendMessage(invoker.getName(),
           "Your wish to kill " + killTarget + " has been received.");
     }

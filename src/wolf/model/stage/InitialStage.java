@@ -3,7 +3,7 @@ package wolf.model.stage;
 import java.util.List;
 
 import wolf.action.Action;
-import wolf.action.setup.CommandsAction;
+import wolf.action.CommandsAction;
 import wolf.action.setup.InitGameAction;
 import wolf.bot.IBot;
 import wolf.model.Player;

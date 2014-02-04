@@ -2,7 +2,6 @@ package wolf.action.setup;
 
 import java.util.List;
 
-import wolf.WolfException;
 import wolf.action.Action;
 import wolf.model.Player;
 import wolf.model.Role;
@@ -17,12 +16,7 @@ public class DetailsAction extends SetupAction {
 
   @Override
   protected void execute(Player invoker, List<String> args) {
-    Role role;
-    try {
-      role = Role.valueOf(args.get(0).toUpperCase());
-    } catch (IllegalArgumentException e) {
-      throw new WolfException("There is no role \'" + args.get(0) + "\'.");
-    }
+    Role role = Role.parse(args.get(0));
 
     AbstractRole instance = AbstractRole.create(role, null);
     getBot().sendMessage(role.name() + " - Team " + instance.getVictoryTeamFaction());

@@ -2,11 +2,10 @@ package wolf.action.setup;
 
 import java.util.List;
 
-import wolf.model.stage.SetupStage;
-
 import wolf.WolfException;
 import wolf.model.Player;
 import wolf.model.Role;
+import wolf.model.stage.SetupStage;
 
 public class SetRoleAction extends SetupAction {
 
@@ -16,12 +15,7 @@ public class SetRoleAction extends SetupAction {
 
   @Override
   protected void execute(Player invoker, List<String> args) {
-    Role role; 
-    try {
-      role = Role.valueOf(args.get(0).toUpperCase());
-    } catch (IllegalArgumentException e) {
-      throw new WolfException("There is no role \'" + args.get(0) + "\'.");
-    }
+    Role role = Role.parse(args.get(0));
 
     int num;
     try {

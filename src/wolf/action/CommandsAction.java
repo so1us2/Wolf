@@ -1,9 +1,7 @@
-package wolf.action.setup;
+package wolf.action;
 
 import java.util.List;
 
-import wolf.action.Action;
-import wolf.action.Visibility;
 import wolf.model.Player;
 import wolf.model.stage.Stage;
 
@@ -15,8 +13,16 @@ public class CommandsAction extends Action {
 
   @Override
   public void apply(Player invoker, List<String> args, boolean isPrivate) {
-    for (Action a : this.getStage().getAvailableActions(invoker)) {
-      getBot().sendMessage(invoker.getName(), a.getUsage() + " - " + a.getDescription());
+    if (isPrivate) {
+      getBot().sendMessage(invoker.getName(), "Supported Commands:");
+      for (Action a : this.getStage().getAvailableActions(invoker)) {
+        getBot().sendMessage(invoker.getName(), a.getUsage() + " - " + a.getDescription());
+      }
+    } else {
+      getBot().sendMessage("Supported Commands:");
+      for (Action a : this.getStage().getAvailableActions(invoker)) {
+        getBot().sendMessage(a.getUsage() + " - " + a.getDescription());
+      }
     }
   }
 

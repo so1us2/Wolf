@@ -33,6 +33,7 @@ public class LoadConfigAction extends SetupAction {
       throw new WolfException(configName + " is an invalid configuration.");
     }
     this.getStage().getConfig().setRoles(configs.get(configName));
+    getBot().sendMessage(configName + " loaded.");
   }
 
   @Override

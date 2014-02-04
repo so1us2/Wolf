@@ -55,9 +55,9 @@ public class Priest extends AbstractRole {
       protectTarget = stage.getPlayer(args.get(0));
 
       if (protectTarget == lastProtectedTarget) {
-        protectTarget = null;
         stage.getBot().sendMessage(invoker.getName(),
             "You cannot protect " + protectTarget + " twice in a row.");
+        protectTarget = null;
         return;
       }
 

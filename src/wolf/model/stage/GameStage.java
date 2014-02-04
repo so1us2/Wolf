@@ -53,9 +53,12 @@ public class GameStage extends Stage {
 
   private boolean daytime = true;
 
+  private final GameConfig config;
+
   public GameStage(IBot bot, GameConfig config, Set<Player> players) {
     super(bot);
 
+    this.config = config;
     this.players = ImmutableSortedSet.copyOf(players);
 
     daytimeActions.add(commandsAction);
@@ -368,6 +371,10 @@ public class GameStage extends Stage {
     Player player = getPlayer(sender);
 
     player.getRole().handleChat(player, message);
+  }
+
+  public String getSetting(String settingName) {
+    return config.getSettings().get(settingName);
   }
 
   private static final Predicate<Player> alive = new Predicate<Player>() {

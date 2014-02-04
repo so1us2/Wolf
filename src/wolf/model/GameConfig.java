@@ -7,9 +7,15 @@ import com.google.common.collect.Maps;
 public class GameConfig {
 
   private final Map<Role, Integer> roles;
+  private final Map<String, String> settings;
 
   public GameConfig() {
     roles = Maps.newLinkedHashMap();
+    settings = Maps.newLinkedHashMap();
+
+    for (Setting setting : Settings.getSettingsByCategory().values()) {
+      settings.put(setting.getName(), setting.getDefault());
+    }
   }
 
   public Map<Role, Integer> getRoles() {
@@ -35,6 +41,10 @@ public class GameConfig {
       n += i;
     }
     return n;
+  }
+
+  public Map<String, String> getSettings() {
+    return settings;
   }
 
 }

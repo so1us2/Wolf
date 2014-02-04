@@ -2,10 +2,13 @@ package wolf.model.role;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
+import wolf.WolfException;
 import wolf.action.Action;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
+
+import com.google.common.base.Objects;
+import com.google.common.collect.ImmutableList;
 
 public class Priest extends AbstractRole {
 
@@ -52,6 +55,13 @@ public class Priest extends AbstractRole {
       GameStage stage = Priest.this.getStage();
 
       protectTarget = stage.getPlayer(args.get(0));
+
+      if (Objects.equal(protectTarget, invoker)) {
+        // make sure we are allowed to protect ourselves
+        if (!stage.getSetting("SELF_PROTECT").equals("YES")) {
+          throw new WolfException("You are not allowed to protect yourself.");
+        }
+      }
 
       if (protectTarget == lastProtectedTarget) {
         stage.getBot().sendMessage(invoker.getName(),

@@ -89,9 +89,15 @@ public class CoreRolesTest2 extends SimulationTest {
   private void night1Actions() {
     bot.privMsg("Jason", "!protect Tom");
     bot.privMsg("Tom", "!peek Jason");
+
+    bot.privMsg("Will", "Who should we kill?");
+    checkForMessage("<WolfChat> Will: Who should we kill?");
+
+    bot.privMsg("Potter", "Lets kill Tom");
+    checkForMessage("<WolfChat> Potter: Lets kill Tom");
+
     bot.privMsg("Potter", "!kill Tom");
     bot.privMsg("Will", "!kill Tom");
-
 
     checkForMessage("Jason is a villager.");
     checkForMessage("Your wish to protect Tom has been received.");

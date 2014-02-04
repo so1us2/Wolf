@@ -22,6 +22,17 @@ public abstract class SimulationTest {
     return this;
   }
 
+  public SimulationTest setAdmin(String... players) {
+    GameStage stage = (GameStage) bot.getStage();
+
+    for (String s : players) {
+      Player player = stage.getPlayer(s);
+
+    }
+
+    return this;
+  }
+
   protected void checkForAbsence(String s) {
     if (bot.getMessageLog().toString().contains(s)) {
       throw new RuntimeException("Found message that shouldn't exist: " + s);

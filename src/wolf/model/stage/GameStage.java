@@ -12,6 +12,10 @@ import wolf.action.CommandsAction;
 import wolf.action.game.ListPlayersAction;
 import wolf.action.game.VoteAction;
 import wolf.action.game.VoteCountAction;
+import wolf.action.moderator.AbortGameAction;
+import wolf.action.moderator.AnnounceAction;
+import wolf.action.moderator.GetVotersAction;
+import wolf.action.moderator.ReminderAction;
 import wolf.bot.IBot;
 import wolf.model.Faction;
 import wolf.model.GameConfig;
@@ -38,6 +42,7 @@ public class GameStage extends Stage {
 
   private final CommandsAction commandsAction = new CommandsAction(this);
   private final List<Action> daytimeActions = Lists.newArrayList();
+  private final List<Action> adminActions = Lists.newArrayList();
   private final VotingHistory votingHistory = new VotingHistory();
   private final Map<Player, Player> votesToDayKill = Maps.newLinkedHashMap();
 
@@ -57,6 +62,11 @@ public class GameStage extends Stage {
     daytimeActions.add(new VoteAction(this));
     daytimeActions.add(new VoteCountAction(this));
     daytimeActions.add(new ListPlayersAction(this));
+
+    adminActions.add(new AnnounceAction(this));
+    adminActions.add(new AbortGameAction(this));
+    adminActions.add(new GetVotersAction(this));
+    adminActions.add(new ReminderAction(this));
 
     for (Player player : players) {
       player.getRole().setStage(this);
@@ -297,14 +307,21 @@ public class GameStage extends Stage {
 
   @Override
   public List<Action> getAvailableActions(Player player) {
+
+    List<Action> actions = Lists.newArrayList();
+
+    if (player.isAdmin()) {
+      actions.addAll(adminActions);
+    }
     if (isDay()) {
-      return daytimeActions;
+      actions.addAll(daytimeActions);
     } else {
       List<Action> ret = Lists.newArrayList();
       ret.add(commandsAction);
       ret.addAll(player.getRole().getNightActions());
-      return ret;
+      actions.addAll(ret);
     }
+    return actions;
   }
 
   @Override

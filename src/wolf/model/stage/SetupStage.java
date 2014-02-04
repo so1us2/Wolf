@@ -4,7 +4,7 @@ import java.util.List;
 import java.util.Set;
 
 import wolf.action.Action;
-import wolf.action.setup.CommandsAction;
+import wolf.action.CommandsAction;
 import wolf.action.setup.DetailsAction;
 import wolf.action.setup.JoinAction;
 import wolf.action.setup.LeaveAction;
@@ -25,7 +25,7 @@ import com.google.common.collect.Sets;
 
 public class SetupStage extends Stage {
 
-  private final List<Action> actions = Lists.newArrayList();
+  private final Set<Action> actions = Sets.newTreeSet();
   private final Set<Player> players = Sets.newLinkedHashSet();
   private final GameConfig config = new GameConfig();
 

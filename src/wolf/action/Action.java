@@ -1,5 +1,7 @@
 package wolf.action;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
 import wolf.WolfException;
@@ -9,9 +11,7 @@ import wolf.model.stage.Stage;
 
 import com.google.common.collect.ImmutableList;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
-public abstract class Action {
+public abstract class Action implements Comparable<Action> {
 
   private final Stage stage;
   private final String name;
@@ -85,6 +85,11 @@ public abstract class Action {
 
   public Stage getStage() {
     return stage;
+  }
+
+  @Override
+  public int compareTo(Action o) {
+    return name.compareTo(o.getName());
   }
 
 }

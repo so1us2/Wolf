@@ -24,6 +24,7 @@ public class SetupTests {
     bot.msg("Tom", "!allroles");
     bot.msg("Tom", "!details fubar");
     bot.msg("Tom", "!details wolf");
+    bot.msg("Tom", "!commands");
   }
 
 }

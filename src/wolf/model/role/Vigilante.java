@@ -27,7 +27,7 @@ public class Vigilante extends AbstractRole {
   }
 
   @Override
-  public void onNightEnds(Player player) {
+  public void onNightEnds() {
     if (killTarget != null) {
       hasFired = true;
       killTarget = null;

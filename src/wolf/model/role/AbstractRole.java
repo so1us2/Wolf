@@ -27,6 +27,8 @@ public abstract class AbstractRole {
     roleMap.put(Role.PRIEST, Priest.class);
     roleMap.put(Role.VIGILANTE, Vigilante.class);
     roleMap.put(Role.BARTENDER, Bartender.class);
+    roleMap.put(Role.HUNTER, Hunter.class);
+    roleMap.put(Role.MINION, Minion.class);
   }
 
   private final Role role;
@@ -45,14 +47,21 @@ public abstract class AbstractRole {
     return role.getFaction();
   }
 
+  public Faction getVisibleFaction() {
+    return role.getFaction();
+  }
+
+  public void onGameStart() {}
+
   public void onNightBegins() {}
 
-  public void onNightEnds(Player player) {}
+  public void onNightEnds() {}
 
   /**
-  This method is called when a new player is replacing someone that had to leave.
-  Subclasses can override this to give the new player relevant information that
-  he/she might need to fulfill the duties of their role. */
+  * This method is called when a new player is replacing someone that had to leave.
+  * Subclasses can override this to give the new player relevant information that
+  * he/she might need to fulfill the duties of their role. 
+  */
 
   public void onPlayerSwitch() {
     getStage().getBot().sendMessage(player.getName(), "Welcome to the game. You are a " + role);

@@ -23,7 +23,7 @@ public class Priest extends AbstractRole {
   }
 
   @Override
-  public void onNightEnds(Player player) {
+  public void onNightEnds() {
     lastProtectedTarget = protectTarget;
     protectTarget = null;
   }

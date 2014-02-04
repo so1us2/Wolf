@@ -17,6 +17,15 @@ public class Seer extends AbstractRole {
   private List<Player> peekHistory = Lists.newArrayList();
 
   @Override
+  public void onGameStart() {
+    List<Player> villagers = getStage().getPlayers(Faction.VILLAGERS);
+    Player peek = villagers.get((int) (Math.random() * villagers.size()));
+    peekHistory.add(peek);
+
+    getBot().sendMessage(getPlayer().getName(), peek + " is not a wolf.");
+  }
+
+  @Override
   public void onNightBegins() {
     peekTarget = null;
 
@@ -25,10 +34,11 @@ public class Seer extends AbstractRole {
   }
   
   @Override
-  public void onNightEnds(Player player) {
+  public void onNightEnds() {
+    Player player = getPlayer();
     peekHistory.add(peekTarget);
 
-    if (peekTarget.getRole().getFaction() == Faction.WOLVES) {
+    if (peekTarget.getRole().getVisibleFaction() == Faction.WOLVES) {
       getStage().getBot().sendMessage(player.getName(),
           "RAWRRRR!! " + peekTarget.getName() + " is a wolf.");
     } else {
@@ -36,6 +46,11 @@ public class Seer extends AbstractRole {
     }
   }
   
+  @Override
+  public void onPlayerSwitch() {
+    // send new player a list of all previous peeks.
+  }
+
   @Override
   public boolean isFinishedWithNightAction() {
     return peekTarget != null;
@@ -52,11 +67,6 @@ public class Seer extends AbstractRole {
       GameStage stage = Seer.this.getStage();
 
       peekTarget = stage.getPlayer(args.get(0));
-
-      if (peekTarget == null) {
-        stage.getBot().sendMessage(invoker.getName(),
-            args.get(0) + " is not a valid player name.");
-      }
 
       stage.getBot().sendMessage(invoker.getName(),
           "Your wish to peek " + peekTarget + " has been received.");

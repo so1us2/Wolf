@@ -15,6 +15,12 @@ public class Wolf extends AbstractRole {
   private Player killTarget;
 
   @Override
+  public void onGameStart() {
+    getBot().sendMessage(getPlayer().getName(),
+        "The wolves are: " + getStage().getPlayers(Role.WOLF));
+  }
+
+  @Override
   public void onNightBegins() {
     killTarget = null;
     getBot().sendMessage(getPlayer().getName(),

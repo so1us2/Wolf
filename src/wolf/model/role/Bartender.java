@@ -26,7 +26,7 @@ public class Bartender extends AbstractRole {
   }
 
   @Override
-  public void onNightEnds(Player player) {
+  public void onNightEnds() {
     drinkHistory.add(drinkTarget);
   }
 

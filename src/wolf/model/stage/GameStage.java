@@ -65,10 +65,8 @@ public class GameStage extends Stage {
   }
 
   private void beginGame() {
-    // tell the wolves who they are
-    List<Player> wolves = getPlayers(Role.WOLF);
-    for (Player wolf : wolves) {
-      getBot().sendMessage(wolf.getName(), "The wolves are: " + wolves);
+    for (Player player : getPlayers()) {
+      player.getRole().onGameStart();
     }
 
     unmutePlayers();
@@ -122,15 +120,9 @@ public class GameStage extends Stage {
     // need to change this to majority from random choice.
     Player target = targets.get((int) (Math.random() * targets.size()));
 
-    // Handle wolf kill.
     if (!isProtected(target)) {
       dying.add(target);
     }
-
-      // this is not the default mode.
-      // getBot().sendMessage(
-      // "The sun dawns and the village awakens to find the ripped-apart corpse of "
-      // + target.getName() + ".");
 
     for (Player p : getPlayers(Role.VIGILANTE)) {
       Vigilante vig = (Vigilante) p.getRole();
@@ -142,7 +134,7 @@ public class GameStage extends Stage {
     // Dying set should now have anyone who needs to be killed in it.
 
     for (Player player : getPlayers()) {
-      player.getRole().onNightEnds(player);
+      player.getRole().onNightEnds();
     }
 
     if (!dying.isEmpty()) {
@@ -207,16 +199,25 @@ public class GameStage extends Stage {
     if (factionCount.get(Faction.VILLAGERS) == numAlive) {
       winner = Faction.VILLAGERS;
     } else if (factionCount.get(Faction.WOLVES) >= factionCount.get(Faction.VILLAGERS)) {
-      winner = Faction.WOLVES;
+      if (getPlayers(Role.HUNTER).isEmpty()) {
+        winner = Faction.WOLVES;
+      } else {
+        winner = Faction.VILLAGERS;
+      }
     }
 
     if (winner != null) {
       getBot().sendMessage("The " + winner.getPluralForm() + " have won the game!");
+      printGameLog();
       getBot().setStage(new InitialStage(getBot()));
       getBot().unmuteAll();
     }
 
     return winner;
+  }
+
+  public void printGameLog() {
+    // need to print out a list of all players in game and their roles.
   }
 
   private Map<Faction, Integer> getFactionCounts() {
@@ -260,6 +261,16 @@ public class GameStage extends Stage {
     List<Player> ret = Lists.newArrayList();
     for (Player player : getPlayers()) {
       if (player.getRole().getType() == role) {
+        ret.add(player);
+      }
+    }
+    return ret;
+  }
+
+  public List<Player> getPlayers(Faction faction) {
+    List<Player> ret = Lists.newArrayList();
+    for (Player player : getPlayers()) {
+      if (player.getRole().getFaction() == faction) {
         ret.add(player);
       }
     }

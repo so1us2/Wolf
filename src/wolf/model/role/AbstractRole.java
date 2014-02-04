@@ -1,11 +1,9 @@
 package wolf.model.role;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
-import com.google.common.base.Throwables;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.ImmutableList;
 import wolf.action.Action;
 import wolf.bot.IBot;
 import wolf.model.Faction;
@@ -13,9 +11,12 @@ import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.stage.GameStage;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Throwables;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableList;
 
-public abstract class AbstractRole {
+public abstract class AbstractRole implements Comparable<AbstractRole> {
 
   public static final BiMap<Role, Class<? extends AbstractRole>> roleMap = HashBiMap.create();
 
@@ -46,6 +47,10 @@ public abstract class AbstractRole {
     return role.getFaction();
   }
 
+  public Faction getVictoryTeamFaction() {
+    return role.getFaction();
+  }
+
   public void onGameStart() {}
 
   public void onNightBegins() {}
@@ -60,6 +65,8 @@ public abstract class AbstractRole {
   public void onPlayerSwitch() {
     getStage().getBot().sendMessage(player.getName(), "Welcome to the game. You are a " + role);
   }
+
+  public abstract String getDescription();
 
   @Override
   public String toString() {
@@ -108,4 +115,8 @@ public abstract class AbstractRole {
     }
   }
 
+  @Override
+  public int compareTo(AbstractRole other) {
+    return getType().name().compareTo(other.getType().name());
+  }
 }

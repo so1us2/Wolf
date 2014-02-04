@@ -14,7 +14,7 @@ public class HunterTest extends SimulationTest {
   }
 
   @Test
-  public void coreRolesTest() {
+  public void hunterTest() {
     initGame();
     day1Votes();
     night1Actions();

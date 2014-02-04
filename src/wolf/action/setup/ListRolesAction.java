@@ -4,10 +4,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import wolf.model.stage.SetupStage;
-
 import wolf.model.Player;
 import wolf.model.Role;
+import wolf.model.stage.SetupStage;
 
 public class ListRolesAction extends SetupAction {
 
@@ -21,7 +20,7 @@ public class ListRolesAction extends SetupAction {
     Map<Role, Integer> roles = getStage().getConfig().getRoles();
 
     if (roles.isEmpty()) {
-      getBot().sendMessage("No roles have been setup yet.");
+      getBot().sendMessage("No roles have been added yet.");
     } else {
       StringBuilder output = new StringBuilder();
       output.append("Current roles: ");

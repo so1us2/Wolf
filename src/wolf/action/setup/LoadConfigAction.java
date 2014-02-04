@@ -18,6 +18,8 @@ public class LoadConfigAction extends SetupAction {
   static {
     configs.put("Default",
         ImmutableMap.of(Role.SEER, 1, Role.PRIEST, 1, Role.VILLAGER, 5, Role.WOLF, 2));
+    configs.put("Fives", ImmutableMap.of(Role.SEER, 1, Role.VILLAGER, 1, Role.WOLF, 1, Role.MINION,
+        1, Role.HUNTER, 1));
   }
 
   public LoadConfigAction(SetupStage stage) {

@@ -44,6 +44,11 @@ public class Bartender extends AbstractRole {
     return drinkTarget;
   }
 
+  @Override
+  public String getDescription() {
+    return "The Bartender can give drinks to players at night and it is announced to everyone when someone receives a drink.";
+  }
+
   private Action drinkAction = new Action("drink", "target") {
     @Override
     protected void execute(Player invoker, List<String> args) {

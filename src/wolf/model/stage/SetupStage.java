@@ -5,11 +5,13 @@ import java.util.Set;
 
 import wolf.action.Action;
 import wolf.action.setup.CommandsAction;
+import wolf.action.setup.DetailsAction;
 import wolf.action.setup.JoinAction;
 import wolf.action.setup.LeaveAction;
 import wolf.action.setup.ListConfigsAction;
 import wolf.action.setup.ListPlayersAction;
 import wolf.action.setup.ListRolesAction;
+import wolf.action.setup.ListSupportedRolesAction;
 import wolf.action.setup.LoadConfigAction;
 import wolf.action.setup.SetRoleAction;
 import wolf.action.setup.StartGameAction;
@@ -39,6 +41,8 @@ public class SetupStage extends Stage {
     actions.add(new ListRolesAction(this));
     actions.add(new SetRoleAction(this));
     actions.add(new StartGameAction(this));
+    actions.add(new DetailsAction(this));
+    actions.add(new ListSupportedRolesAction(this));
   }
 
   public Set<Player> getPlayers() {

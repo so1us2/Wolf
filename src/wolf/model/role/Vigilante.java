@@ -54,6 +54,11 @@ public class Vigilante extends AbstractRole {
     return killTarget;
   }
 
+  @Override
+  public String getDescription() {
+    return "Once per game, the Vigilante can kill a player at night.";
+  }
+
   private Action shootAction = new Action("shoot", "target") {
     @Override
     protected void execute(Player invoker, List<String> args) {

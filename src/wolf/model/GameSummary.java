@@ -3,23 +3,18 @@ package wolf.model;
 import java.util.Collection;
 import java.util.Set;
 
-import com.google.common.collect.Sets;
 import wolf.bot.IBot;
+
+import com.google.common.collect.Sets;
 
 public class GameSummary {
 
   public static void printGameLog(IBot bot, Collection<Player> players, Faction winner) {
-    // TODO: Sort the outputs by alive/dead and then alphabetically.
-
     Set<Player> winners = Sets.newTreeSet();
     Set<Player> losers = Sets.newTreeSet();
 
     for (Player player : players) {
-      Faction faction = player.getRole().getFaction();
-      if (player.getRole().getType() == Role.MINION) {
-        // Minion wins if the wolves win.
-        faction = Faction.WOLVES;
-      }
+      Faction faction = player.getRole().getVictoryTeamFaction();
       if (winner == faction) {
         winners.add(player);
       } else {

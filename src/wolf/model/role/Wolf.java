@@ -57,6 +57,11 @@ public class Wolf extends AbstractRole {
     }
   }
 
+  @Override
+  public String getDescription() {
+    return "The Wolves kill a villager every night. They win when their numbers equal those of the villagers.";
+  }
+
   private Action killAction = new Action("kill", "target") {
     @Override
     protected void execute(Player invoker, List<String> args) {

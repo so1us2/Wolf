@@ -2,13 +2,14 @@ package wolf.model.role;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import wolf.action.Action;
 import wolf.action.Visibility;
 import wolf.model.Faction;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 public class Seer extends AbstractRole {
 
@@ -66,6 +67,11 @@ public class Seer extends AbstractRole {
     return ImmutableList.<Action>of(peekAction);
   }
   
+  @Override
+  public String getDescription() {
+    return "The Seer peeks a player each night and finds out if the player is a villager or a wolf.";
+  }
+
   private Action peekAction = new Action("peek", "target") {
     @Override
     protected void execute(Player invoker, List<String> args) {

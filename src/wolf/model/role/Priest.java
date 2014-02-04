@@ -42,6 +42,11 @@ public class Priest extends AbstractRole {
     return protectTarget;
   }
 
+  @Override
+  public String getDescription() {
+    return "The Priest can protect a player each night, preventing that player from being killed by a different special power.";
+  }
+
   private Action protectAction = new Action("protect", "target") {
     @Override
     protected void execute(Player invoker, List<String> args) {

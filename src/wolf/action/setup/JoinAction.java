@@ -2,10 +2,9 @@ package wolf.action.setup;
 
 import java.util.List;
 
-import wolf.model.stage.SetupStage;
-
 import wolf.WolfException;
 import wolf.model.Player;
+import wolf.model.stage.SetupStage;
 
 public class JoinAction extends SetupAction {
 
@@ -19,7 +18,8 @@ public class JoinAction extends SetupAction {
     if (!added) {
       throw new WolfException(invoker.getName() + " already joined!");
     }
-    getBot().sendMessage(invoker.getName() + " joined the game.");
+    getBot().sendMessage(
+        invoker.getName() + " joined the game (" + getStage().getPlayers().size() + " players)");
   }
 
   @Override

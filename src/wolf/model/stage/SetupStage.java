@@ -10,8 +10,8 @@ import wolf.action.setup.JoinAction;
 import wolf.action.setup.LeaveAction;
 import wolf.action.setup.ListConfigsAction;
 import wolf.action.setup.ListPlayersAction;
-import wolf.action.setup.ListRolesAction;
-import wolf.action.setup.ListSupportedRolesAction;
+import wolf.action.setup.ListSetupAction;
+import wolf.action.setup.ListAllRolesAction;
 import wolf.action.setup.LoadConfigAction;
 import wolf.action.setup.SetRoleAction;
 import wolf.action.setup.StartGameAction;
@@ -38,11 +38,11 @@ public class SetupStage extends Stage {
     actions.add(new LoadConfigAction(this));
     actions.add(new ListConfigsAction(this));
     actions.add(new ListPlayersAction(this));
-    actions.add(new ListRolesAction(this));
+    actions.add(new ListSetupAction(this));
     actions.add(new SetRoleAction(this));
     actions.add(new StartGameAction(this));
     actions.add(new DetailsAction(this));
-    actions.add(new ListSupportedRolesAction(this));
+    actions.add(new ListAllRolesAction(this));
   }
 
   public Set<Player> getPlayers() {

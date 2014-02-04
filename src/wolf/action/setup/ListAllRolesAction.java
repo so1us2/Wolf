@@ -11,10 +11,10 @@ import wolf.model.Role;
 import wolf.model.role.AbstractRole;
 import wolf.model.stage.SetupStage;
 
-public class ListSupportedRolesAction extends SetupAction {
+public class ListAllRolesAction extends SetupAction {
 
-  public ListSupportedRolesAction(SetupStage stage) {
-    super(stage, "allroles");
+  public ListAllRolesAction(SetupStage stage) {
+    super(stage, "roles");
   }
 
   @Override
@@ -35,15 +35,22 @@ public class ListSupportedRolesAction extends SetupAction {
     Collections.sort(villageRoles);
     Collections.sort(wolfRoles);
 
-    getBot().sendMessage("Village Roles:");
+    StringBuilder output = new StringBuilder();
+    output.append("Village Roles: ");
     for (AbstractRole r : (villageRoles)) {
-      getBot().sendMessage(r.getType().name() + ": " + r.getDescription());
+      output.append(r.getType().name()).append(", ");
     }
+    output.setLength(output.length() - 2);
+    getBot().sendMessage(output.toString());
     getBot().sendMessage("");
-    getBot().sendMessage("Wolf Roles:");
+    output = new StringBuilder();
+    output.append("Wolf Roles: ");
     for (AbstractRole r : wolfRoles) {
-      getBot().sendMessage(r.getType().name() + ": " + r.getDescription());
+      output.append(r.getType().name()).append(", ");
     }
+    output.setLength(output.length() - 2);
+    getBot().sendMessage(output.toString());
+    getBot().sendMessage("For more information on a role, !details <role>");
   }
 
   @Override

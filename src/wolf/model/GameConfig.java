@@ -6,7 +6,7 @@ import com.google.common.collect.Maps;
 
 public class GameConfig {
 
-  private Map<Role, Integer> roles;
+  private final Map<Role, Integer> roles;
 
   public GameConfig() {
     roles = Maps.newLinkedHashMap();
@@ -17,7 +17,11 @@ public class GameConfig {
   }
 
   public void setRole(Role role, int n) {
-    roles.put(role, n);
+    if (n == 0) {
+      roles.remove(role);
+    } else {
+      roles.put(role, n);
+    }
   }
 
   public void setRoles(Map<Role, Integer> newRoles) {

@@ -16,9 +16,9 @@ public class LoadConfigAction extends SetupAction {
   static final Map<String, Map<Role, Integer>> configs = Maps.newLinkedHashMap();
 
   static {
-    configs.put("Default",
+    configs.put("default",
         ImmutableMap.of(Role.SEER, 1, Role.PRIEST, 1, Role.VILLAGER, 5, Role.WOLF, 2));
-    configs.put("Fives", ImmutableMap.of(Role.SEER, 1, Role.VILLAGER, 1, Role.WOLF, 1, Role.MINION,
+    configs.put("fives", ImmutableMap.of(Role.SEER, 1, Role.VILLAGER, 1, Role.WOLF, 1, Role.MINION,
         1, Role.HUNTER, 1));
   }
 
@@ -28,7 +28,7 @@ public class LoadConfigAction extends SetupAction {
 
   @Override
   protected void execute(Player invoker, List<String> args) {
-    String configName = args.get(0);
+    String configName = args.get(0).toLowerCase();
     if (!configs.containsKey(configName)) {
       throw new WolfException(configName + " is an invalid configuration.");
     }

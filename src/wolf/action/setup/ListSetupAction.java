@@ -8,10 +8,10 @@ import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.stage.SetupStage;
 
-public class ListRolesAction extends SetupAction {
+public class ListSetupAction extends SetupAction {
 
-  public ListRolesAction(SetupStage stage) {
-    super(stage, "roles");
+  public ListSetupAction(SetupStage stage) {
+    super(stage, "current");
   }
 
   @Override

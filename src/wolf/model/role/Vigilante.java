@@ -11,8 +11,10 @@ import com.google.common.collect.ImmutableList;
 
 public class Vigilante extends AbstractRole {
 
-  boolean hasFired = false;
-  boolean hasActed = false;
+  public static String HOLD_FIRE_MESSAGE = "You holster your pistol.";
+
+  private boolean hasFired = false;
+  private boolean hasActed = false;
   private Player killTarget;
 
   @Override
@@ -20,7 +22,7 @@ public class Vigilante extends AbstractRole {
     if (!hasFired) {
     killTarget = null;
     getBot().sendMessage(getPlayer().getName(),
-          "Who do you want to shoot?  Message me !shoot <target>");
+              "Do you want to use your shot?  Message me !shoot <target> to shoot or !pass to hold fire.");
     }
   }
 
@@ -64,7 +66,7 @@ public class Vigilante extends AbstractRole {
 
     @Override
     public String getDescription() {
-      return "You have a single bullet that you can shoot.";
+      return "You have a single bullet. Use it wisely.";
     }
 
     @Override
@@ -80,7 +82,7 @@ public class Vigilante extends AbstractRole {
 
       hasActed = true;
       killTarget = null;
-      stage.getBot().sendMessage(invoker.getName(), "You holster your pistol.");
+      stage.getBot().sendMessage(invoker.getName(), HOLD_FIRE_MESSAGE);
     }
 
     @Override

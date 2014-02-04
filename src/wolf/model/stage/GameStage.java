@@ -18,6 +18,7 @@ import wolf.model.GameConfig;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.VotingHistory;
+import wolf.model.role.Bartender;
 import wolf.model.role.Priest;
 import wolf.model.role.Vigilante;
 import wolf.model.role.Wolf;
@@ -27,16 +28,17 @@ import com.google.common.base.Predicate;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 
 public class GameStage extends Stage {
 
-  public static final String NONE_DEAD_MSG = "The sun dawns and the village thanks the "
-      + "gods that not a single person was killed this night.";
+  public static final String NONE_DEAD_MSG =
+      "The sun dawns and the village finds that no one has died in the night.";
 
   private final CommandsAction commandsAction = new CommandsAction(this);
   private final List<Action> daytimeActions = Lists.newArrayList();
   private final VotingHistory votingHistory = new VotingHistory();
-  private final Map<Player, Player> votesToLynch = Maps.newLinkedHashMap();
+  private final Map<Player, Player> votesToDayKill = Maps.newLinkedHashMap();
 
   /**
    * The set of all players (even dead ones).
@@ -102,9 +104,9 @@ public class GameStage extends Stage {
 
   private void moveToDay() {
 
-    List<Player> dying = Lists.newArrayList();
-
+    Set<Player> dying = Sets.newHashSet();
     List<Player> targets = Lists.newArrayList();
+
     for (Player p : getPlayers(Role.WOLF)) {
       Wolf wolf = (Wolf) p.getRole();
       targets.add(wolf.getKillTarget());
@@ -115,28 +117,29 @@ public class GameStage extends Stage {
       return;
     }
 
+    // Get anyone who needs to die into the dying set.
 
     // need to change this to majority from random choice.
     Player target = targets.get((int) (Math.random() * targets.size()));
 
     // Handle wolf kill.
-    if (isProtected(target)) {
-      getBot().sendMessage(NONE_DEAD_MSG);
-    } else {
+    if (!isProtected(target)) {
       dying.add(target);
+    }
 
       // this is not the default mode.
       // getBot().sendMessage(
       // "The sun dawns and the village awakens to find the ripped-apart corpse of "
       // + target.getName() + ".");
-    }
 
     for (Player p : getPlayers(Role.VIGILANTE)) {
       Vigilante vig = (Vigilante) p.getRole();
-      if (vig.getKillTarget() != null) {
+      if (vig.getKillTarget() != null && !isProtected(vig.getKillTarget())) {
         dying.add(vig.getKillTarget());
       }
     }
+
+    // Dying set should now have anyone who needs to be killed in it.
 
     for (Player player : getPlayers()) {
       player.getRole().onNightEnds(player);
@@ -153,7 +156,14 @@ public class GameStage extends Stage {
       output.append("dead in the village.");
       getBot().sendMessage(output.toString());
     } else {
-      getBot().sendMessage("The sun dawns and no one has died in the night.");
+      getBot().sendMessage(NONE_DEAD_MSG);
+    }
+
+    for (Player p : getPlayers(Role.BARTENDER)) {
+      Bartender b = (Bartender) p.getRole();
+      if (b.getDrinkTarget() != null) {
+        getBot().sendMessage(b.getDrinkTarget() + " has a drink waiting for them.");
+      }
     }
 
     if (checkForWinner() != null) {
@@ -224,8 +234,8 @@ public class GameStage extends Stage {
     return ret;
   }
 
-  public Map<Player, Player> getVotesToLynch() {
-    return votesToLynch;
+  public Map<Player, Player> getVotesToDayKill() {
+    return votesToDayKill;
   }
 
   /**

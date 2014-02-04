@@ -53,7 +53,13 @@ public class Seer extends AbstractRole {
 
       peekTarget = stage.getPlayer(args.get(0));
 
-      getStage().getBot().sendMessage(invoker.getName(), "You focus your reading on " + peekTarget);
+      if (peekTarget == null) {
+        stage.getBot().sendMessage(invoker.getName(),
+            args.get(0) + " is not a valid player name.");
+      }
+
+      stage.getBot().sendMessage(invoker.getName(),
+          "Your wish to peek " + peekTarget + " has been received.");
     }
 
     @Override

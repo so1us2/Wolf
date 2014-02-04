@@ -21,7 +21,7 @@ public class VoteAction extends GameAction {
   @Override
   protected void execute(Player invoker, List<String> args) {
     Player target = getStage().getPlayer(args.get(0));
-    Map<Player, Player> votes = getStage().getVotesToLynch();
+    Map<Player, Player> votes = getStage().getVotesToDayKill();
 
     Player prevTarget = votes.put(invoker, target);
 
@@ -45,23 +45,24 @@ public class VoteAction extends GameAction {
   }
 
   /**
-   * Checks for a majority -- and if there is one, performs a lynching.
+   * Checks for a majority -- and if there is one, performs a villager kill.
    */
   private void processVotes(Map<Player, Player> votes) {
-    Player lynchTarget = getMajorityVote(votes);
+    Player dayKillTarget = getMajorityVote(votes);
 
-    if (lynchTarget == null) {
+    if (dayKillTarget == null) {
       votes.clear();
       getStage().getVotingHistory().nextRound();
       getBot().sendMessage("No majority was reached.");
     } else {
-      lynchTarget.setAlive(false);
+      dayKillTarget.setAlive(false);
       getStage().getVotingHistory().print(getBot());
       getStage().getVotingHistory().reset();
-      getStage().getVotesToLynch().clear();
-      getBot().sendMessage("A verdict was reached and " + lynchTarget.getName() + " was lynched.");
+      getStage().getVotesToDayKill().clear();
+      getBot().sendMessage("A verdict was reached and " + dayKillTarget.getName() + " was killed.");
       getBot().sendMessage(
-          lynchTarget.getName() + " was a " + lynchTarget.getRole().getFaction().getSingularForm());
+          dayKillTarget.getName() + " was a "
+              + dayKillTarget.getRole().getFaction().getSingularForm());
       if (getStage().checkForWinner() != null) {
         // game is over, don't need to do any more logic here.
         return;

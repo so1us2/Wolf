@@ -8,11 +8,10 @@ import wolf.model.Player;
 import wolf.model.stage.GameStage;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
 public class Priest extends AbstractRole {
 
-  private List<Player> protectHistory = Lists.newArrayList();
+  private Player lastProtectedTarget;
   private Player protectTarget;
 
   @Override
@@ -25,7 +24,8 @@ public class Priest extends AbstractRole {
 
   @Override
   public void onNightEnds(Player player) {
-    protectHistory.add(protectTarget);
+    lastProtectedTarget = protectTarget;
+    protectTarget = null;
   }
 
   @Override
@@ -49,7 +49,7 @@ public class Priest extends AbstractRole {
 
       protectTarget = stage.getPlayer(args.get(0));
 
-      if (protectTarget == protectHistory.get(protectHistory.size() - 1)) {
+      if (protectTarget == lastProtectedTarget) {
         protectTarget = null;
         stage.getBot().sendMessage(invoker.getName(),
             "You cannot protect " + protectTarget + " twice in a row.");

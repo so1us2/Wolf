@@ -15,7 +15,7 @@ public class VoteCountAction extends GameAction {
   @Override
   protected void execute(Player invoker, List<String> args) {
     getBot().sendMessage(
-        getStage().getVotesToLynch().size() + " of " + getStage().getPlayers().size()
+        getStage().getVotesToDayKill().size() + " of " + getStage().getPlayers().size()
             + " players have voted.");
   }
 

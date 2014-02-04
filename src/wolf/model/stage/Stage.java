@@ -12,7 +12,7 @@ import com.google.common.collect.ImmutableSet;
 
 public abstract class Stage {
 
-  private static final Set<String> admins = ImmutableSet.of("satnam", "semisober");
+  private static final Set<String> admins = ImmutableSet.of("satnam", "TomM");
 
   private final IBot bot;
 

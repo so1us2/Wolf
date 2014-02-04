@@ -15,7 +15,7 @@ public class CoreRolesTest2 extends SimulationTest {
   }
 
   @Test
-  public void coreRolesTest() {
+  public void coreRolesTest2() {
     initGame();
     day1Votes();
     night1Actions();
@@ -40,7 +40,7 @@ public class CoreRolesTest2 extends SimulationTest {
 
     bot.msg("Khaladin", "!load Default");
 
-    checkForMessage("Default loaded.");
+    checkForMessage("default loaded.");
 
     bot.msg("Zack", "!roles");
 
@@ -127,7 +127,7 @@ public class CoreRolesTest2 extends SimulationTest {
     checkForMessage("The sun dawns and you find Tom dead in the village.");
     bot.getMessageLog().clear();
   }
-  
+
   private void day3Votes() {
     bot.msg("Jason", "!players");
     checkForMessage("Alive players: [Bob, Jason, Joe, Potter, Will, Zack]");

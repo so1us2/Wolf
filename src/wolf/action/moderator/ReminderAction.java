@@ -26,7 +26,7 @@ public class ReminderAction extends GameAction {
 
   @Override
   public String getDescription() {
-    return "Remind players who need to act to do so. (admin only)";
+    return "Remind players who need to act to do so.";
   }
 
   @Override

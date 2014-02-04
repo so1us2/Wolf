@@ -44,6 +44,7 @@ public abstract class WolfBot extends PircBot {
     voice(channel, player);
   }
 
+  // Needs to be tested using actual IRC.
   public void unmutePlayers(List<String> players) {
     StringBuilder output = new StringBuilder();
 

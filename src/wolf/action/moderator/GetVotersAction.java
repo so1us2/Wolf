@@ -2,16 +2,17 @@ package wolf.action.moderator;
 
 import java.util.List;
 import java.util.Map;
-
-import org.testng.collections.Lists;
+import java.util.Set;
 
 import wolf.action.Visibility;
 import wolf.action.game.GameAction;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
 
-public class GetVotersAction extends GameAction {
+import com.google.common.base.Joiner;
+import com.google.common.collect.Sets;
 
+public class GetVotersAction extends GameAction {
 
   public GetVotersAction(GameStage stage) {
     super(stage, "voters");
@@ -19,37 +20,23 @@ public class GetVotersAction extends GameAction {
 
   @Override
   protected void execute(Player invoker, List<String> args) {
-
     Map<Player, Player> votes = getStage().getVotesToDayKill();
-    List<Player> nonvoters = Lists.newArrayList();
-
-    for (Player p : getStage().getPlayers()) {
-      if (!votes.keySet().contains(p)) {
-        nonvoters.add(p);
-      }
-    }
+    Set<Player> nonvoters = Sets.difference(getStage().getPlayers(), votes.keySet());
 
     StringBuilder output = new StringBuilder();
     output.append("Voters: ");
-
-    for (Player p : votes.keySet()) {
-      output.append(p.getName() + ", ");
-    }
-    output.setLength(output.length() - 2);
+    output.append(Joiner.on(", ").join(votes.keySet()));
     getBot().sendMessage(invoker.getName(), output.toString());
 
     output = new StringBuilder();
     output.append("Non-voters: ");
-    for (Player p : nonvoters) {
-      output.append(p.getName() + ", ");
-    }
-    output.setLength(output.length() - 2);
+    output.append(Joiner.on(", ").join(nonvoters));
     getBot().sendMessage(invoker.getName(), output.toString());
   }
 
   @Override
   public String getDescription() {
-    return "List voting status of each player. (admin only)";
+    return "List voting status of each player.";
   }
 
   @Override

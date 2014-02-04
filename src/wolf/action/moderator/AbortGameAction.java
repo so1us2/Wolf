@@ -22,7 +22,7 @@ public class AbortGameAction extends GameAction {
 
   @Override
   public String getDescription() {
-    return "Ends a game in progress. (admin only)";
+    return "Ends a game in progress.";
   }
 
   @Override

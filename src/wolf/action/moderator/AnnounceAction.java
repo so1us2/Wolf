@@ -40,7 +40,7 @@ public class AnnounceAction extends Action {
 
   @Override
   public String getDescription() {
-    return "Have the bot send an announcement to the channel. (admin only)";
+    return "Have the bot send an announcement to the channel.";
   }
 
   @Override

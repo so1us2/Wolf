@@ -22,11 +22,8 @@ public class GameSummary {
       }
     }
 
-    bot.sendMessage("");
-    bot.sendMessage("Winners");
-    bot.sendMessage("");
-
     StringBuilder output = new StringBuilder();
+    output.append("Winners: ");
     for (Player p : winners) {
       output.append(p.getName()).append(" (").append(p.getRole()).append(")");
       if (p.isAlive()) {
@@ -38,10 +35,8 @@ public class GameSummary {
     bot.sendMessage(output.toString());
 
     bot.sendMessage("");
-    bot.sendMessage("Losers");
-    bot.sendMessage("");
-
     output = new StringBuilder();
+    output.append("Losers: ");
     for (Player p : losers) {
       output.append(p.getName()).append(" (").append(p.getRole()).append(")");
       if (p.isAlive()) {

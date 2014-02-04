@@ -267,10 +267,10 @@ public class GameStage extends Stage {
     return ret;
   }
 
-  public List<Player> getPlayers(Faction faction) {
+  public List<Player> getVisiblePlayers(Faction faction) {
     List<Player> ret = Lists.newArrayList();
     for (Player player : getPlayers()) {
-      if (player.getRole().getFaction() == faction) {
+      if (player.getRole().getVisibleFaction() == faction) {
         ret.add(player);
       }
     }

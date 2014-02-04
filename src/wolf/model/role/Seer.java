@@ -18,7 +18,7 @@ public class Seer extends AbstractRole {
 
   @Override
   public void onGameStart() {
-    List<Player> villagers = getStage().getPlayers(Faction.VILLAGERS);
+    List<Player> villagers = getStage().getVisiblePlayers(Faction.VILLAGERS);
     Player peek = villagers.get((int) (Math.random() * villagers.size()));
     peekHistory.add(peek);
 
@@ -49,6 +49,12 @@ public class Seer extends AbstractRole {
   @Override
   public void onPlayerSwitch() {
     // send new player a list of all previous peeks.
+    super.onPlayerSwitch();
+    int i=0;
+    for (Player p : peekHistory) {
+      getStage().getBot().sendMessage(getPlayer().getName(),
+          "Night " + i++ + ": " + p.getName() + " - " + p.getRole().getVisibleFaction());
+    }
   }
 
   @Override

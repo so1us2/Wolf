@@ -62,7 +62,6 @@ public abstract class AbstractRole {
   * Subclasses can override this to give the new player relevant information that
   * he/she might need to fulfill the duties of their role. 
   */
-
   public void onPlayerSwitch() {
     getStage().getBot().sendMessage(player.getName(), "Welcome to the game. You are a " + role);
   }

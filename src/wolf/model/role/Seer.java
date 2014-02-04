@@ -2,14 +2,13 @@ package wolf.model.role;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import wolf.action.Action;
 import wolf.action.Visibility;
 import wolf.model.Faction;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
 public class Seer extends AbstractRole {
 
@@ -18,7 +17,7 @@ public class Seer extends AbstractRole {
 
   @Override
   public void onGameStart() {
-    List<Player> villagers = getStage().getVisiblePlayers(Faction.VILLAGERS);
+    List<Player> villagers = getStage().getPlayers(Faction.VILLAGERS);
     Player peek = villagers.get((int) (Math.random() * villagers.size()));
     peekHistory.add(peek);
 
@@ -38,7 +37,7 @@ public class Seer extends AbstractRole {
     Player player = getPlayer();
     peekHistory.add(peekTarget);
 
-    if (peekTarget.getRole().getVisibleFaction() == Faction.WOLVES) {
+    if (peekTarget.getRole().getFaction() == Faction.WOLVES) {
       getStage().getBot().sendMessage(player.getName(),
           "RAWRRRR!! " + peekTarget.getName() + " is a wolf.");
     } else {
@@ -53,7 +52,7 @@ public class Seer extends AbstractRole {
     int i=0;
     for (Player p : peekHistory) {
       getStage().getBot().sendMessage(getPlayer().getName(),
-          "Night " + i++ + ": " + p.getName() + " - " + p.getRole().getVisibleFaction());
+          "Night " + i++ + ": " + p.getName() + " - " + p.getRole().getFaction());
     }
   }
 

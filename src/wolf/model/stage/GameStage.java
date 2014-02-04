@@ -1,11 +1,15 @@
 package wolf.model.stage;
 
-import static com.google.common.collect.Iterables.filter;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import wolf.WolfException;
 import wolf.action.Action;
 import wolf.action.game.ListPlayersAction;
@@ -15,6 +19,7 @@ import wolf.action.setup.CommandsAction;
 import wolf.bot.IBot;
 import wolf.model.Faction;
 import wolf.model.GameConfig;
+import wolf.model.GameSummary;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.VotingHistory;
@@ -23,12 +28,7 @@ import wolf.model.role.Priest;
 import wolf.model.role.Vigilante;
 import wolf.model.role.Wolf;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
+import static com.google.common.collect.Iterables.filter;
 
 public class GameStage extends Stage {
 
@@ -208,42 +208,12 @@ public class GameStage extends Stage {
 
     if (winner != null) {
       getBot().sendMessage("The " + winner.getPluralForm() + " have won the game!");
-      printGameLog(winner);
+      GameSummary.printGameLog(getBot(), players, winner);
       getBot().setStage(new InitialStage(getBot()));
       getBot().unmuteAll();
     }
 
     return winner;
-  }
-
-  public void printGameLog(Faction winner) {
-    // TODO: Sort the outputs by alive/dead and then alphabetically.
-
-    getBot().sendMessage("");
-    getBot().sendMessage("Winners");
-    getBot().sendMessage("");
-
-    for (Player p : getAllPlayers(winner)) {
-      StringBuilder output = new StringBuilder();
-      output.append(p.getName()).append(" (").append(p.getRole()).append(")");
-      if (p.isAlive()) {
-        output.append(" *ALIVE*");
-      }
-      getBot().sendMessage(output.toString());
-    }
-
-    getBot().sendMessage("");
-    getBot().sendMessage("Losers");
-    getBot().sendMessage("");
-
-    for (Player p : getAllOtherPlayers(winner)) {
-      StringBuilder output = new StringBuilder();
-      output.append(p.getName()).append(" (").append(p.getRole()).append(")");
-      if (p.isAlive()) {
-        output.append(" *ALIVE*");
-      }
-      getBot().sendMessage(output.toString());
-    }
   }
 
   private Map<Faction, Integer> getFactionCounts() {
@@ -254,8 +224,8 @@ public class GameStage extends Stage {
     }
 
     for (Player p : getPlayers()) {
-      Integer c = ret.get(p.getRole().getVisibleFaction());
-      ret.put(p.getRole().getVisibleFaction(), c + 1);
+      Integer c = ret.get(p.getRole().getFaction());
+      ret.put(p.getRole().getFaction(), c + 1);
     }
 
     return ret;
@@ -297,36 +267,6 @@ public class GameStage extends Stage {
     List<Player> ret = Lists.newArrayList();
     for (Player player : getPlayers()) {
       if (player.getRole().getFaction() == faction) {
-        ret.add(player);
-      }
-    }
-    return ret;
-  }
-
-  public List<Player> getAllPlayers(Faction faction) {
-    List<Player> ret = Lists.newArrayList();
-    for (Player player : players) {
-      if (player.getRole().getFaction() == faction) {
-        ret.add(player);
-      }
-    }
-    return ret;
-  }
-
-  public List<Player> getAllOtherPlayers(Faction faction) {
-      List<Player> ret = Lists.newArrayList();
-    for (Player player : players) {
-        if (player.getRole().getFaction() != faction) {
-          ret.add(player);
-        }
-      }
-      return ret;
-    }
-
-  public List<Player> getVisiblePlayers(Faction faction) {
-    List<Player> ret = Lists.newArrayList();
-    for (Player player : getPlayers()) {
-      if (player.getRole().getVisibleFaction() == faction) {
         ret.add(player);
       }
     }

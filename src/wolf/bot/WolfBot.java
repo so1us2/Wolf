@@ -1,5 +1,7 @@
 package wolf.bot;
 
+import java.util.List;
+
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
 
@@ -26,12 +28,12 @@ public abstract class WolfBot extends PircBot {
 
     joinChannel(channel);
   }
-  
+
   public void sendMessage(String message) {
     sendMessage(channel, message);
   }
-  
-  public void muteAll(){
+
+  public void muteAll() {
     setMode(channel, "+m");
     for (User user : getUsers(channel)) {
       deVoice(channel, user.getNick());
@@ -40,6 +42,17 @@ public abstract class WolfBot extends PircBot {
 
   public void unmute(String player) {
     voice(channel, player);
+  }
+
+  public void unmutePlayers(List<String> players) {
+    StringBuilder output = new StringBuilder();
+
+    for (String s : players) {
+      output.append("+v ").append(s).append(" ");
+    }
+    output.setLength(output.length() - 1);
+
+    this.sendRawLine("MODE " + channel + output.toString());
   }
 
   public void unmuteAll() {
@@ -55,8 +68,9 @@ public abstract class WolfBot extends PircBot {
   }
 
   @Override
-  protected final void onMessage(String channel, String sender, String login, String hostname, String message) {
-    onMessage(sender,message);
+  protected final void onMessage(String channel, String sender, String login, String hostname,
+      String message) {
+    onMessage(sender, message);
   }
 
   @Override

@@ -26,27 +26,31 @@ public class GameSummary {
     bot.sendMessage("Winners");
     bot.sendMessage("");
 
+    StringBuilder output = new StringBuilder();
     for (Player p : winners) {
-      StringBuilder output = new StringBuilder();
       output.append(p.getName()).append(" (").append(p.getRole()).append(")");
       if (p.isAlive()) {
         output.append(" *ALIVE*");
       }
-      bot.sendMessage(output.toString());
+      output.append(", ");
     }
+    output.setLength(output.length() - 2);
+    bot.sendMessage(output.toString());
 
     bot.sendMessage("");
     bot.sendMessage("Losers");
     bot.sendMessage("");
 
+    output = new StringBuilder();
     for (Player p : losers) {
-      StringBuilder output = new StringBuilder();
       output.append(p.getName()).append(" (").append(p.getRole()).append(")");
       if (p.isAlive()) {
         output.append(" *ALIVE*");
       }
-      bot.sendMessage(output.toString());
+      output.append(", ");
     }
+    output.setLength(output.length() - 2);
+    bot.sendMessage(output.toString());
   }
 
 }

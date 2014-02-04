@@ -6,6 +6,7 @@ import wolf.action.Action;
 import wolf.action.Visibility;
 import wolf.model.Faction;
 import wolf.model.Player;
+import wolf.model.Role;
 import wolf.model.stage.GameStage;
 
 import com.google.common.collect.ImmutableList;
@@ -14,12 +15,16 @@ import com.google.common.collect.Lists;
 public class Seer extends AbstractRole {
 
   private Player peekTarget;
-  private List<Player> peekHistory = Lists.newArrayList();
+  private final List<Player> peekHistory = Lists.newArrayList();
 
   @Override
   public void onGameStart() {
-    List<Player> villagers = getStage().getPlayers(Faction.VILLAGERS);
+    // List<Player> villagers = getStage().getPlayers(Faction.VILLAGERS);
+    // villagers.remove(getPlayer());
+
+    List<Player> villagers = getStage().getPlayers(Role.VILLAGER);
     Player peek = villagers.get((int) (Math.random() * villagers.size()));
+
     peekHistory.add(peek);
 
     getBot().sendMessage(getPlayer().getName(), peek + " is a human.");
@@ -32,7 +37,7 @@ public class Seer extends AbstractRole {
     getBot().sendMessage(getPlayer().getName(),
         "Who do you want to peek?  Message me !peek <target>");
   }
-  
+
   @Override
   public void onNightEnds() {
     Player player = getPlayer();
@@ -45,12 +50,12 @@ public class Seer extends AbstractRole {
       getStage().getBot().sendMessage(player.getName(), peekTarget.getName() + " is a villager.");
     }
   }
-  
+
   @Override
   public void onPlayerSwitch() {
     // send new player a list of all previous peeks.
     super.onPlayerSwitch();
-    int i=0;
+    int i = 0;
     for (Player p : peekHistory) {
       getStage().getBot().sendMessage(getPlayer().getName(),
           "Night " + i++ + ": " + p.getName() + " - " + p.getRole().getFaction());
@@ -66,13 +71,13 @@ public class Seer extends AbstractRole {
   public List<Action> getNightActions() {
     return ImmutableList.<Action>of(peekAction);
   }
-  
+
   @Override
   public String getDescription() {
     return "The Seer peeks a player each night and finds out if the player is a villager or a wolf.";
   }
 
-  private Action peekAction = new Action("peek", "target") {
+  private final Action peekAction = new Action("peek", "target") {
     @Override
     protected void execute(Player invoker, List<String> args) {
       GameStage stage = Seer.this.getStage();

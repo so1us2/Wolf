@@ -10,6 +10,8 @@ import wolf.action.Visibility;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
 
+import com.google.common.base.Joiner;
+
 public class AnnounceAction extends Action {
 
   public AnnounceAction(GameStage stage) {
@@ -19,11 +21,8 @@ public class AnnounceAction extends Action {
   @Override
   protected void execute(Player invoker, List<String> args) {
     StringBuilder output = new StringBuilder();
-    for (String s : args) {
-      output.append(s).append(" ");
-    }
-    output.setLength(output.length() - 1);
-    getBot().sendMessage("ANNOUNCEMENT - " + output.toString());
+    output.append("ANNOUNCEMENT - ").append(Joiner.on(" ").join(args));
+    getBot().sendMessage(output.toString());
   }
 
   @Override

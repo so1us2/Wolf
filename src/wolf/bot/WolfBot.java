@@ -1,7 +1,5 @@
 package wolf.bot;
 
-import java.util.List;
-
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
 
@@ -45,16 +43,16 @@ public abstract class WolfBot extends PircBot {
   }
 
   // Needs to be tested using actual IRC.
-  public void unmutePlayers(List<String> players) {
-    StringBuilder output = new StringBuilder();
-
-    for (String s : players) {
-      output.append("+v ").append(s).append(" ");
-    }
-    output.setLength(output.length() - 1);
-
-    this.sendRawLine("MODE " + channel + output.toString());
-  }
+  // public void unmutePlayers(List<String> players) {
+  // StringBuilder output = new StringBuilder();
+  //
+  // for (String s : players) {
+  // output.append("+v ").append(s).append(" ");
+  // }
+  // output.setLength(output.length() - 1);
+  //
+  // this.sendRawLine("MODE " + channel + output.toString());
+  // }
 
   public void unmuteAll() {
     setMode(channel, "-m");

@@ -1,7 +1,5 @@
 package wolf.bot;
 
-import java.util.List;
-
 import wolf.model.stage.Stage;
 
 public interface IBot {
@@ -22,6 +20,6 @@ public interface IBot {
 
   public void unmute(String player);
 
-  public void unmutePlayers(List<String> players);
+  // public void unmutePlayers(List<String> players);
 
 }

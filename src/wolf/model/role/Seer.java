@@ -22,7 +22,7 @@ public class Seer extends AbstractRole {
     Player peek = villagers.get((int) (Math.random() * villagers.size()));
     peekHistory.add(peek);
 
-    getBot().sendMessage(getPlayer().getName(), peek + " is not a wolf.");
+    getBot().sendMessage(getPlayer().getName(), peek + " is a human.");
   }
 
   @Override

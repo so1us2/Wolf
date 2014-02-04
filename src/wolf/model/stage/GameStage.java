@@ -102,7 +102,7 @@ public class GameStage extends Stage {
 
   private void moveToDay() {
 
-    Set<Player> dying = Sets.newHashSet();
+    Set<Player> dying = Sets.newTreeSet();
     List<Player> targets = Lists.newArrayList();
 
     for (Player p : getPlayers(Role.WOLF)) {
@@ -208,7 +208,7 @@ public class GameStage extends Stage {
 
     if (winner != null) {
       getBot().sendMessage("The " + winner.getPluralForm() + " have won the game!");
-      printGameLog();
+      printGameLog(winner);
       getBot().setStage(new InitialStage(getBot()));
       getBot().unmuteAll();
     }
@@ -216,8 +216,34 @@ public class GameStage extends Stage {
     return winner;
   }
 
-  public void printGameLog() {
-    // need to print out a list of all players in game and their roles.
+  public void printGameLog(Faction winner) {
+    // TODO: Sort the outputs by alive/dead and then alphabetically.
+
+    getBot().sendMessage("");
+    getBot().sendMessage("Winners");
+    getBot().sendMessage("");
+
+    for (Player p : getAllPlayers(winner)) {
+      StringBuilder output = new StringBuilder();
+      output.append(p.getName()).append(" (").append(p.getRole()).append(")");
+      if (p.isAlive()) {
+        output.append(" *ALIVE*");
+      }
+      getBot().sendMessage(output.toString());
+    }
+
+    getBot().sendMessage("");
+    getBot().sendMessage("Losers");
+    getBot().sendMessage("");
+
+    for (Player p : getAllOtherPlayers(winner)) {
+      StringBuilder output = new StringBuilder();
+      output.append(p.getName()).append(" (").append(p.getRole()).append(")");
+      if (p.isAlive()) {
+        output.append(" *ALIVE*");
+      }
+      getBot().sendMessage(output.toString());
+    }
   }
 
   private Map<Faction, Integer> getFactionCounts() {
@@ -228,8 +254,8 @@ public class GameStage extends Stage {
     }
 
     for (Player p : getPlayers()) {
-      Integer c = ret.get(p.getRole().getFaction());
-      ret.put(p.getRole().getFaction(), c + 1);
+      Integer c = ret.get(p.getRole().getVisibleFaction());
+      ret.put(p.getRole().getVisibleFaction(), c + 1);
     }
 
     return ret;
@@ -266,6 +292,36 @@ public class GameStage extends Stage {
     }
     return ret;
   }
+
+  public List<Player> getPlayers(Faction faction) {
+    List<Player> ret = Lists.newArrayList();
+    for (Player player : getPlayers()) {
+      if (player.getRole().getFaction() == faction) {
+        ret.add(player);
+      }
+    }
+    return ret;
+  }
+
+  public List<Player> getAllPlayers(Faction faction) {
+    List<Player> ret = Lists.newArrayList();
+    for (Player player : players) {
+      if (player.getRole().getFaction() == faction) {
+        ret.add(player);
+      }
+    }
+    return ret;
+  }
+
+  public List<Player> getAllOtherPlayers(Faction faction) {
+      List<Player> ret = Lists.newArrayList();
+    for (Player player : players) {
+        if (player.getRole().getFaction() != faction) {
+          ret.add(player);
+        }
+      }
+      return ret;
+    }
 
   public List<Player> getVisiblePlayers(Faction faction) {
     List<Player> ret = Lists.newArrayList();

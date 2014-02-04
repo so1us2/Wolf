@@ -9,9 +9,9 @@ import wolf.model.role.Vigilante;
 import wolf.model.stage.GameStage;
 
 /**
- * Tests to see if Bartender can serve drinks and if Vigilante shot is protectable. Also checks if Vigilante can pass properly.
+ * Tests to see if Bartender can serve drinks and if Vigilante shot works. Also checks if Vigilante can pass properly.
  */
-public class AdvancedRoleTest extends SimulationTest {
+public class AdvancedRoleTest2 extends SimulationTest {
 
   @BeforeMethod
   public void before() {
@@ -97,32 +97,29 @@ public class AdvancedRoleTest extends SimulationTest {
   }
 
   private void night2Actions() {
-    bot.privMsg("Jason", "!protect Jason");
+    bot.privMsg("Jason", "!protect Potter");
     bot.privMsg("Tom", "!peek Potter");
     bot.privMsg("Potter", "!kill Tom");
     bot.privMsg("Ian", "!shoot Jason");
     bot.privMsg("Mongo", "!drink Ian");
 
     checkForMessage("RAWRRRR!! Potter is a wolf.");
-    checkForMessage("Your wish to protect Jason has been received.");
+    checkForMessage("Your wish to protect Potter has been received.");
     checkForMessage("You aim at Jason.");
     checkForMessage("You plan to make a drink for Ian.");
     checkForMessage("Ian has a drink waiting for them.");
-    checkForMessage("The sun dawns and you find Tom dead in the village.");
+    checkForMessage("The sun dawns and you find Jason and Tom dead in the village.");
     bot.getMessageLog().clear();
   }
 
   private void day3Votes() {
-    bot.msg("Jason", "!players");
-    checkForMessage("Alive players: [Ian, Jason, Mongo, Potter]");
+    bot.msg("Ian", "!players");
+    checkForMessage("Alive players: [Ian, Mongo, Potter]");
 
-    bot.privMsg("Jason", "!vote Potter");
-    bot.privMsg("Potter", "!vote Jason");
+    bot.privMsg("Potter", "!vote Ian");
     bot.privMsg("Ian", "!vote Potter");
     bot.privMsg("Mongo", "!vote Potter");
     
     checkForMessage("The Villagers have won the game!");
   }
-
-
 }

@@ -40,7 +40,8 @@ public class Bartender extends AbstractRole {
     return ImmutableList.<Action>of(drinkAction, passAction);
   }
 
-  public Player getDrinkTarget() {
+  @Override
+  public Player getTarget() {
     return drinkTarget;
   }
 

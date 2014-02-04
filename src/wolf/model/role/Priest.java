@@ -38,7 +38,8 @@ public class Priest extends AbstractRole {
     return ImmutableList.<Action>of(protectAction);
   }
 
-  public Player getProtectTarget() {
+  @Override
+  public Player getTarget() {
     return protectTarget;
   }
 

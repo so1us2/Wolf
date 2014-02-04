@@ -1,5 +1,6 @@
 package wolf.model;
 
+import static wolf.model.Faction.DEMONS;
 import static wolf.model.Faction.VILLAGERS;
 import static wolf.model.Faction.WOLVES;
 import wolf.WolfException;
@@ -7,7 +8,7 @@ import wolf.WolfException;
 public enum Role {
 
   VILLAGER(VILLAGERS), WOLF(WOLVES), SEER(VILLAGERS), PRIEST(VILLAGERS), VIGILANTE(VILLAGERS),
-  BARTENDER(VILLAGERS), HUNTER(VILLAGERS), MINION(VILLAGERS);
+  BARTENDER(VILLAGERS), HUNTER(VILLAGERS), MINION(VILLAGERS), DEMON(DEMONS);
 
   private final Faction faction;
 

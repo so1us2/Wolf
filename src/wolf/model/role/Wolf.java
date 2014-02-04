@@ -37,7 +37,8 @@ public class Wolf extends AbstractRole {
     return ImmutableList.<Action>of(killAction);
   }
   
-  public Player getKillTarget() {
+  @Override
+  public Player getTarget() {
     return killTarget;
   }
 

@@ -9,70 +9,53 @@ import wolf.model.stage.GameStage;
 
 import com.google.common.collect.ImmutableList;
 
-public class Vigilante extends AbstractRole {
+public class Demon extends AbstractRole {
 
-  public static String HOLD_FIRE_MESSAGE = "You holster your pistol.";
+  public static String NO_KILL_MESSAGE = "You resist the urge to rip someone apart.";
 
-  private boolean hasFired = false;
-  private boolean hasActed = false;
-  private Player killTarget;
+  boolean hasActed = false;
+  Player killTarget;
 
   @Override
   public void onNightBegins() {
-    if (!hasFired) {
+    hasActed = false;
     killTarget = null;
     getBot().sendMessage(getPlayer().getName(),
-              "Do you want to use your shot?  Message me !shoot <target> to shoot or !pass to hold fire.");
-    }
-  }
-
-  @Override
-  public void onNightEnds() {
-    if (killTarget != null) {
-      hasFired = true;
-      killTarget = null;
-    }
-
-    hasActed = false;
+        "Who do you want to kill?  Message me !kill <target> or !pass to kill no one.");
   }
 
   @Override
   public boolean isFinishedWithNightAction() {
-    return hasActed || hasFired;
+    return hasActed;
   }
 
   @Override
   public List<Action> getNightActions() {
-    if (hasFired) {
-      return ImmutableList.of();
-    } else {
-      return ImmutableList.<Action>of(shootAction, passAction);
-    }
+    return ImmutableList.<Action>of(killAction, passAction);
   }
 
-  @Override
   public Player getTarget() {
     return killTarget;
   }
 
   @Override
   public String getDescription() {
-    return "Once per game, the Vigilante can kill a player at night.";
+    return "The Demon is a solo role that wins by killing everyone else.";
   }
 
-  private Action shootAction = new Action("shoot", "target") {
+  private Action killAction = new Action("kill", "target") {
     @Override
     protected void execute(Player invoker, List<String> args) {
-      GameStage stage = Vigilante.this.getStage();
+      GameStage stage = Demon.this.getStage();
 
       hasActed = true;
       killTarget = stage.getPlayer(args.get(0));
-      stage.getBot().sendMessage(invoker.getName(), "You aim at " + killTarget + ".");
+      stage.getBot().sendMessage(invoker.getName(), "You plan to kill " + killTarget + ".");
     }
 
     @Override
     public String getDescription() {
-      return "You have a single bullet. Use it wisely.";
+      return "You may kill someone every night if you so choose.";
     }
 
     @Override
@@ -84,16 +67,16 @@ public class Vigilante extends AbstractRole {
   private Action passAction = new Action("pass") {
     @Override
     protected void execute(Player invoker, List<String> args) {
-      GameStage stage = Vigilante.this.getStage();
+      GameStage stage = Demon.this.getStage();
 
       hasActed = true;
       killTarget = null;
-      stage.getBot().sendMessage(invoker.getName(), HOLD_FIRE_MESSAGE);
+      stage.getBot().sendMessage(invoker.getName(), NO_KILL_MESSAGE);
     }
 
     @Override
     public String getDescription() {
-      return "You hold your fire and do not kill anyone.";
+      return "You refrain from slaughtering anyone for the night.";
     }
 
     @Override

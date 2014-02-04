@@ -29,6 +29,7 @@ public abstract class AbstractRole implements Comparable<AbstractRole> {
     roleMap.put(Role.BARTENDER, Bartender.class);
     roleMap.put(Role.HUNTER, Hunter.class);
     roleMap.put(Role.MINION, Minion.class);
+    roleMap.put(Role.DEMON, Demon.class);
   }
 
   private final Role role;
@@ -49,6 +50,10 @@ public abstract class AbstractRole implements Comparable<AbstractRole> {
 
   public Faction getVictoryTeamFaction() {
     return role.getFaction();
+  }
+
+  public Player getTarget() {
+    return null;
   }
 
   public void onGameStart() {}

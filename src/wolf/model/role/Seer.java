@@ -31,6 +31,11 @@ public class Seer extends AbstractRole {
   }
 
   @Override
+  public Player getTarget() {
+    return peekTarget;
+  }
+
+  @Override
   public void onNightBegins() {
     peekTarget = null;
 
@@ -43,12 +48,17 @@ public class Seer extends AbstractRole {
     Player player = getPlayer();
     peekHistory.add(peekTarget);
 
-    if (peekTarget.getRole().getFaction() == Faction.WOLVES) {
-      getStage().getBot().sendMessage(player.getName(),
-          "RAWRRRR!! " + peekTarget.getName() + " is a wolf.");
-    } else {
-      getStage().getBot().sendMessage(player.getName(), peekTarget.getName() + " is a villager.");
-    }
+    // if (peekTarget.getRole().getFaction() == Faction.WOLVES) {
+    // getStage().getBot().sendMessage(player.getName(),
+    // "RAWRRRR!! " + peekTarget.getName() + " is a wolf.");
+    // } else {
+    // getStage().getBot().sendMessage(player.getName(), peekTarget.getName() + " is a villager.");
+    // }
+    getStage().getBot()
+        .sendMessage(
+            player.getName(),
+            peekTarget.getName() + " is a " + peekTarget.getRole().getFaction().getSingularForm()
+                + ".");
   }
 
   @Override

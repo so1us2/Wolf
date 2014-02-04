@@ -24,6 +24,7 @@ import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.VotingHistory;
 import wolf.model.role.Bartender;
+import wolf.model.role.Demon;
 import wolf.model.role.Priest;
 import wolf.model.role.Vigilante;
 import wolf.model.role.Wolf;
@@ -118,7 +119,7 @@ public class GameStage extends Stage {
 
     for (Player p : getPlayers(Role.WOLF)) {
       Wolf wolf = (Wolf) p.getRole();
-      targets.add(wolf.getKillTarget());
+      targets.add(wolf.getTarget());
     }
 
     if (targets.contains(null)) {
@@ -136,9 +137,36 @@ public class GameStage extends Stage {
     }
 
     for (Player p : getPlayers(Role.VIGILANTE)) {
-      Vigilante vig = (Vigilante) p.getRole();
-      if (vig.getKillTarget() != null && !isProtected(vig.getKillTarget())) {
-        dying.add(vig.getKillTarget());
+      target = ((Vigilante) p.getRole()).getTarget();
+      if (target != null && !isProtected(target)) {
+        dying.add(target);
+      }
+    }
+
+    for (Player p : getPlayers(Role.DEMON)) {
+      target = ((Demon) p.getRole()).getTarget();
+      if (target != null && !isProtected(target)) {
+        dying.add(target);
+      }
+    }
+
+    // Kill anyone who targets the demon.
+    if (!getPlayers(Role.DEMON).isEmpty()) {
+      boolean didWolvesTarget = false;
+      for (Player p : getPlayers()) {
+        if (p.getRole().getTarget() != null) {
+          if (p.getRole().getTarget().getRole().getType() == Role.DEMON) {
+            if (p.getRole().getType() == Role.WOLF) {
+              didWolvesTarget = true;
+            } else {
+              dying.add(p);
+            }
+          }
+        }
+      }
+      if (didWolvesTarget) {
+        List<Player> wolves = getPlayers(Role.WOLF);
+        dying.add(wolves.get((int) (Math.random() * wolves.size())));
       }
     }
 
@@ -146,6 +174,15 @@ public class GameStage extends Stage {
 
     for (Player player : getPlayers()) {
       player.getRole().onNightEnds();
+    }
+
+    // Should this code be in bartender.onNightEnd ? Should bartender get to give drink even if they
+    // die that night?
+    for (Player p : getPlayers(Role.BARTENDER)) {
+      target = ((Bartender) p.getRole()).getTarget();
+      if (target != null) {
+        getBot().sendMessage(target.getName() + " has a drink waiting for them.");
+      }
     }
 
     if (!dying.isEmpty()) {
@@ -162,12 +199,6 @@ public class GameStage extends Stage {
       getBot().sendMessage(NONE_DEAD_MSG);
     }
 
-    for (Player p : getPlayers(Role.BARTENDER)) {
-      Bartender b = (Bartender) p.getRole();
-      if (b.getDrinkTarget() != null) {
-        getBot().sendMessage(b.getDrinkTarget() + " has a drink waiting for them.");
-      }
-    }
 
     if (checkForWinner() != null) {
       return;
@@ -178,9 +209,12 @@ public class GameStage extends Stage {
   }
 
   private boolean isProtected(Player player) {
+    if (player.getRole().getType() == Role.DEMON) {
+      return true;
+    }
     for (Player p : getPlayers(Role.PRIEST)) {
       Priest priest = (Priest) p.getRole();
-      if (Objects.equal(priest.getProtectTarget(), player)) {
+      if (Objects.equal(priest.getTarget(), player)) {
         return true;
       }
     }
@@ -211,11 +245,17 @@ public class GameStage extends Stage {
 
     if (factionCount.get(Faction.VILLAGERS) == numAlive) {
       winner = Faction.VILLAGERS;
-    } else if (factionCount.get(Faction.WOLVES) >= factionCount.get(Faction.VILLAGERS)) {
-      if (getPlayers(Role.HUNTER).isEmpty()) {
-        winner = Faction.WOLVES;
-      } else {
-        winner = Faction.VILLAGERS;
+    } else if (factionCount.get(Faction.DEMONS) == 0) {
+      if (factionCount.get(Faction.WOLVES) >= factionCount.get(Faction.VILLAGERS)) {
+        if (getPlayers(Role.HUNTER).isEmpty()) {
+          winner = Faction.WOLVES;
+        } else {
+          winner = Faction.VILLAGERS;
+        }
+      }
+    } else {
+      if (factionCount.get(Faction.DEMONS) >= Math.ceil(((double) numAlive) / 2)) {
+        winner = Faction.DEMONS;
       }
     }
 

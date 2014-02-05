@@ -6,13 +6,12 @@ import org.testng.collections.Lists;
 
 import wolf.WolfException;
 import wolf.bot.IBot;
-import wolf.model.Player;
 
 import com.google.common.base.Joiner;
 
 /**
  * Private chat server that announces who is talking with whom to the public chat so people know.
- * TODOS: Need way to control entry. Needs some kind of invite / acceptance model.
+ * May want to move to its on PircBot as well so it can be in a separate window from game actions in IRC.
  * @author Tom
  */
 public class ChatServer {
@@ -25,7 +24,7 @@ public class ChatServer {
     rooms = Lists.newArrayList();
   }
 
-  private ChatRoom findRoomForPlayer(Player sender) {
+  public ChatRoom findRoomForPlayer(String sender) {
     for (ChatRoom room : rooms) {
       if (room.contains(sender)) {
         return room;
@@ -34,7 +33,7 @@ public class ChatServer {
     return null;
   }
 
-  private ChatRoom findRoomByName(String name) {
+  public ChatRoom findRoomByName(String name) {
     for (ChatRoom room : rooms) {
       if (room.getName().equalsIgnoreCase(name)) {
         return room;
@@ -47,42 +46,55 @@ public class ChatServer {
     return bot;
   }
 
-  public void sendMessage(Player sender, String message) {
+  public void sendMessage(String sender, String message) {
     ChatRoom room = findRoomForPlayer(sender);
     if (room == null) {
-      throw new WolfException(sender.getName() + " is not in a room.");
+      throw new WolfException("You are not in a room.");
     }
     room.sendMessage(sender, message);
   }
 
-  public void startRoom(List<Player> founders, String name) {
+  public void startRoom(String founder, String name) {
     if (findRoomByName(name) != null) {
       throw new WolfException("A room by that name already exists.");
     }
-    ChatRoom newRoom = new ChatRoom(this, name, founders);
+    ChatRoom newRoom = new ChatRoom(this, name);
+    newRoom.authorizePlayer(founder);
     rooms.add(newRoom);
+    joinRoom(founder, name);
   }
 
   public void closeRoom(ChatRoom room) {
     rooms.remove(room);
   }
 
-  public void joinRoom(Player p, String name) {
-    ChatRoom room = findRoomByName(name);
+  public void joinRoom(String player, String roomName) {
+    ChatRoom room = findRoomByName(roomName);
     if (room == null) {
-      throw new WolfException("There is no room named " + name);
+      throw new WolfException("There is no room named " + roomName);
     }
-    ChatRoom oldRoom = findRoomForPlayer(p);
+
+    // Currently if a player fails to join a new room, they still leave their old. Not sure this is
+    // best behavior.
+    ChatRoom oldRoom = findRoomForPlayer(player);
     if (oldRoom != null) {
-      oldRoom.leave(p);
+      oldRoom.leave(player);
     }
-    room.join(p);
+    room.join(player);
   }
 
   public void listRooms() {
-    for (ChatRoom r : rooms) {
-      bot.sendMessage(r.getName() + ": " + Joiner.on(",").join(r.getMembers()));
+    if (rooms.isEmpty()) {
+      bot.sendMessage("There are currently no rooms.");
+    } else {
+      for (ChatRoom r : rooms) {
+        bot.sendMessage(r.getName() + ": " + Joiner.on(",").join(r.getMembers()));
+      }
     }
+  }
+
+  public void clearAllRooms() {
+    rooms.clear();
   }
 
 }

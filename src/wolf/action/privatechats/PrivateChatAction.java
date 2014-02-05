@@ -1,7 +1,6 @@
 package wolf.action.privatechats;
 
 import wolf.action.Action;
-import wolf.action.Visibility;
 import wolf.model.chat.ChatServer;
 
 public abstract class PrivateChatAction extends Action {
@@ -15,11 +14,6 @@ public abstract class PrivateChatAction extends Action {
 
   public ChatServer getServer() {
     return server;
-  }
-
-  @Override
-  public Visibility getVisibility() {
-    return Visibility.PRIVATE;
   }
 
 }

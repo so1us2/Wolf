@@ -30,7 +30,7 @@ public abstract class Action implements Comparable<Action> {
     checkNotNull(invoker);
     checkNotNull(args);
 
-    if (args.size() != argNames.size()) {
+    if (argSizeMatters() && (args.size() != argNames.size())) {
       throw new WolfException("Expected " + argNames.size() + " arguments.");
     }
 
@@ -38,11 +38,19 @@ public abstract class Action implements Comparable<Action> {
       throw new WolfException("You must be an admin to do that.");
     }
 
-    if (!invoker.isAlive()) {
+    if (onlyIfAlive() && !invoker.isAlive()) {
       throw new WolfException("You cannot do anything while dead.");
     }
 
     execute(invoker, args);
+  }
+
+  protected boolean onlyIfAlive() {
+    return true;
+  }
+
+  protected boolean argSizeMatters() {
+    return true;
   }
 
   protected abstract void execute(Player invoker, List<String> args);

@@ -1,14 +1,15 @@
 package wolf.action.moderator;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
-import com.google.common.base.Joiner;
 import wolf.WolfException;
 import wolf.action.Action;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Joiner;
 
 public class AnnounceAction extends Action {
 
@@ -36,13 +37,23 @@ public class AnnounceAction extends Action {
   }
 
   @Override
-  public String getDescription() {
-    return "Have the bot send an announcement to the channel.";
+  public boolean requiresAdmin() {
+    return true;
   }
 
   @Override
-  public boolean requiresAdmin() {
-    return true;
+  protected boolean argSizeMatters() {
+    return false;
+  }
+
+  @Override
+  protected boolean onlyIfAlive() {
+    return false;
+  }
+
+  @Override
+  public String getDescription() {
+    return "Makes an announcement to the channel.";
   }
 
 }

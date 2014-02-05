@@ -2,19 +2,18 @@ package wolf.model.role;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import wolf.action.Action;
 import wolf.action.Visibility;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
 
-import com.google.common.collect.ImmutableList;
-
 public class Demon extends AbstractRole {
 
   public static String NO_KILL_MESSAGE = "You resist the urge to rip someone apart.";
 
-  boolean hasActed = false;
-  Player killTarget;
+  private boolean hasActed = false;
+  private Player killTarget;
 
   @Override
   public void onNightBegins() {

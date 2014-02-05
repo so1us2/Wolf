@@ -16,6 +16,13 @@ import wolf.action.moderator.AbortGameAction;
 import wolf.action.moderator.AnnounceAction;
 import wolf.action.moderator.GetVotersAction;
 import wolf.action.moderator.ReminderAction;
+import wolf.action.privatechats.AuthorizePlayerAction;
+import wolf.action.privatechats.ChatAction;
+import wolf.action.privatechats.JoinRoomAction;
+import wolf.action.privatechats.LeaveRoomAction;
+import wolf.action.privatechats.ListRoomsAction;
+import wolf.action.privatechats.NewRoomAction;
+import wolf.action.privatechats.RevokeAuthorizationAction;
 import wolf.bot.IBot;
 import wolf.model.Faction;
 import wolf.model.GameConfig;
@@ -23,6 +30,7 @@ import wolf.model.GameSummary;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.VotingHistory;
+import wolf.model.chat.ChatServer;
 import wolf.model.role.Demon;
 import wolf.model.role.Priest;
 import wolf.model.role.Vigilante;
@@ -45,8 +53,10 @@ public class GameStage extends Stage {
   private final CommandsAction commandsAction = new CommandsAction(this);
   private final List<Action> daytimeActions = Lists.newArrayList();
   private final List<Action> adminActions = Lists.newArrayList();
+  private final List<Action> chatActions = Lists.newArrayList();
   private final VotingHistory votingHistory = new VotingHistory();
   private final Map<Player, Player> votesToDayKill = Maps.newLinkedHashMap();
+  private ChatServer server;
 
   /**
    * The set of all players (even dead ones).
@@ -63,6 +73,8 @@ public class GameStage extends Stage {
     this.config = config;
     this.players = ImmutableSortedSet.copyOf(players);
 
+    server = new ChatServer(bot);
+
     daytimeActions.add(commandsAction);
     daytimeActions.add(new VoteAction(this));
     daytimeActions.add(new VoteCountAction(this));
@@ -72,6 +84,14 @@ public class GameStage extends Stage {
     adminActions.add(new AbortGameAction(this));
     adminActions.add(new GetVotersAction(this));
     adminActions.add(new ReminderAction(this));
+
+    chatActions.add(new AuthorizePlayerAction(server));
+    chatActions.add(new ChatAction(server));
+    chatActions.add(new JoinRoomAction(server));
+    chatActions.add(new LeaveRoomAction(server));
+    chatActions.add(new ListRoomsAction(server));
+    chatActions.add(new NewRoomAction(server));
+    chatActions.add(new RevokeAuthorizationAction(server));
 
     for (Player player : players) {
       player.getRole().setStage(this);
@@ -285,6 +305,8 @@ public class GameStage extends Stage {
 
     getBot().muteAll();
 
+    server.clearAllRooms();
+
     getBot().sendMessage("Night falls on the village.");
 
     for (Player player : getPlayers()) {
@@ -414,6 +436,7 @@ public class GameStage extends Stage {
     }
     if (isDay()) {
       actions.addAll(daytimeActions);
+      actions.addAll(chatActions);
     } else {
       List<Action> ret = Lists.newArrayList();
       ret.add(commandsAction);

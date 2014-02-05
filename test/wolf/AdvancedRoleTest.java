@@ -103,7 +103,7 @@ public class AdvancedRoleTest extends SimulationTest {
     bot.privMsg("Ian", "!shoot Jason");
     bot.privMsg("Mongo", "!drink Ian");
 
-    checkForMessage("RAWRRRR!! Potter is a wolf.");
+    checkForMessage("Potter is a wolf.");
     checkForMessage("Your wish to protect Jason has been received.");
     checkForMessage("You aim at Jason.");
     checkForMessage("You plan to make a drink for Ian.");

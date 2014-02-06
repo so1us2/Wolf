@@ -1,0 +1,36 @@
+.header{
+  position: fixed;
+  width:100%;
+  top: 0;
+  background-color: white;
+  border-bottom: 1px solid black;
+}
+.header h1{
+  margin: 5px;
+}
+.chat-text{
+  padding: 45px 10px 30px 10px;
+}
+.chat-input {
+  height:35px;
+  position: fixed;
+  bottom: 0;
+  background-color: white;
+}
+.chat-input input{
+  width:600px;
+}
+.input-label{
+	display: inline;
+}
+#the-input{
+	margin-left: 10px;
+}
+.inline{
+  display: inline;
+}
+#viewers{
+	float: right;
+	padding-right: 20px;
+	padding-top: 5px;
+}

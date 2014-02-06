@@ -6,6 +6,8 @@
 	<classpathentry kind="lib" path="lib/pircbot.jar"/>
 	<classpathentry kind="lib" path="lib/guava-14.0.1.jar"/>
 	<classpathentry kind="lib" path="lib/joda-time-2.3.jar"/>
+	<classpathentry kind="lib" path="lib/web/simple-5.1.5.jar"/>
+	<classpathentry kind="lib" path="lib/web/webbit-0.4.15-full.jar" sourcepath="open_src/webbit-0.4.15-sources.jar"/>
 	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

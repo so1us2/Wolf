@@ -6,6 +6,7 @@ import java.util.Set;
 import wolf.WolfException;
 
 import com.google.common.base.Joiner;
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
@@ -17,14 +18,14 @@ public class ChatRoom {
   private final Set<String> authorized;
 
   public ChatRoom(ChatServer server, String name) {
+    this(server, name, ImmutableList.<String>of());
+  }
+
+  public ChatRoom(ChatServer server, String name, List<String> founders) {
     members = Sets.newTreeSet();
     authorized = Sets.newTreeSet();
     this.server = server;
     roomName = name;
-  }
-
-  public ChatRoom(ChatServer server, String name, List<String> founders) {
-    this(server, name);
     for (String s : founders) {
       members.add(s);
     }
@@ -85,8 +86,6 @@ public class ChatRoom {
 
   /**
    * This is for messages from players to the room.
-   * @param sender
-   * @param message
    */
   public void sendMessageToRoom(String sender, String message) {
     assert (members.contains(sender));
@@ -98,7 +97,6 @@ public class ChatRoom {
 
   /**
    * This is for messages from the server to the room.
-   * @param message
    */
   public void sendMessageToRoom(String message) {
     for (String player : members) {

@@ -16,8 +16,8 @@ import com.google.common.base.Joiner;
  */
 public class ChatServer {
 
-  private IBot bot;
-  private List<ChatRoom> rooms;
+  final private IBot bot;
+  final private List<ChatRoom> rooms;
 
   public ChatServer(IBot bot) {
     this.bot = bot;
@@ -51,7 +51,7 @@ public class ChatServer {
     if (room == null) {
       throw new WolfException("You are not in a room.");
     }
-    room.sendMessage(sender, message);
+    room.sendMessageToRoom(sender, message);
   }
 
   public void startRoom(String founder, String name) {
@@ -88,7 +88,7 @@ public class ChatServer {
       bot.sendMessage("There are currently no rooms.");
     } else {
       for (ChatRoom r : rooms) {
-        bot.sendMessage(r.getName() + ": " + Joiner.on(",").join(r.getMembers()));
+        bot.sendMessage(r.getName() + ": " + Joiner.on(", ").join(r.getMembers()));
       }
     }
   }

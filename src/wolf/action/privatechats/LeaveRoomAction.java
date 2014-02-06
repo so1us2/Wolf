@@ -15,9 +15,6 @@ public class LeaveRoomAction extends PrivateChatAction {
 
   @Override
   protected void execute(Player invoker, List<String> args) {
-
-
-
     ChatRoom room = getServer().findRoomForPlayer(invoker.getName());
     if (room == null) {
       throw new WolfException(invoker.getName() + " is not in a room.");
@@ -27,8 +24,7 @@ public class LeaveRoomAction extends PrivateChatAction {
 
   @Override
   public String getDescription() {
-    // TODO Auto-generated method stub
-    return null;
+    return "Leave a private chat.";
   }
 
 }

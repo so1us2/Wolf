@@ -81,7 +81,7 @@ public class CoreRolesTest extends SimulationTest {
     bot.privMsg("Tom", "!peek Potter");
     bot.privMsg("Potter", "!kill Tom");
 
-    checkForMessage("RAWRRRR!! Potter is a wolf.");
+    checkForMessage("Potter is a wolf.");
     checkForMessage("The sun dawns and you find Tom dead in the village.");
     checkForMessage("The Wolves have won the game!");
   }

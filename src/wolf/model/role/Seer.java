@@ -4,7 +4,6 @@ import java.util.List;
 
 import wolf.action.Action;
 import wolf.action.Visibility;
-import wolf.model.Faction;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.stage.GameStage;
@@ -48,16 +47,11 @@ public class Seer extends AbstractRole {
     Player player = getPlayer();
     peekHistory.add(peekTarget);
 
-    // if (peekTarget.getRole().getFaction() == Faction.WOLVES) {
-    // getStage().getBot().sendMessage(player.getName(),
-    // "RAWRRRR!! " + peekTarget.getName() + " is a wolf.");
-    // } else {
-    // getStage().getBot().sendMessage(player.getName(), peekTarget.getName() + " is a villager.");
-    // }
     getStage().getBot()
         .sendMessage(
             player.getName(),
-            peekTarget.getName() + " is a " + peekTarget.getRole().getFaction().getSingularForm()
+        peekTarget.getName() + " is a "
+            + peekTarget.getRole().getFaction().getSingularForm().toLowerCase()
                 + ".");
   }
 

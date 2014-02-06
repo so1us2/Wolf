@@ -30,11 +30,11 @@ public class HunterTest extends SimulationTest {
     bot.msg("Snape", "!join");
     bot.msg("Potter", "!join");
 
-    bot.msg("Khaladin", "!set Hunter 1");
-    bot.msg("Khaladin", "!set Wolf 1");
-    bot.msg("Khaladin", "!set Seer 1");
-    bot.msg("Khaladin", "!set Villager 1");
-    bot.msg("Khaladin", "!set Minion 1");
+    bot.msg("Khaladin", "!setrole Hunter 1");
+    bot.msg("Khaladin", "!setrole Wolf 1");
+    bot.msg("Khaladin", "!setrole Seer 1");
+    bot.msg("Khaladin", "!setrole Villager 1");
+    bot.msg("Khaladin", "!setrole Minion 1");
 
     bot.msg("Khaladin", "!start");
 

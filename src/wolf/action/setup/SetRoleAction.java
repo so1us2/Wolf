@@ -10,7 +10,7 @@ import wolf.model.stage.SetupStage;
 public class SetRoleAction extends SetupAction {
 
   public SetRoleAction(SetupStage stage) {
-    super(stage, "set", "role", "number");
+    super(stage, "setrole", "role", "number");
   }
 
   @Override

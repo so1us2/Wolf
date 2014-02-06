@@ -39,12 +39,12 @@ public class AdvancedRoleTest2 extends SimulationTest {
     bot.msg("Ian", "!join");
     bot.msg("Mongo", "!join");
 
-    bot.msg("Khaladin", "!set Villager 2");
-    bot.msg("Khaladin", "!set Wolf 1");
-    bot.msg("Khaladin", "!set Seer 1");
-    bot.msg("Khaladin", "!set Priest 1");
-    bot.msg("Khaladin", "!set Vigilante 1");
-    bot.msg("Khaladin", "!set Bartender 1");
+    bot.msg("Khaladin", "!setrole Villager 2");
+    bot.msg("Khaladin", "!setrole Wolf 1");
+    bot.msg("Khaladin", "!setrole Seer 1");
+    bot.msg("Khaladin", "!setrole Priest 1");
+    bot.msg("Khaladin", "!setrole Vigilante 1");
+    bot.msg("Khaladin", "!setrole Bartender 1");
 
     bot.msg("Khaladin", "!start");
 

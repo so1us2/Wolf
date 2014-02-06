@@ -8,10 +8,11 @@ import wolf.action.CommandsAction;
 import wolf.action.setup.DetailsAction;
 import wolf.action.setup.JoinAction;
 import wolf.action.setup.LeaveAction;
+import wolf.action.setup.ListAllRolesAction;
 import wolf.action.setup.ListConfigsAction;
 import wolf.action.setup.ListPlayersAction;
+import wolf.action.setup.ListSettingsAction;
 import wolf.action.setup.ListSetupAction;
-import wolf.action.setup.ListAllRolesAction;
 import wolf.action.setup.LoadConfigAction;
 import wolf.action.setup.SetRoleAction;
 import wolf.action.setup.StartGameAction;
@@ -20,7 +21,6 @@ import wolf.model.GameConfig;
 import wolf.model.Player;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 public class SetupStage extends Stage {
@@ -43,6 +43,7 @@ public class SetupStage extends Stage {
     actions.add(new StartGameAction(this));
     actions.add(new DetailsAction(this));
     actions.add(new ListAllRolesAction(this));
+    actions.add(new ListSettingsAction(this));
   }
 
   public Set<Player> getPlayers() {
@@ -52,7 +53,7 @@ public class SetupStage extends Stage {
   public GameConfig getConfig() {
     return config;
   }
-  
+
   @Override
   public List<Action> getAvailableActions(Player player) {
     return ImmutableList.copyOf(actions);

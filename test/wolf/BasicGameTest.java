@@ -22,8 +22,8 @@ public class BasicGameTest extends SimulationTest {
     bot.msg("Shallan", "!join");
     bot.msg("Dalinar", "!join");
 
-    bot.msg("Khaladin", "!set Villager 5");
-    bot.msg("Khaladin", "!set Wolf 2");
+    bot.msg("Khaladin", "!setrole Villager 5");
+    bot.msg("Khaladin", "!setrole Wolf 2");
 
     bot.msg("Adolin", "!join");
     bot.msg("Navani", "!join");

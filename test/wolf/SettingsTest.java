@@ -7,7 +7,7 @@ import wolf.bot.TestBot;
 import wolf.model.Role;
 import wolf.model.stage.GameStage;
 
-public class CoreRolesTest extends SimulationTest {
+public class SettingsTest extends SimulationTest {
 
   @BeforeMethod
   public void before() {
@@ -31,6 +31,8 @@ public class CoreRolesTest extends SimulationTest {
     bot.msg("Tom", "!join");
     bot.msg("Snape", "!join");
     bot.msg("Potter", "!join");
+
+    bot.msg("Tom", "!settings");
 
     bot.msg("Khaladin", "!setrole Villager 2");
     bot.msg("Khaladin", "!setrole Wolf 1");
@@ -81,7 +83,7 @@ public class CoreRolesTest extends SimulationTest {
     bot.privMsg("Tom", "!peek Potter");
     bot.privMsg("Potter", "!kill Tom");
 
-    checkForMessage("Potter is a wolf.");
+    checkForMessage("RAWRRRR!! Potter is a wolf.");
     checkForMessage("The sun dawns and you find Tom dead in the village.");
     checkForMessage("The Wolves have won the game!");
   }

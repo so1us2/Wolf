@@ -6,9 +6,10 @@ import com.google.common.collect.ImmutableList;
 
 public class Setting {
 
-  private String category;
+  private final String category;
   private String name;
   private String description;
+  private String defaultSetting = null;
   private List<String> options;
 
   public Setting(String category) {
@@ -16,7 +17,15 @@ public class Setting {
   }
 
   public String getDefault() {
-    return options.get(0);
+    if (defaultSetting == null) {
+      return options.get(0);
+    }
+    return defaultSetting;
+  }
+
+  public Setting defaultSetting(String defaultSetting) {
+    this.defaultSetting = defaultSetting;
+    return this;
   }
 
   public Setting name(String name) {

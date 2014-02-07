@@ -16,7 +16,7 @@ $("#the-input").keypress(function(e){
 	}
 });
 
-if ("WebSocket" in window){
+if (WebSocket){
 	// Let us open a web socket
 	ws = new WebSocket("ws://localhost:80/socket");
 	ws.onopen = function() {

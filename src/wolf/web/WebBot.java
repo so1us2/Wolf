@@ -73,6 +73,14 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
 
   private void handle(WebSocketConnection from, String command, List<String> args) {
     if (command.equalsIgnoreCase("login")) {
+      if (connectionNameMap.containsKey(from)) {
+        from.send("You are already logged in.");
+        return;
+      }
+      if (nameConnectionMap.containsKey(args.get(0))) {
+        from.send("Already a user with that name!");
+        return;
+      }
       connectionNameMap.put(from, args.get(0));
       nameConnectionMap.put(args.get(0), from);
     } else if (command.equalsIgnoreCase("chat")) {

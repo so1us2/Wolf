@@ -97,6 +97,10 @@ public abstract class AbstractRole implements Comparable<AbstractRole> {
     return stage.getBot();
   }
 
+  public String getKillMessage() {
+    return "";
+  }
+
   public boolean isFinishedWithNightAction() {
     return true;
   }

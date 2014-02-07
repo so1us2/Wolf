@@ -21,8 +21,25 @@ public class Settings {
         .description("Does the seer get to peek a random villager at the start of the game?");
     category("SEER").name("PRE_GAME_PEEK_MODE").options("REGULAR_VILLAGERS", "ALL_VILLAGERS")
         .description("Can the pre-game peek randomly choose a special-role villager?");
+    category("SEER").name("FIRST_PEEK_MINION").options("YES", "NO").defaultSetting("NO")
+        .description("Can the Minion be the N0 peek?");
     category("GAME").name("PRIVATE_CHAT").options("ENABLED", "DISABLED").defaultSetting("DISABLED")
         .description("Enable or disable private chats amongst players during daytime.");
+    category("GAME").name("DAY_KILL_ANNOUNCE").options("FACTION", "SILENT", "ROLE")
+        .defaultSetting("FACTION")
+        .description("What is announced for players who are voted dead by day?");
+    category("GAME").name("NIGHT_KILL_ANNOUNCE").options("NONE", "FACTION", "ROLE")
+        .defaultSetting("NONE").description("What is revealed about players who die at night?");
+    category("WOLF").name("TELL_WOLVES_ON_KILL").options("NONE", "FACTION", "ROLE")
+        .defaultSetting("NONE")
+        .description("Will wolves be told the role of the player that they kill?");
+    category("DEMON").name("TELL_DEMON_ON_KILL").options("NONE", "FACTION", "ROLE")
+        .defaultSetting("NONE")
+        .description("Will the demon be told the role of the player it kills?");
+    category("GAME").name("REVEAL_NIGHT_KILLERS").options("YES", "NO").defaultSetting("NO")
+        .description("Will the killers of each person killed at night be revealed?");
+    category("VOTES").name("ANNOUNCE_ON_TIE").options("NONE", "TOTALS", "ALL")
+        .defaultSetting("NONE").description("What should be announced when a day vote ties?");
   }
 
   public static final Setting get(String name) {

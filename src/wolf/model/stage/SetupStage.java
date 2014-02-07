@@ -14,6 +14,7 @@ import wolf.action.setup.ListPlayersAction;
 import wolf.action.setup.ListSettingsAction;
 import wolf.action.setup.ListSetupAction;
 import wolf.action.setup.LoadConfigAction;
+import wolf.action.setup.SetFlagAction;
 import wolf.action.setup.SetRoleAction;
 import wolf.action.setup.StartGameAction;
 import wolf.bot.IBot;
@@ -44,6 +45,7 @@ public class SetupStage extends Stage {
     actions.add(new DetailsAction(this));
     actions.add(new ListAllRolesAction(this));
     actions.add(new ListSettingsAction(this));
+    actions.add(new SetFlagAction(this));
   }
 
   public Set<Player> getPlayers() {

@@ -46,21 +46,39 @@ public class VoteAction extends GameAction {
    * Checks for a majority -- and if there is one, performs a villager kill.
    */
   private void processVotes(Map<Player, Player> votes) {
-    Player dayKillTarget = getMajorityVote(votes);
+    Map<Player, Integer> tally = tallyVotes(votes);
+    Player dayKillTarget = getMajorityVote(tally);
 
     if (dayKillTarget == null) {
+
+      String mode = getStage().getSetting("ANNOUNCE_ON_TIE");
+      if (mode.equals("NONE")) {
+        getBot().sendMessage("No majority was reached.");
+      } else if (mode.equals("TOTALS")) {
+        for (Player p : tally.keySet()) {
+          getBot().sendMessage(p.getName() + " (" + tally.get(p) + ")");
+        }
+      } else if (mode.equals("ALL")) {
+        getStage().getVotingHistory().printRound(getBot(),
+            getStage().getVotingHistory().getCurrentRound());
+      }
       votes.clear();
       getStage().getVotingHistory().nextRound();
-      getBot().sendMessage("No majority was reached.");
     } else {
       dayKillTarget.setAlive(false);
       getStage().getVotingHistory().print(getBot());
       getStage().getVotingHistory().reset();
       getStage().getVotesToDayKill().clear();
       getBot().sendMessage("A verdict was reached and " + dayKillTarget.getName() + " was killed.");
-      getBot().sendMessage(
-          dayKillTarget.getName() + " was a "
-              + dayKillTarget.getRole().getFaction().getSingularForm());
+      String mode = getStage().getSetting("DAY_KILL_ANNOUNCE");
+      if (mode.equals("FACTION")) {
+        getBot().sendMessage(
+            dayKillTarget.getName() + " was a "
+                + dayKillTarget.getRole().getFaction().getSingularForm());
+      } else if (mode.equals("ROLE")) {
+        getBot().sendMessage(
+            dayKillTarget.getName() + " was a " + dayKillTarget.getRole().getType());
+      } else if (mode.equals("SILENT")) {}
       if (getStage().checkForWinner() != null) {
         // game is over, don't need to do any more logic here.
         return;
@@ -69,7 +87,7 @@ public class VoteAction extends GameAction {
     }
   }
 
-  private Player getMajorityVote(Map<Player, Player> votes) {
+  private Map<Player, Integer> tallyVotes(Map<Player, Player> votes) {
     Map<Player, Integer> voteTally = Maps.newLinkedHashMap();
 
     for (Player target : votes.values()) {
@@ -80,6 +98,11 @@ public class VoteAction extends GameAction {
       voteTally.put(target, i + 1);
     }
 
+    return voteTally;
+  }
+
+  private Player getMajorityVote(Map<Player, Integer> tally) {
+
     int votesNeededToWin;
     int numPlayers = getStage().getPlayers().size();
 
@@ -89,7 +112,7 @@ public class VoteAction extends GameAction {
       votesNeededToWin = (int) Math.ceil(numPlayers / 2.0);
     }
 
-    for (Entry<Player, Integer> e : voteTally.entrySet()) {
+    for (Entry<Player, Integer> e : tally.entrySet()) {
       if (e.getValue() >= votesNeededToWin) {
         return e.getKey();
       }

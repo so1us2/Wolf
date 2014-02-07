@@ -54,6 +54,11 @@ public class Vigilante extends AbstractRole {
   }
 
   @Override
+  public String getKillMessage() {
+    return "has a single bullet wound in the forehead";
+  }
+
+  @Override
   public String getDescription() {
     return "Once per game, the Vigilante can kill a player at night.";
   }

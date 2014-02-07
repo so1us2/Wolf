@@ -29,15 +29,22 @@ public class VotingHistory {
     history.add(Lists.<Vote>newArrayList());
   }
 
+  public int getCurrentRound() {
+    return history.size();
+  }
+
   public void print(IBot bot) {
-    int roundNumber = 1;
-    for (List<Vote> round : history) {
-      bot.sendMessage("Round " + roundNumber);
-      for (Vote vote : round) {
-        bot.sendMessage(format.print(vote.getTimestamp()) + ": " + vote.getPlayer().getName()
-            + " -> " + vote.getTarget());
-      }
-      roundNumber++;
+    for (int roundNumber = 1; roundNumber <= history.size(); roundNumber++) {
+      printRound(bot, roundNumber);
+    }
+  }
+
+  public void printRound(IBot bot, int roundNumber) {
+    List<Vote> round = history.get(roundNumber - 1);
+    bot.sendMessage("Round " + roundNumber);
+    for (Vote vote : round) {
+      bot.sendMessage(format.print(vote.getTimestamp()) + ": " + vote.getPlayer().getName()
+          + " -> " + vote.getTarget());
     }
   }
 

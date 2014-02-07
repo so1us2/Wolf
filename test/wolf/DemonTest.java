@@ -36,12 +36,12 @@ public class DemonTest extends SimulationTest {
     bot.msg("Ian", "!join");
     bot.msg("Mongo", "!join");
 
-    bot.msg("Khaladin", "!set Villager 2");
-    bot.msg("Khaladin", "!set Wolf 1");
-    bot.msg("Khaladin", "!set Seer 1");
-    bot.msg("Khaladin", "!set Priest 1");
-    bot.msg("Khaladin", "!set Demon 1");
-    bot.msg("Khaladin", "!set Bartender 1");
+    bot.msg("Khaladin", "!setrole Villager 2");
+    bot.msg("Khaladin", "!setrole Wolf 1");
+    bot.msg("Khaladin", "!setrole Seer 1");
+    bot.msg("Khaladin", "!setrole Priest 1");
+    bot.msg("Khaladin", "!setrole Demon 1");
+    bot.msg("Khaladin", "!setrole Bartender 1");
 
     bot.msg("Khaladin", "!start");
 
@@ -76,7 +76,7 @@ public class DemonTest extends SimulationTest {
     checkForMessage(Demon.NO_KILL_MESSAGE);
     checkForMessage("You plan to make a drink for Ian.");
     checkForMessage("Ian has a drink waiting for them.");
-    checkForMessage("The sun dawns and you find Mongo and Tom dead in the village.");
+    checkForMessage("You find that Mongo and Tom are dead.");
 
     bot.getMessageLog().clear();
   }
@@ -98,7 +98,7 @@ public class DemonTest extends SimulationTest {
 
     checkForMessage("Your wish to protect Potter has been received.");
     checkForMessage("You plan to kill Jason.");
-    checkForMessage("The sun dawns and you find Jason and Potter dead in the village.");
+    checkForMessage("You find that Jason and Potter are dead.");
     checkForMessage("The Demons have won the game!");
     bot.getMessageLog().clear();
   }

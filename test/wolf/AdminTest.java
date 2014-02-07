@@ -32,10 +32,10 @@ public class AdminTest extends SimulationTest {
     bot.msg("Snape", "!join");
     bot.msg("Potter", "!join");
 
-    bot.msg("Khaladin", "!set Villager 2");
-    bot.msg("Khaladin", "!set Wolf 1");
-    bot.msg("Khaladin", "!set Seer 1");
-    bot.msg("Khaladin", "!set Priest 1");
+    bot.msg("Khaladin", "!setrole Villager 2");
+    bot.msg("Khaladin", "!setrole Wolf 1");
+    bot.msg("Khaladin", "!setrole Seer 1");
+    bot.msg("Khaladin", "!setrole Priest 1");
 
     bot.msg("Khaladin", "!start");
 
@@ -90,8 +90,8 @@ public class AdminTest extends SimulationTest {
     bot.privMsg("TomM", "!peek Potter");
     bot.privMsg("Potter", "!kill TomM");
 
-    checkForMessage("RAWRRRR!! Potter is a wolf.");
-    checkForMessage("The sun dawns and you find TomM dead in the village.");
+    checkForMessage("Potter is a wolf.");
+    checkForMessage("You find that TomM is dead.");
     checkForMessage("The Wolves have won the game!");
   }
 

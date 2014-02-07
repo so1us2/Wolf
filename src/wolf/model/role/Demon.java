@@ -2,10 +2,11 @@ package wolf.model.role;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
 import wolf.action.Action;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
+
+import com.google.common.collect.ImmutableList;
 
 public class Demon extends AbstractRole {
 
@@ -32,8 +33,14 @@ public class Demon extends AbstractRole {
     return ImmutableList.<Action>of(killAction, passAction);
   }
 
+  @Override
   public Player getTarget() {
     return killTarget;
+  }
+
+  @Override
+  public String getKillMessage() {
+    return "is a soulless husk";
   }
 
   @Override

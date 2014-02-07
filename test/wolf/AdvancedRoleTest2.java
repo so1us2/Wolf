@@ -108,7 +108,7 @@ public class AdvancedRoleTest2 extends SimulationTest {
     checkForMessage("You aim at Jason.");
     checkForMessage("You plan to make a drink for Ian.");
     checkForMessage("Ian has a drink waiting for them.");
-    checkForMessage("The sun dawns and you find Jason and Tom dead in the village.");
+    checkForMessage("You find that Jason and Tom are dead.");
     bot.getMessageLog().clear();
   }
 

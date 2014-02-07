@@ -19,12 +19,16 @@ public class Bartender extends AbstractRole {
     drinkTarget = null;
     hasActed = false;
 
-    getBot().sendMessage(getPlayer().getName(),
+    getBot()
+        .sendMessage(getPlayer().getName(),
             "Who do you want to send a drink?  Message me !drink <target> or !pass to not serve anyone.");
   }
 
   @Override
   public void onNightEnds() {
+    if (drinkTarget != null) {
+      getBot().sendMessage(drinkTarget.getName() + " has a drink waiting for them.");
+    }
     drinkHistory.add(drinkTarget);
   }
 

@@ -2,11 +2,12 @@ package wolf.model.role;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
 import wolf.action.Action;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.stage.GameStage;
+
+import com.google.common.collect.ImmutableList;
 
 public class Wolf extends AbstractRole {
 
@@ -41,8 +42,12 @@ public class Wolf extends AbstractRole {
   }
 
   @Override
-  public void handleChat(Player sender, String message) {
-    if (getStage().isNight()) {
+  public String getKillMessage() {
+    return "has been ripped apart";
+  }
+
+  public void handleChat(Player sender, String message, boolean isPrivate) {
+    if (getStage().isNight() && isPrivate) {
       // wolf-chat
       wolfChat(sender, message);
     }

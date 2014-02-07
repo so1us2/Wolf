@@ -2,12 +2,14 @@ package wolf.model.role;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import wolf.action.Action;
+import wolf.model.Faction;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.stage.GameStage;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 public class Seer extends AbstractRole {
 
@@ -16,15 +18,26 @@ public class Seer extends AbstractRole {
 
   @Override
   public void onGameStart() {
-    // List<Player> villagers = getStage().getPlayers(Faction.VILLAGERS);
-    // villagers.remove(getPlayer());
+    if (getStage().getSetting("PRE_GAME_PEEK").equals("NO")) {
+      return;
+    }
 
-    List<Player> villagers = getStage().getPlayers(Role.VILLAGER);
+    String mode = getStage().getSetting("PRE_GAME_PEEK_MODE");
+    // what is right style for villagers initialization here?
+    List<Player> villagers = null;
+    if (mode.equals("REGULAR_VILLAGERS")) {
+      villagers = getStage().getPlayers(Role.VILLAGER);
+    } else if (mode.equals("ALL_VILLAGERS")) {
+      villagers = getStage().getPlayers(Faction.VILLAGERS);
+      if (getStage().getSetting("FIRST_PEEK_MINION").equals("NO")) {
+        villagers.removeAll(getStage().getPlayers(Role.MINION));
+      }
+      villagers.remove(getPlayer());
+    }
+
     Player peek = villagers.get((int) (Math.random() * villagers.size()));
-
     peekHistory.add(peek);
-
-    getBot().sendMessage(getPlayer().getName(), peek + " is a human.");
+    getBot().sendMessage(getPlayer().getName(), peek.getName() + " is a villager.");
   }
 
   @Override

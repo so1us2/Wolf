@@ -9,11 +9,13 @@ import wolf.model.stage.GameStage;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 public class Priest extends AbstractRole {
 
-  private Player lastProtectedTarget;
+
   private Player protectTarget;
+  private final List<Player> protectHistory = Lists.newArrayList();
 
   @Override
   public void onNightBegins() {
@@ -25,8 +27,7 @@ public class Priest extends AbstractRole {
 
   @Override
   public void onNightEnds() {
-    lastProtectedTarget = protectTarget;
-    protectTarget = null;
+    protectHistory.add(protectTarget);
   }
 
   @Override
@@ -63,15 +64,32 @@ public class Priest extends AbstractRole {
         }
       }
 
-      if (protectTarget == lastProtectedTarget) {
-        stage.getBot().sendMessage(invoker.getName(),
-            "You cannot protect " + protectTarget + " twice in a row.");
-        protectTarget = null;
-        return;
-      }
+      String mode = stage.getSetting("PROTECTION_MODE");
+      if (mode.equals("EVERY_OTHER_NIGHT")) {
+        if (protectTarget == getLastProtect()) {
+          Player fail = protectTarget;
+          protectTarget = null;
+          throw new WolfException("You cannot protect " + fail.getName()
+              + " twice in a row.");
+        }
+      } else if (mode.equals("ONCE_PER_GAME")) {
+        if (protectHistory.contains(protectTarget)) {
+          Player fail = protectTarget;
+          protectTarget = null;
+          throw new WolfException("You have already protected " + fail.getName()
+              + " this game.");
+        }
+      } else if (mode.equals("NO_RULES")) {}
 
       stage.getBot().sendMessage(invoker.getName(),
           "Your wish to protect " + protectTarget + " has been received.");
+    }
+
+    private Player getLastProtect() {
+      if (protectHistory.size() > 0) {
+        return protectHistory.get(protectHistory.size() - 1);
+      }
+      return null;
     }
 
     @Override

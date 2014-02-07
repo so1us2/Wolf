@@ -1,15 +1,11 @@
 package wolf.model.stage;
 
+import static com.google.common.collect.Iterables.filter;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import wolf.WolfException;
 import wolf.action.Action;
 import wolf.action.CommandsAction;
@@ -27,13 +23,19 @@ import wolf.model.GameSummary;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.VotingHistory;
-import wolf.model.role.Bartender;
 import wolf.model.role.Demon;
 import wolf.model.role.Priest;
 import wolf.model.role.Vigilante;
 import wolf.model.role.Wolf;
 
-import static com.google.common.collect.Iterables.filter;
+import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 
 public class GameStage extends Stage {
 
@@ -115,92 +117,122 @@ public class GameStage extends Stage {
   }
 
   private void moveToDay() {
+    // Get anyone who needs to die into the killMap. Upon being added to dying,
+    // they must later die so any protection needs to be triggered beforehand.
+    Multimap<Player, Player> killMap = TreeMultimap.create();
 
-    Set<Player> dying = Sets.newTreeSet();
-    List<Player> targets = Lists.newArrayList();
+    if (!getPlayers(Role.WOLF).isEmpty()) {
+      List<Player> targets = Lists.newArrayList();
+      for (Player p : getPlayers(Role.WOLF)) {
+        Wolf wolf = (Wolf) p.getRole();
+        targets.add(wolf.getTarget());
+      }
 
-    for (Player p : getPlayers(Role.WOLF)) {
-      Wolf wolf = (Wolf) p.getRole();
-      targets.add(wolf.getTarget());
-    }
+      if (targets.contains(null)) {
+        // wolves haven't finished choosing yet.
+        return;
+      }
 
-    if (targets.contains(null)) {
-      // wolves haven't finished choosing yet.
-      return;
-    }
-
-    // Get anyone who needs to die into the dying set.
-
-    // need to change this to majority from random choice.
-    Player target = targets.get((int) (Math.random() * targets.size()));
-
-    if (!isProtected(target)) {
-      dying.add(target);
+      // need to change this to majority from random choice.
+      Player target = targets.get((int) (Math.random() * targets.size()));
+      if (!isProtected(target)) {
+        for (Player p : getPlayers(Role.WOLF)) {
+          killMap.put(target, p);
+        }
+      }
     }
 
     for (Player p : getPlayers(Role.VIGILANTE)) {
-      target = ((Vigilante) p.getRole()).getTarget();
+      Player target = ((Vigilante) p.getRole()).getTarget();
       if (target != null && !isProtected(target)) {
-        dying.add(target);
+        killMap.put(target, p);
       }
     }
 
     for (Player p : getPlayers(Role.DEMON)) {
-      target = ((Demon) p.getRole()).getTarget();
+      Player target = ((Demon) p.getRole()).getTarget();
       if (target != null && !isProtected(target)) {
-        dying.add(target);
+        killMap.put(target, p);
       }
     }
 
-    // Kill anyone who targets the demon.
-    if (!getPlayers(Role.DEMON).isEmpty()) {
-      boolean didWolvesTarget = false;
+    // Kill anyone who targets the demon - this ignores protection. May want to settings this later.
+    for (Player demon : getPlayers(Role.DEMON)) {
+      boolean wolfTarget = false;
       for (Player p : getPlayers()) {
-        if (p.getRole().getTarget() != null) {
-          if (p.getRole().getTarget().getRole().getType() == Role.DEMON) {
-            if (p.getRole().getType() == Role.WOLF) {
-              didWolvesTarget = true;
-            } else {
-              dying.add(p);
-            }
+        if (p.getRole().getTarget() == demon) {
+          if ((p.getRole().getType() == Role.WOLF)) {
+            wolfTarget = true;
+          } else {
+            killMap.put(p, demon);
           }
         }
       }
-      if (didWolvesTarget) {
+      if (wolfTarget) {
         List<Player> wolves = getPlayers(Role.WOLF);
-        dying.add(wolves.get((int) (Math.random() * wolves.size())));
+        Player randomWolf = wolves.get((int) (Math.random() * wolves.size()));
+        killMap.put(randomWolf, demon);
       }
     }
 
-    // Dying set should now have anyone who needs to be killed in it.
+    // killMap should now have anyone who needs to be killed in it.
 
     for (Player player : getPlayers()) {
       player.getRole().onNightEnds();
     }
 
-    // Should this code be in bartender.onNightEnd ? Should bartender get to give drink even if they
-    // die that night?
-    for (Player p : getPlayers(Role.BARTENDER)) {
-      target = ((Bartender) p.getRole()).getTarget();
-      if (target != null) {
-        getBot().sendMessage(target.getName() + " has a drink waiting for them.");
-      }
-    }
+    getBot().sendMessage("The sun dawns upon the village.");
+    if (!killMap.isEmpty()) {
+      deathNotifications(killMap);
 
-    if (!dying.isEmpty()) {
-      StringBuilder output = new StringBuilder();
-      output.append("The sun dawns and you find ");
-      for (Player p : dying) {
-        output.append(p.getName()).append(" and ");
-        p.setAlive(false);
+      if (config.getSettings().get("REVEAL_NIGHT_KILLERS").equals("YES")) {
+        for (Player p : killMap.keySet()) {
+          StringBuilder output = new StringBuilder();
+          Player wolfKiller = null;
+          output.append("You find that ").append(p.getName()).append(" ");
+          for (Player killer : killMap.get(p)) {
+            if (killer.getRole().getType() == Role.WOLF) {
+              wolfKiller = killer;
+            } else {
+              output.append(killer.getRole().getKillMessage()).append(" and ");
+            }
+          }
+          if(wolfKiller != null) {
+            output.append(wolfKiller.getRole().getKillMessage());
+          } else {
+            output.setLength(output.length() - 5);
+          }
+          output.append(".");
+          getBot().sendMessage(output.toString());
+          p.setAlive(false);
+        }
+      } else if (config.getSettings().get("REVEAL_NIGHT_KILLERS").equals("NO")) {
+        for (Player p : killMap.keySet()) {
+          p.setAlive(false);
+        }
+        StringBuilder output = new StringBuilder();
+        output.append("You find that ").append(Joiner.on(" and ").join(killMap.keySet()));
+        if (killMap.keySet().size() > 1) {
+          output.append(" are dead.");
+        } else {
+          output.append(" is dead.");
+        }
+        getBot().sendMessage(output.toString());
       }
-      output.setLength(output.length() - 4);
-      output.append("dead in the village.");
-      getBot().sendMessage(output.toString());
     } else {
       getBot().sendMessage(NONE_DEAD_MSG);
     }
 
+    String mode = config.getSettings().get("NIGHT_KILL_ANNOUNCE");
+    if (!mode.equals("NONE")) {
+      for (Player p : killMap.keySet()) {
+        if (mode.equals("FACTION")) {
+          getBot().sendMessage(p.getName() + " was a " + p.getRole().getFaction() + ".");
+        } else if (mode.equals("ROLE")) {
+          getBot().sendMessage(p.getName() + " was a " + p.getRole().getType() + ".");
+        }
+      }
+    }
 
     if (checkForWinner() != null) {
       return;
@@ -208,6 +240,31 @@ public class GameStage extends Stage {
 
     daytime = true;
     unmutePlayers();
+  }
+
+  private void deathNotifications(Multimap<Player, Player> killMap) {
+
+    for (Player dead : killMap.keySet()) {
+      for (Player killer : killMap.get(dead)) {
+        String mode = null;
+        if (killer.getRole().getType() == Role.DEMON) {
+          mode = config.getSettings().get("TELL_DEMON_ON_KILL");
+        } else if (killer.getRole().getType() == Role.WOLF) {
+          mode = config.getSettings().get("TELL_WOLVES_ON_KILL");
+        } else if (killer.getRole().getType() == Role.VIGILANTE) {
+          mode = config.getSettings().get("TELL_VIGILANTE_ON_KILL");
+        }
+        if (mode != null) {
+          if (mode.equals("FACTION")) {
+            getBot().sendMessage(killer.getName(),
+                dead.getName() + " was a " + dead.getRole().getFaction() + ".");
+          } else if (mode.equals("ROLE")) {
+            getBot().sendMessage(killer.getName(),
+                dead.getName() + " was a " + dead.getRole().getType() + ".");
+          } else if (mode.equals("NONE")) {}
+        }
+      }
+    }
   }
 
   private boolean isProtected(Player player) {

@@ -130,7 +130,7 @@ public class CoreRolesTest2 extends SimulationTest {
     bot.privMsg("Will", "!kill Tom");
 
     checkForMessage("Potter is a wolf.");
-    checkForMessage("The sun dawns and you find Tom dead in the village.");
+    checkForMessage("You find that Tom is dead.");
     bot.getMessageLog().clear();
   }
 
@@ -158,7 +158,7 @@ public class CoreRolesTest2 extends SimulationTest {
     bot.privMsg("Will", "!kill Jason");
     bot.privMsg("Jason", "!protect Zack");
 
-    checkForMessage("The sun dawns and you find Jason dead in the village.");
+    checkForMessage("You find that Jason is dead.");
     checkForMessage("The Wolves have won the game!");
 
   }

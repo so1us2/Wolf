@@ -7,7 +7,7 @@ import wolf.bot.TestBot;
 import wolf.model.Role;
 import wolf.model.role.Vigilante;
 
-public class SettingsTest extends SimulationTest {
+public class SettingsTest2 extends SimulationTest {
 
   @BeforeMethod
   public void before() {
@@ -21,6 +21,7 @@ public class SettingsTest extends SimulationTest {
     night1Actions();
     day2Votes();
     night2Actions();
+    day3Votes();
   }
 
   private void initGame() {
@@ -36,6 +37,7 @@ public class SettingsTest extends SimulationTest {
 
     bot.msg("Tom", "!settings");
     bot.msg("Tom", "!setflag REVEAL_NIGHT_KILLERS yes");
+    bot.msg("Tom", "!setflag TELL_WOLVES_ON_KILL ROLE");
 
     bot.msg("Khaladin", "!setrole Villager 2");
     bot.msg("Khaladin", "!setrole Wolf 1");
@@ -77,6 +79,7 @@ public class SettingsTest extends SimulationTest {
     checkForMessage(Vigilante.HOLD_FIRE_MESSAGE);
     checkForMessage("You plan to make a drink for Jason.");
     checkForMessage("Jason has a drink waiting for them.");
+    checkForMessage("Tom was a Seer.");
     checkForMessage("You find that Tom has been ripped apart.");
 
     bot.getMessageLog().clear();
@@ -95,7 +98,7 @@ public class SettingsTest extends SimulationTest {
 
   private void night2Actions() {
     bot.privMsg("Jason", "!protect Potter");
-    bot.privMsg("Potter", "!kill Ian");
+    bot.privMsg("Potter", "!kill Jason");
     bot.privMsg("Ian", "!shoot Jason");
     bot.privMsg("Mongo", "!drink Ian");
 
@@ -103,10 +106,20 @@ public class SettingsTest extends SimulationTest {
     checkForMessage("You aim at Jason.");
     checkForMessage("You plan to make a drink for Ian.");
     checkForMessage("Ian has a drink waiting for them.");
-    checkForMessage("You find that Ian has been ripped apart.");
-    checkForMessage("You find that Jason has a single bullet wound in the forehead.");
-    checkForMessage("The Wolves have won the game!");
+    checkForMessage("You find that Jason has a single bullet wound in the forehead and has been ripped apart.");
+    checkForMessage("Jason was a Priest.");
     bot.getMessageLog().clear();
+  }
+
+  private void day3Votes() {
+    bot.msg("Ian", "!players");
+    checkForMessage("Alive players: [Ian, Mongo, Potter]");
+
+    bot.privMsg("Potter", "!vote Ian");
+    bot.privMsg("Ian", "!vote Potter");
+    bot.privMsg("Mongo", "!vote Potter");
+
+    checkForMessage("The Villagers have won the game!");
   }
 
 }

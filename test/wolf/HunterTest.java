@@ -59,7 +59,7 @@ public class HunterTest extends SimulationTest {
     bot.privMsg("Potter", "!kill Jason");
 
     checkForMessage("Jason is a villager.");
-    checkForMessage("The sun dawns and you find Jason dead in the village.");
+    checkForMessage("You find that Jason is dead.");
 
     bot.getMessageLog().clear();
   }

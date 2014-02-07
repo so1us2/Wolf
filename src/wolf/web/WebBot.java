@@ -58,6 +58,8 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
       return;
     }
 
+    System.out.println(message);
+
     JsonObject o = parser.parse(message).getAsJsonObject();
 
     String command = o.get("command").getAsString();
@@ -87,7 +89,8 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
   private void handleChat(String sender, String message) {
     if (!message.startsWith("/")) {
       if (moderated && !playersAllowedToSpeak.contains(sender.toLowerCase())) {
-        sendMessage(sender, "You do not have permission to speak right now.");
+        sendMessage(sender, "You are not allowed to chat while"
+            + " the game is going on. Wait for the next game.");
         return;
       }
       getStage().handleChat(this, sender, message);

@@ -2,6 +2,7 @@ package wolf.model.role;
 
 import java.util.List;
 
+import wolf.WolfException;
 import wolf.action.Action;
 import wolf.model.Faction;
 import wolf.model.Player;
@@ -48,13 +49,33 @@ public class Seer extends AbstractRole {
   @Override
   public void onNightBegins() {
     peekTarget = null;
-
+    if (!hasPeekedEveryone()) {
     getBot().sendMessage(getPlayer().getName(),
         "Who do you want to peek?  Message me !peek <target>");
+    } else {
+      getBot().sendMessage(getPlayer().getName(), "You have peeked everyone.");
+      int i = 0;
+      for (Player p : peekHistory) {
+        getStage().getBot().sendMessage(getPlayer().getName(),
+            "Night " + i++ + ": " + p.getName() + " - " + p.getRole().getFaction());
+      }
+    }
+  }
+
+  private boolean hasPeekedEveryone() {
+    for (Player p : getStage().getPlayers()) {
+      if (!peekHistory.contains(p) && p != getPlayer()) {
+        return false;
+      }
+    }
+    return true;
   }
 
   @Override
   public void onNightEnds() {
+    if (peekTarget == null) {
+      return;
+    }
     Player player = getPlayer();
     peekHistory.add(peekTarget);
 
@@ -84,6 +105,9 @@ public class Seer extends AbstractRole {
 
   @Override
   public List<Action> getNightActions() {
+    if (hasPeekedEveryone()) {
+      return ImmutableList.of();
+    }
     return ImmutableList.<Action>of(peekAction);
   }
 
@@ -96,11 +120,18 @@ public class Seer extends AbstractRole {
     @Override
     protected void execute(Player invoker, List<String> args) {
       GameStage stage = Seer.this.getStage();
-
-      peekTarget = stage.getPlayer(args.get(0));
-
-      stage.getBot().sendMessage(invoker.getName(),
-          "Your wish to peek " + peekTarget + " has been received.");
+      Player peek = stage.getPlayer(args.get(0));
+      if (peek == getPlayer()) {
+        throw new WolfException("You cannot peek yourself.");
+      }
+      if (peekHistory.contains(peek)) {
+        throw new WolfException("You have already peeked " + peek + ". They are a "
+            + peek.getRole().getFaction().getSingularForm().toLowerCase() + ".");
+      } else {
+        peekTarget = peek;
+        stage.getBot().sendMessage(invoker.getName(),
+            "Your wish to peek " + peekTarget + " has been received.");
+      }
     }
 
     @Override

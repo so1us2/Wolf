@@ -21,6 +21,10 @@ public class Priest extends AbstractRole {
   public void onNightBegins() {
     protectTarget = null;
 
+    if (!isLegalProtection()) {
+      getBot().sendMessage(getPlayer().getName(), "There is no legal protection.");
+    }
+
     getBot().sendMessage(getPlayer().getName(),
         "Who do you want to protect?  Message me !protect <target>");
   }
@@ -37,6 +41,9 @@ public class Priest extends AbstractRole {
 
   @Override
   public List<Action> getNightActions() {
+    if (!isLegalProtection()) {
+      return ImmutableList.of();
+    }
     return ImmutableList.<Action>of(protectAction);
   }
 
@@ -50,16 +57,26 @@ public class Priest extends AbstractRole {
     return "The Priest can protect a player each night, preventing that player from being killed.";
   }
 
+  private boolean isLegalProtection() {
+    if (getStage().getSetting("PROTECTION_MODE").equals("ONCE_PER_GAME")) {
+      for (Player p : getStage().getPlayers()) {
+        if (!protectHistory.contains(p)) {
+          return false;
+        }
+      }
+    }
+    return true;
+  }
+
   private Action protectAction = new Action("protect", "target") {
     @Override
     protected void execute(Player invoker, List<String> args) {
       GameStage stage = Priest.this.getStage();
-
       protectTarget = stage.getPlayer(args.get(0));
 
       if (Objects.equal(protectTarget, invoker)) {
         // make sure we are allowed to protect ourselves
-        if (!stage.getSetting("SELF_PROTECT").equals("YES")) {
+        if (stage.getSetting("SELF_PROTECT").equals("NO")) {
           throw new WolfException("You are not allowed to protect yourself.");
         }
       }
@@ -69,15 +86,13 @@ public class Priest extends AbstractRole {
         if (protectTarget == getLastProtect()) {
           Player fail = protectTarget;
           protectTarget = null;
-          throw new WolfException("You cannot protect " + fail.getName()
-              + " twice in a row.");
+          throw new WolfException("You cannot protect " + fail.getName() + " twice in a row.");
         }
       } else if (mode.equals("ONCE_PER_GAME")) {
         if (protectHistory.contains(protectTarget)) {
           Player fail = protectTarget;
           protectTarget = null;
-          throw new WolfException("You have already protected " + fail.getName()
-              + " this game.");
+          throw new WolfException("You have already protected " + fail.getName() + " this game.");
         }
       } else if (mode.equals("NO_RULES")) {}
 

@@ -38,6 +38,8 @@ public class SettingsTest2 extends SimulationTest {
     bot.msg("Tom", "!settings");
     bot.msg("Tom", "!setflag REVEAL_NIGHT_KILLERS yes");
     bot.msg("Tom", "!setflag TELL_WOLVES_ON_KILL ROLE");
+    bot.msg("Tom", "!setflag self_protect no");
+    bot.msg("Tom", "!setflag protection_mode once_per_game");
 
     bot.msg("Khaladin", "!setrole Villager 2");
     bot.msg("Khaladin", "!setrole Wolf 1");
@@ -68,6 +70,8 @@ public class SettingsTest2 extends SimulationTest {
   }
 
   private void night1Actions() {
+    bot.privMsg("Jason", "!protect Jason");
+    checkForMessage("You are not allowed to protect yourself.");
     bot.privMsg("Jason", "!protect Ian");
     bot.privMsg("Tom", "!peek Jason");
     bot.privMsg("Potter", "!kill Tom");
@@ -97,6 +101,8 @@ public class SettingsTest2 extends SimulationTest {
   }
 
   private void night2Actions() {
+    bot.privMsg("Jason", "!protect Ian");
+    checkForMessage("You have already protected Ian this game.");
     bot.privMsg("Jason", "!protect Potter");
     bot.privMsg("Potter", "!kill Jason");
     bot.privMsg("Ian", "!shoot Jason");

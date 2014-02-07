@@ -11,6 +11,10 @@
 #chat-text{
   padding: 45px 10px 30px 10px;
 }
+
+#rankings-link{
+}
+
 .chat-input {
   height:35px;
   position: fixed;

@@ -22,6 +22,10 @@ public class WolfServer implements HttpHandler {
       uri = "/wolf.html";
     }
 
+    if (uri.equalsIgnoreCase("/rankings")) {
+      uri = "/rankings.html";
+    }
+
     // System.out.println("uri: " + uri);
 
     byte[] data;

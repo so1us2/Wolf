@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.google.common.collect.ImmutableList;
 import wolf.action.Action;
-import wolf.action.Visibility;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
 
@@ -56,11 +55,6 @@ public class Demon extends AbstractRole {
     public String getDescription() {
       return "You may kill someone every night if you so choose.";
     }
-
-    @Override
-    public Visibility getVisibility() {
-      return Visibility.PRIVATE;
-    };
   };
 
   private Action passAction = new Action("pass") {
@@ -77,11 +71,6 @@ public class Demon extends AbstractRole {
     public String getDescription() {
       return "You refrain from slaughtering anyone for the night.";
     }
-
-    @Override
-    public Visibility getVisibility() {
-      return Visibility.PRIVATE;
-    };
   };
 
 

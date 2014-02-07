@@ -3,7 +3,6 @@ package wolf;
 import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import wolf.bot.TestBot;
 import wolf.model.Role;
 import wolf.model.stage.GameStage;
@@ -77,7 +76,7 @@ public class BasicGameTest extends SimulationTest {
     bot.privMsg("Snape", "!vote Dalinar");
     bot.privMsg("Potter", "!vote Dalinar");
 
-    checkForMessage("Dalinar was lynched");
+    checkForMessage("Dalinar was killed");
   }
 
   @Test

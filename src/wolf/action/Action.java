@@ -1,15 +1,14 @@
 package wolf.action;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import wolf.WolfException;
 import wolf.bot.IBot;
 import wolf.model.Player;
 import wolf.model.stage.Stage;
 
-import com.google.common.collect.ImmutableList;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class Action implements Comparable<Action> {
 
@@ -27,7 +26,7 @@ public abstract class Action implements Comparable<Action> {
     this.argNames = ImmutableList.copyOf(argsNames);
   }
 
-  public void apply(Player invoker, List<String> args, boolean isPrivate) {
+  public void apply(Player invoker, List<String> args) {
     checkNotNull(invoker);
     checkNotNull(args);
 
@@ -53,7 +52,7 @@ public abstract class Action implements Comparable<Action> {
   public String getUsage() {
     StringBuilder sb = new StringBuilder();
 
-    sb.append("!").append(getName());
+    sb.append("/").append(getName());
 
     for (String arg : argNames) {
       sb.append(" <").append(arg).append(">");
@@ -73,10 +72,6 @@ public abstract class Action implements Comparable<Action> {
   protected boolean requiresAdmin() {
     // subclasses can override
     return false;
-  }
-
-  public Visibility getVisibility() {
-    return Visibility.PUBLIC;
   }
 
   public IBot getBot() {

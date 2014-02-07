@@ -6,13 +6,18 @@ public interface IBot {
 
   public void sendMessage(String message);
 
+  /**
+   * Sends a private message to the given user.
+   */
   public void sendMessage(String user, String message);
+
+  public void sendToAll(String from, String message);
 
   public void setStage(Stage stage);
 
   public Stage getStage();
 
-  public void onMessage(String sender, String message, boolean isPrivate);
+  public void onMessage(String sender, String message);
 
   public void muteAll();
 

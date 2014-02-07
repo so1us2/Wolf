@@ -4,13 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import wolf.action.Visibility;
+import com.google.common.base.Joiner;
+import com.google.common.collect.Sets;
 import wolf.action.game.GameAction;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
-
-import com.google.common.base.Joiner;
-import com.google.common.collect.Sets;
 
 public class GetVotersAction extends GameAction {
 
@@ -37,11 +35,6 @@ public class GetVotersAction extends GameAction {
   @Override
   public String getDescription() {
     return "List voting status of each player.";
-  }
-
-  @Override
-  public Visibility getVisibility() {
-    return Visibility.BOTH;
   }
 
   @Override

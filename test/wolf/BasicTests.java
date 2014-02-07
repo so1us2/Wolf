@@ -16,9 +16,9 @@ public class BasicTests {
 
   @Test
   public void invalidCommand() {
-    bot.onMessage("Khaladin", "!hello", true);
+    bot.onMessage("Khaladin", "!hello");
     
-    Assert.assertTrue(bot.getMessageLog().toString().contains("!newgame"));
+    Assert.assertTrue(bot.getMessageLog().toString().contains("/newgame"));
   }
 
 }

@@ -2,10 +2,9 @@ package wolf.bot;
 
 import java.util.List;
 
+import com.google.common.collect.Lists;
 import wolf.model.stage.InitialStage;
 import wolf.model.stage.Stage;
-
-import com.google.common.collect.Lists;
 
 public class TestBot implements IBot {
 
@@ -38,16 +37,21 @@ public class TestBot implements IBot {
   }
 
   public void msg(String sender, String message) {
-    onMessage(sender, message, false);
+    onMessage(sender, message);
   }
 
   public void privMsg(String sender, String message) {
-    onMessage(sender, message, true);
+    onMessage(sender, message);
   }
 
   @Override
-  public void onMessage(String sender, String message, boolean isPrivate) {
-    NarratorBot.handle(this, sender, message, isPrivate);
+  public void onMessage(String sender, String message) {
+    NarratorBot.handle(this, sender, message);
+  }
+
+  @Override
+  public void sendToAll(String from, String message) {
+    System.out.println("SendToAll: " + from + ": " + message);
   }
 
   public List<Message> getMessageLog() {

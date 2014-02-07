@@ -3,12 +3,10 @@ package wolf.model.stage;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
 import wolf.action.Action;
-import wolf.action.Visibility;
 import wolf.bot.IBot;
 import wolf.model.Player;
-
-import com.google.common.collect.ImmutableSet;
 
 public abstract class Stage {
 
@@ -20,30 +18,22 @@ public abstract class Stage {
     this.bot = bot;
   }
 
-  public void handleChat(IBot bot, String sender, String message, boolean isPrivate) {}
+  public void handleChat(IBot bot, String sender, String message) {
+    bot.sendToAll(sender, message);
+  }
 
-  public void handle(IBot bot, String sender, String command, List<String> args, boolean isPrivate) {
+  public void handle(IBot bot, String sender, String command, List<String> args) {
     Player player = getPlayer(sender);
 
     Action action = getActionForCommand(command, player);
 
     if (action == null) {
       String message = "Invalid command: " + command;
-      if (isPrivate) {
-        bot.sendMessage(sender, message);
-      } else {
-        bot.sendMessage(message);
-      }
+      bot.sendMessage(sender, message);
       action = getActionForCommand("commands", player);
     }
 
-    if (isPrivate && action.getVisibility() == Visibility.PUBLIC) {
-      bot.sendMessage(sender, "The " + command + " action does not work as a private message.");
-    } else if (!isPrivate && action.getVisibility() == Visibility.PRIVATE) {
-      bot.sendMessage(sender, "The " + command + " should be sent as a private message.");
-    }
-
-    action.apply(player, args, isPrivate);
+    action.apply(player, args);
   }
 
   public Player getPlayer(String name) {

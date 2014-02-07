@@ -2,12 +2,10 @@ package wolf.model.role;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import wolf.action.Action;
-import wolf.action.Visibility;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
-
-import com.google.common.collect.ImmutableList;
 
 public class Vigilante extends AbstractRole {
 
@@ -74,11 +72,6 @@ public class Vigilante extends AbstractRole {
     public String getDescription() {
       return "You have a single bullet. Use it wisely.";
     }
-
-    @Override
-    public Visibility getVisibility() {
-      return Visibility.PRIVATE;
-    };
   };
 
   private Action passAction = new Action("pass") {
@@ -95,11 +88,6 @@ public class Vigilante extends AbstractRole {
     public String getDescription() {
       return "You hold your fire and do not kill anyone.";
     }
-
-    @Override
-    public Visibility getVisibility() {
-      return Visibility.PRIVATE;
-    };
   };
 
 

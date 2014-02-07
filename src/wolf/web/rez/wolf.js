@@ -8,7 +8,7 @@ $("#the-input").keypress(function(e){
 		target.val("");
 		if(msg) {
 			if(loggedIn){
-				send("CHAT "+msg);
+				send("CHAT",msg);
 			} else{
 				login(msg);
 			}
@@ -20,7 +20,7 @@ if ("WebSocket" in window){
 	// Let us open a web socket
 	ws = new WebSocket("ws://localhost:80/socket");
 	ws.onopen = function() {
-		appendToChat("Connected to chat server.");
+		announce("Connected to chat server.");
 		var username = $.cookie("username");
 		if(username){
 			login(username);
@@ -30,7 +30,7 @@ if ("WebSocket" in window){
 		receive(evt.data);
 	};
 	ws.onclose = function() { 
-		appendToChat("Disconnected from chat server.");
+		announce("Disconnected from chat server.");
 		ws = null;
 		$(".input-label").html("Enter your username:");
 	};
@@ -40,29 +40,62 @@ else {
 }
 
 function login(username){
-	send("LOGIN "+username);
+	send("LOGIN", username);
 	$(".input-label").html("Chat");
-	appendToChat("Logged in as '"+username+"'");
+	announce("Logged in as '"+username+"'");
 	loggedIn=true;
 	$.cookie("username",username,{expires: 7});
 }
 
-function send(msg){
-	ws.send(msg);
+function send(command, arg){
+	var jsonData = {
+		command:command,
+		args:[arg]
+	};
+	ws.send(JSON.stringify(jsonData));
 }
 
 function receive(msg){
-	var i = msg.indexOf(" ");
-	var command = msg.substring(0,i);
-	var rest = msg.substring(i+1);
+	msg = JSON.parse(msg);
+	console.log(msg);
+	
+	var command = msg.command;
+	var args = msg.args;
+	
+	
 	if(command=="CHAT"){
-		appendToChat(rest);
+		append(args[0], args[1], false);
 	} else if(command=="CONNECTIONS"){
-		$("#viewers-count").text(rest);
+		$("#viewers-count").text(args[0]);
 	}
 }
 
-function appendToChat(msg){
+function append(from, msg, isPrivate){
+	var div = $("<div>");
+	var fromDiv = $("<div>").text("<"+from+">").addClass("sender");
+	var msgDiv = $("<div>").text(msg).addClass("message");
+	
+	if(from=="$narrator"){
+		msgDiv.addClass("private");
+		div.append(msgDiv);
+	} else{
+		div.append(fromDiv).append(msgDiv);
+	}
+	
+	$("#chat-text").append(div);
+	scrollToBottom();
+}
+
+function announce(msg){
 	var div = $("<div>").text(msg);
-	$(".chat-text").append(div);
+	div.addClass("private");
+	$("#chat-text").append(div);
+	scrollToBottom();
+}
+
+function scrollToBottom(){
+	var win = $(window);
+	if(win.scrollTop() + win.height() >= $(document).height()-100){
+		window.scrollTo(0, document.body.scrollHeight);
+	}
 }

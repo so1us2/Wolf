@@ -27,7 +27,7 @@ public class DetailsAction extends SetupAction {
       getBot().sendMessage("No special actions.");
     } else {
       for (Action a : actions) {
-        getBot().sendMessage("!" + a.getName() + ": " + a.getDescription());
+        getBot().sendMessage("/" + a.getName() + ": " + a.getDescription());
       }
     }
   }

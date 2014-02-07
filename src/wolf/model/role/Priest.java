@@ -2,12 +2,10 @@ package wolf.model.role;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
 import wolf.action.Action;
-import wolf.action.Visibility;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
-
-import com.google.common.collect.ImmutableList;
 
 public class Priest extends AbstractRole {
 
@@ -70,11 +68,6 @@ public class Priest extends AbstractRole {
     public String getDescription() {
       return "Protects the target from being killed by wolves tonight.";
     }
-
-    @Override
-    public Visibility getVisibility() {
-      return Visibility.PRIVATE;
-    };
   };
 
 }

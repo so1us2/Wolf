@@ -2,14 +2,12 @@ package wolf.model.role;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import wolf.action.Action;
-import wolf.action.Visibility;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.stage.GameStage;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
 public class Seer extends AbstractRole {
 
@@ -96,11 +94,6 @@ public class Seer extends AbstractRole {
     public String getDescription() {
       return "Gain information on whether that person is one of the villagers or wolves.";
     }
-
-    @Override
-    public Visibility getVisibility() {
-      return Visibility.PRIVATE;
-    };
   };
 
 }

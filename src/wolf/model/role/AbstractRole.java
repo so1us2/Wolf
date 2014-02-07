@@ -1,9 +1,11 @@
 package wolf.model.role;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.List;
 
+import com.google.common.base.Throwables;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableList;
 import wolf.action.Action;
 import wolf.bot.IBot;
 import wolf.model.Faction;
@@ -11,10 +13,7 @@ import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.stage.GameStage;
 
-import com.google.common.base.Throwables;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.ImmutableList;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class AbstractRole implements Comparable<AbstractRole> {
 
@@ -106,7 +105,9 @@ public abstract class AbstractRole implements Comparable<AbstractRole> {
     return ImmutableList.of();
   }
 
-  public void handleChat(Player sender, String message, boolean isPrivate) {}
+  public void handleChat(Player sender, String message) {
+    getBot().sendToAll(sender.getName(), message);
+  }
 
   public static AbstractRole create(Role role, Player player) {
     Class<? extends AbstractRole> c = roleMap.get(role);

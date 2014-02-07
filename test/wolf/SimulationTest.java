@@ -23,13 +23,13 @@ public abstract class SimulationTest {
   }
 
   protected void checkForAbsence(String s) {
-    if (bot.getMessageLog().toString().contains(s)) {
+    if (bot.getMessageLog().toString().toLowerCase().contains(s.toLowerCase())) {
       throw new RuntimeException("Found message that shouldn't exist: " + s);
     }
   }
 
   protected void checkForMessage(String s) {
-    if (!bot.getMessageLog().toString().contains(s)) {
+    if (!bot.getMessageLog().toString().toLowerCase().contains(s.toLowerCase())) {
       throw new RuntimeException("Could not find message in the log: " + s);
     }
   }

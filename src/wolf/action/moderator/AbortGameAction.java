@@ -2,7 +2,6 @@ package wolf.action.moderator;
 
 import java.util.List;
 
-import wolf.action.Visibility;
 import wolf.action.game.GameAction;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
@@ -30,8 +29,4 @@ public class AbortGameAction extends GameAction {
     return true;
   }
 
-  @Override
-  public Visibility getVisibility() {
-    return Visibility.BOTH;
-  }
 }

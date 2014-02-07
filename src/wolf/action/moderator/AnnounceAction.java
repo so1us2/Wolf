@@ -1,16 +1,14 @@
 package wolf.action.moderator;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.List;
 
+import com.google.common.base.Joiner;
 import wolf.WolfException;
 import wolf.action.Action;
-import wolf.action.Visibility;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
 
-import com.google.common.base.Joiner;
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class AnnounceAction extends Action {
 
@@ -26,7 +24,7 @@ public class AnnounceAction extends Action {
   }
 
   @Override
-  public void apply(Player invoker, List<String> args, boolean isPrivate) {
+  public void apply(Player invoker, List<String> args) {
     checkNotNull(invoker);
     checkNotNull(args);
 
@@ -45,11 +43,6 @@ public class AnnounceAction extends Action {
   @Override
   public boolean requiresAdmin() {
     return true;
-  }
-
-  @Override
-  public Visibility getVisibility() {
-    return Visibility.PRIVATE;
   }
 
 }

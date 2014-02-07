@@ -12,17 +12,10 @@ public class CommandsAction extends Action {
   }
 
   @Override
-  public void apply(Player invoker, List<String> args, boolean isPrivate) {
-    if (isPrivate) {
-      getBot().sendMessage(invoker.getName(), "Supported Commands:");
-      for (Action a : this.getStage().getAvailableActions(invoker)) {
-        getBot().sendMessage(invoker.getName(), a.getUsage() + " - " + a.getDescription());
-      }
-    } else {
-      getBot().sendMessage("Supported Commands:");
-      for (Action a : this.getStage().getAvailableActions(invoker)) {
-        getBot().sendMessage(a.getUsage() + " - " + a.getDescription());
-      }
+  public void apply(Player invoker, List<String> args) {
+    getBot().sendMessage(invoker.getName(), "Supported Commands:");
+    for (Action a : this.getStage().getAvailableActions(invoker)) {
+      getBot().sendMessage(invoker.getName(), a.getUsage() + " - " + a.getDescription());
     }
   }
 
@@ -34,11 +27,6 @@ public class CommandsAction extends Action {
   @Override
   public String getDescription() {
     return "Prints out a list of all supported commands.";
-  }
-
-  @Override
-  public Visibility getVisibility() {
-    return Visibility.BOTH;
   }
 
 }

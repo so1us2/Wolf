@@ -2,7 +2,6 @@ package wolf;
 
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
-
 import wolf.bot.TestBot;
 import wolf.model.Role;
 import wolf.model.role.Demon;
@@ -72,7 +71,7 @@ public class DemonTest extends SimulationTest {
     bot.privMsg("Ian", "!pass");
     bot.privMsg("Mongo", "!drink Ian");
 
-    checkForMessage("Ian is a Demon.");
+    checkForMessage("Ian is a demon.");
     checkForMessage("Your wish to protect Tom has been received.");
     checkForMessage(Demon.NO_KILL_MESSAGE);
     checkForMessage("You plan to make a drink for Ian.");

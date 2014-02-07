@@ -2,7 +2,6 @@ package wolf.action.moderator;
 
 import java.util.List;
 
-import wolf.action.Visibility;
 import wolf.action.game.GameAction;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
@@ -27,11 +26,6 @@ public class ReminderAction extends GameAction {
   @Override
   public String getDescription() {
     return "Remind players who need to act to do so.";
-  }
-
-  @Override
-  public Visibility getVisibility() {
-    return Visibility.BOTH;
   }
 
   @Override

@@ -8,7 +8,7 @@
 .header h1{
   margin: 5px;
 }
-.chat-text{
+#chat-text{
   padding: 45px 10px 30px 10px;
 }
 .chat-input {
@@ -33,4 +33,18 @@
 	float: right;
 	padding-right: 20px;
 	padding-top: 5px;
+}
+
+.sender{
+	display: inline;
+	margin-right: 7px;
+}
+
+.message{
+	 display: inline;
+}
+
+.private{
+  color: purple;
+  font-weight: bold;
 }

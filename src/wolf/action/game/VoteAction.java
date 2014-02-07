@@ -4,13 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import wolf.WolfException;
-import wolf.action.Visibility;
-import wolf.model.Player;
-import wolf.model.stage.GameStage;
-
 import com.google.common.base.Objects;
 import com.google.common.collect.Maps;
+import wolf.WolfException;
+import wolf.model.Player;
+import wolf.model.stage.GameStage;
 
 public class VoteAction extends GameAction {
 
@@ -103,11 +101,6 @@ public class VoteAction extends GameAction {
   @Override
   public String getDescription() {
     return "Votes to have a player lynched.";
-  }
-
-  @Override
-  public Visibility getVisibility() {
-    return Visibility.PRIVATE;
   }
 
 }

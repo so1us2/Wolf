@@ -2,13 +2,11 @@ package wolf.model.role;
 
 import java.util.List;
 
-import wolf.action.Action;
-import wolf.action.Visibility;
-import wolf.model.Player;
-import wolf.model.stage.GameStage;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
+import wolf.action.Action;
+import wolf.model.Player;
+import wolf.model.stage.GameStage;
 
 public class Bartender extends AbstractRole {
 
@@ -65,11 +63,6 @@ public class Bartender extends AbstractRole {
     public String getDescription() {
       return "You send a drink to someone.";
     }
-
-    @Override
-    public Visibility getVisibility() {
-      return Visibility.PRIVATE;
-    };
   };
 
   private Action passAction = new Action("pass") {
@@ -86,11 +79,6 @@ public class Bartender extends AbstractRole {
     public String getDescription() {
       return "You don't make a drink for anyone tonight.";
     }
-
-    @Override
-    public Visibility getVisibility() {
-      return Visibility.PRIVATE;
-    };
   };
 
 

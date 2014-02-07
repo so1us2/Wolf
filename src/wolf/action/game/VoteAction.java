@@ -50,7 +50,6 @@ public class VoteAction extends GameAction {
     Player dayKillTarget = getMajorityVote(tally);
 
     if (dayKillTarget == null) {
-
       String mode = getStage().getSetting("ANNOUNCE_ON_TIE");
       if (mode.equals("NONE")) {
         getBot().sendMessage("No majority was reached.");

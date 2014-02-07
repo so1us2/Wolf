@@ -17,7 +17,6 @@ public class SetFlagAction extends SetupAction {
   protected void execute(Player invoker, List<String> args) {
     String settingName = args.get(0).toUpperCase();
     String option = args.get(1).toUpperCase();
-    // is this better than using the static method to see if the setting exists?
     if (!getStage().getConfig().getSettings().containsKey(settingName)) {
       throw new WolfException(settingName + " is not a valid setting.");
     }

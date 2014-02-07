@@ -9,6 +9,7 @@ import wolf.model.stage.GameStage;
 
 import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 public class Priest extends AbstractRole {
@@ -22,7 +23,7 @@ public class Priest extends AbstractRole {
     protectTarget = null;
 
     if (!isLegalProtection()) {
-      getBot().sendMessage(getPlayer().getName(), "There is no legal protection.");
+      getBot().sendMessage(getPlayer().getName(), "There are no legal targets to protect tonight.");
     }
 
     getBot().sendMessage(getPlayer().getName(),
@@ -102,7 +103,7 @@ public class Priest extends AbstractRole {
 
     private Player getLastProtect() {
       if (protectHistory.size() > 0) {
-        return protectHistory.get(protectHistory.size() - 1);
+        Iterables.getLast(protectHistory);
       }
       return null;
     }

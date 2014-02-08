@@ -1,10 +1,7 @@
 package wolf.action.moderator;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.List;
 
-import wolf.WolfException;
 import wolf.action.Action;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
@@ -22,18 +19,6 @@ public class AnnounceAction extends Action {
     StringBuilder output = new StringBuilder();
     output.append("ANNOUNCEMENT - ").append(Joiner.on(" ").join(args));
     getBot().sendMessage(output.toString());
-  }
-
-  @Override
-  public void apply(Player invoker, List<String> args) {
-    checkNotNull(invoker);
-    checkNotNull(args);
-
-    if (requiresAdmin() && !invoker.isAdmin()) {
-      throw new WolfException("You must be an admin to do that.");
-    }
-
-    execute(invoker, args);
   }
 
   @Override

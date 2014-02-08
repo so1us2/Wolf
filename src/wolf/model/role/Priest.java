@@ -30,6 +30,22 @@ public class Priest extends AbstractRole {
   }
 
   @Override
+  public String getSettingsExplanation() {
+    StringBuilder output = new StringBuilder();
+
+    String mode = getStage().getSetting("PROTECTION_MODE");
+    if (mode.equals("EVERY_OTHER_NIGHT")) {
+      output.append("You cannot protect the same player in back to back nights.");
+    } else if (mode.equals("ONCE_PER_GAME")) {
+      output.append("You can only protect each player once per game.");
+    } else if (mode.equals("NO_RULES")) {
+      output.append("You can protect any player you want each night.");
+    }
+
+    return output.toString();
+  }
+
+  @Override
   public void onNightEnds() {
     protectHistory.add(protectTarget);
   }

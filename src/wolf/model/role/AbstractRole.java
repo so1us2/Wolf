@@ -1,11 +1,9 @@
 package wolf.model.role;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
-import com.google.common.base.Throwables;
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-import com.google.common.collect.ImmutableList;
 import wolf.action.Action;
 import wolf.bot.IBot;
 import wolf.model.Faction;
@@ -13,7 +11,10 @@ import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.stage.GameStage;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.base.Throwables;
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableList;
 
 public abstract class AbstractRole implements Comparable<AbstractRole> {
 
@@ -55,7 +56,17 @@ public abstract class AbstractRole implements Comparable<AbstractRole> {
     return null;
   }
 
-  public void onGameStart() {}
+  public void onGameStart() {
+    getStage().getBot().sendMessage(player.getName(), getDescription());
+    String exp = getSettingsExplanation();
+    if (exp != null) {
+      getStage().getBot().sendMessage(player.getName(), exp);
+    }
+  }
+
+  public String getSettingsExplanation() {
+    return null;
+  }
 
   public void onNightBegins() {}
 
@@ -68,6 +79,7 @@ public abstract class AbstractRole implements Comparable<AbstractRole> {
   */
   public void onPlayerSwitch() {
     getStage().getBot().sendMessage(player.getName(), "Welcome to the game. You are a " + role);
+    getStage().getBot().sendMessage(player.getName(), getDescription());
   }
 
   public abstract String getDescription();

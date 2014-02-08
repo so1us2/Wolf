@@ -31,8 +31,21 @@ public class Vigilante extends AbstractRole {
       hasFired = true;
       killTarget = null;
     }
-
     hasActed = false;
+  }
+
+  @Override
+  public String getSettingsExplanation() {
+    StringBuilder output = new StringBuilder();
+    String mode = getStage().getSetting("TELL_VIG_ON_KILL");
+    if (mode.equals("NONE")) {
+      output.append("You will find out nothing about the people you kill.");
+    } else if (mode.equals("FACTION")) {
+      output.append("You will find out the faction of people you kill.");
+    } else if (mode.equals("ROLE")) {
+      output.append("You will find out the role of people you kill.");
+    }
+    return output.toString();
   }
 
   @Override

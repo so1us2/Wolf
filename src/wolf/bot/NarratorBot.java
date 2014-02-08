@@ -67,4 +67,7 @@ public class NarratorBot extends WolfBot implements IBot {
     new NarratorBot();
   }
 
+  @Override
+  public void onPlayersChanged() {}
+
 }

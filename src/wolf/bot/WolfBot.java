@@ -1,9 +1,8 @@
 package wolf.bot;
 
+import com.google.common.base.Throwables;
 import org.jibble.pircbot.PircBot;
 import org.jibble.pircbot.User;
-
-import com.google.common.base.Throwables;
 
 public abstract class WolfBot extends PircBot {
 
@@ -81,5 +80,4 @@ public abstract class WolfBot extends PircBot {
   protected final void onPart(String channel, String sender, String login, String hostname) {
     personLeft(sender);
   }
-
 }

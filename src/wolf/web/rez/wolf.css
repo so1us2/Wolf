@@ -1,54 +1,20 @@
-.header{
-  position: fixed;
-  width:100%;
-  top: 0;
-  background-color: white;
-  border-bottom: 1px solid black;
+#container-main{
+  margin-top: 60px;
+  margin-bottom: 50px;
 }
-.header h1{
-  margin: 5px;
-}
-#chat-text{
-  padding: 45px 10px 30px 10px;
-}
-
-#rankings-link{
-}
-
-.chat-input {
-  height:35px;
-  position: fixed;
-  bottom: 0;
-  background-color: white;
-}
-.chat-input input{
-  width:600px;
-}
-.input-label{
-	display: inline;
-}
-#the-input{
-	margin-left: 10px;
-}
-.inline{
-  display: inline;
-}
-#viewers{
-	float: right;
-	padding-right: 20px;
-	padding-top: 5px;
-}
-
-.sender{
-	display: inline;
-	margin-right: 7px;
-}
-
-.message{
-	 display: inline;
-}
-
 .private{
-  color: purple;
-  font-weight: bold;
+	color: purple;
+}
+.msg-author{
+	margin-right: 10px;
+	font-weight: bold;
+}
+.dead{
+	background-color: #000;
+	color: #FFF;
+	font-style: italic;
+}
+.alive{
+	background-color: #DFF0D8;
+	font-weight: bold;
 }

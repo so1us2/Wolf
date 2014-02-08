@@ -20,6 +20,7 @@ public class JoinAction extends SetupAction {
     }
     getBot().sendMessage(
         invoker.getName() + " joined the game (" + getStage().getPlayers().size() + " players)");
+    getBot().onPlayersChanged();
   }
 
   @Override

@@ -1,7 +1,7 @@
 var ws;
 var loggedIn = false;
 
-$("#the-input").keypress(function(e){
+$("#text-input").keypress(function(e){
 	if(e.which==13){ //enter
 		var target = $(e.target);
 		var msg = target.val().trim();
@@ -41,7 +41,8 @@ else {
 
 function login(username){
 	send("LOGIN", username);
-	$(".input-label").html("Chat");
+	$("#text-input").prop("placeholder", "Chat");
+	$("#text-input").animate({"width":500});
 	announce("Logged in as '"+username+"'");
 	loggedIn=true;
 	$.cookie("username",username,{expires: 7});
@@ -62,18 +63,31 @@ function receive(msg){
 	var command = msg.command;
 	var args = msg.args;
 	
-	
 	if(command=="CHAT"){
 		append(args[0], args[1], false);
-	} else if(command=="CONNECTIONS"){
-		$("#viewers-count").text(args[0]);
+	} else if(command=="PLAYERS"){
+		$(".list-group-item").remove();
+		
+		$("#viewers-count").text(msg.num_viewers);
+		for(var i=0; i<msg.alive.length; i++){
+			var player = msg.alive[i];
+			$("#list-players").append($("<li class='list-group-item alive'>").text(player));
+		}
+		for(var i=0; i<msg.dead.length; i++){
+			var player = msg.dead[i];
+			$("#list-players").append($("<li class='list-group-item dead'>").text(player));
+		}
+		for(var i=0; i<msg.watchers.length; i++){
+			var player = msg.watchers[i];
+			$("#list-watching").append($("<li class='list-group-item'>").text(player));
+		}
 	}
 }
 
 function append(from, msg, isPrivate){
-	var div = $("<div>");
-	var fromDiv = $("<div>").text("<"+from+">").addClass("sender");
-	var msgDiv = $("<div>").text(msg).addClass("message");
+	var div = $("<div class='row'>");
+	var fromDiv = $("<span class='msg-author'>").text("<"+from+">").addClass("sender");
+	var msgDiv =  $("<span class='msg-text'>").text(msg).addClass("message");
 	
 	if(from=="$narrator"){
 		msgDiv.addClass("private");
@@ -87,7 +101,7 @@ function append(from, msg, isPrivate){
 }
 
 function announce(msg){
-	var div = $("<div>").text(msg);
+	var div = $("<div class='row'>").text(msg);
 	div.addClass("private");
 	$("#chat-text").append(div);
 	scrollToBottom();

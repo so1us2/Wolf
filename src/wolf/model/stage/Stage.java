@@ -36,6 +36,8 @@ public abstract class Stage {
     action.apply(player, args);
   }
 
+  public abstract Iterable<Player> getAllPlayers();
+
   public Player getPlayer(String name) {
     return new Player(name, admins.contains(name));
   }

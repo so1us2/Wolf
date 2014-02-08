@@ -20,6 +20,7 @@ public class LeaveAction extends SetupAction {
     }
     getBot().sendMessage(
         invoker.getName() + " left the game (" + getStage().getPlayers().size() + " players)");
+    getBot().onPlayersChanged();
   }
 
   @Override

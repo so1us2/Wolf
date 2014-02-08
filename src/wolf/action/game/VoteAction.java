@@ -78,6 +78,7 @@ public class VoteAction extends GameAction {
         getBot().sendMessage(
             dayKillTarget.getName() + " was a " + dayKillTarget.getRole().getType());
       } else if (mode.equals("SILENT")) {}
+      getBot().onPlayersChanged();
       if (getStage().checkForWinner() != null) {
         // game is over, don't need to do any more logic here.
         return;

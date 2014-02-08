@@ -1,11 +1,18 @@
 package wolf.model.stage;
 
-import static com.google.common.collect.Iterables.filter;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import wolf.WolfException;
 import wolf.action.Action;
 import wolf.action.CommandsAction;
@@ -36,14 +43,7 @@ import wolf.model.role.Priest;
 import wolf.model.role.Vigilante;
 import wolf.model.role.Wolf;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
+import static com.google.common.collect.Iterables.filter;
 
 public class GameStage extends Stage {
 
@@ -254,6 +254,8 @@ public class GameStage extends Stage {
       }
     }
 
+    getBot().onPlayersChanged();
+
     if (checkForWinner() != null) {
       return;
     }
@@ -455,6 +457,11 @@ public class GameStage extends Stage {
 
   public String getSetting(String settingName) {
     return config.getSettings().get(settingName);
+  }
+
+  @Override
+  public Iterable<Player> getAllPlayers() {
+    return ImmutableList.copyOf(this.players);
   }
 
   private static final Predicate<Player> alive = new Predicate<Player>() {

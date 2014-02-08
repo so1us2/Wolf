@@ -3,6 +3,9 @@ package wolf.model.stage;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Sets;
 import wolf.action.Action;
 import wolf.action.CommandsAction;
 import wolf.action.setup.DetailsAction;
@@ -20,9 +23,6 @@ import wolf.action.setup.StartGameAction;
 import wolf.bot.IBot;
 import wolf.model.GameConfig;
 import wolf.model.Player;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Sets;
 
 public class SetupStage extends Stage {
 
@@ -59,6 +59,11 @@ public class SetupStage extends Stage {
   @Override
   public List<Action> getAvailableActions(Player player) {
     return ImmutableList.copyOf(actions);
+  }
+
+  @Override
+  public Iterable<Player> getAllPlayers() {
+    return ImmutableSet.copyOf(players);
   }
 
 }

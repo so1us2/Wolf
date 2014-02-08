@@ -6,6 +6,7 @@ import java.util.Set;
 
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
@@ -18,6 +19,7 @@ import org.webbitserver.BaseWebSocketHandler;
 import org.webbitserver.WebSocketConnection;
 import wolf.WolfException;
 import wolf.bot.IBot;
+import wolf.model.Player;
 import wolf.model.stage.InitialStage;
 import wolf.model.stage.Stage;
 
@@ -37,7 +39,7 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
   @Override
   public void onOpen(WebSocketConnection connection) {
     allConnections.add(connection);
-    sendToAll("CONNECTIONS", allConnections.size());
+    connection.send(createPlayersObject());
   }
 
   @Override
@@ -47,7 +49,7 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
     if (user != null) {
       nameConnectionMap.remove(user);
     }
-    sendToAll("CONNECTIONS", allConnections.size());
+    sendRemote(createPlayersObject());
   }
 
   @Override
@@ -83,6 +85,8 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
       }
       connectionNameMap.put(from, args.get(0));
       nameConnectionMap.put(args.get(0), from);
+
+      sendRemote(createPlayersObject());
     } else if (command.equalsIgnoreCase("chat")) {
       String sender = connectionNameMap.get(from);
       if (sender == null) {
@@ -124,10 +128,7 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
 
   private void sendToAll(String command, Object... args) {
     String s = constructJson(command, args);
-
-    for (WebSocketConnection conn : ImmutableList.copyOf(allConnections)) {
-      conn.send(s);
-    }
+    sendRemote(s);
   }
 
   private String constructJson(String command, Object... args) {
@@ -189,6 +190,56 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
   @Override
   public void unmute(String player) {
     playersAllowedToSpeak.add(player.toLowerCase());
+  }
+
+  @Override
+  public void onPlayersChanged() {
+    sendRemote(createPlayersObject());
+  }
+
+  private String createPlayersObject() {
+    JsonObject o = new JsonObject();
+
+    o.addProperty("command", "PLAYERS");
+    o.addProperty("num_viewers", allConnections.size());
+
+    JsonArray alive = new JsonArray();
+    JsonArray dead = new JsonArray();
+    JsonArray watchers = new JsonArray();
+
+    Set<String> players = Sets.newHashSet();
+
+    for (Player p : Sets.newTreeSet(stage.getAllPlayers())) {
+      players.add(p.getName());
+      JsonPrimitive e = new JsonPrimitive(p.getName());
+      if (p.isAlive()) {
+        alive.add(e);
+      } else {
+        dead.add(e);
+      }
+    }
+
+    for (String s : ImmutableSet.copyOf(nameConnectionMap.keySet())) {
+      if (!players.contains(s)) {
+        watchers.add(new JsonPrimitive(s));
+      }
+    }
+
+    o.add("alive", alive);
+    o.add("dead", dead);
+    o.add("watchers", watchers);
+
+    return o.toString();
+  }
+
+  private void sendRemote(String s) {
+    for (WebSocketConnection conn : ImmutableList.copyOf(allConnections)) {
+      try {
+        conn.send(s);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+    }
   }
 
 }

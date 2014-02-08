@@ -25,6 +25,8 @@ public interface IBot {
 
   public void unmute(String player);
 
+  public void onPlayersChanged();
+
   // public void unmutePlayers(List<String> players);
 
 }

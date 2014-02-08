@@ -35,7 +35,7 @@ public class Priest extends AbstractRole {
 
     String mode = getStage().getSetting("PROTECTION_MODE");
     if (mode.equals("EVERY_OTHER_NIGHT")) {
-      output.append("You cannot protect the same player in back to back nights.");
+      output.append("You cannot protect the same player two nights in a row.");
     } else if (mode.equals("ONCE_PER_GAME")) {
       output.append("You can only protect each player once per game.");
     } else if (mode.equals("NO_RULES")) {

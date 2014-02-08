@@ -8,6 +8,7 @@ import org.joda.time.format.DateTimeFormatter;
 
 import wolf.bot.IBot;
 
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 public class VotingHistory {
@@ -21,7 +22,7 @@ public class VotingHistory {
   }
 
   public void record(Player player, Player voteTarget) {
-    List<Vote> list = history.get(history.size() - 1);
+    List<Vote> list = Iterables.getLast(history);
     list.add(new Vote(player, voteTarget));
   }
 
@@ -35,7 +36,9 @@ public class VotingHistory {
 
   public void print(IBot bot) {
     for (int roundNumber = 1; roundNumber <= history.size(); roundNumber++) {
+      bot.sendMessage("Voting Round " + roundNumber);
       printRound(bot, roundNumber);
+      bot.sendMessage("");
     }
   }
 

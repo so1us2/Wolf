@@ -15,7 +15,7 @@ import wolf.action.setup.ListAllRolesAction;
 import wolf.action.setup.ListConfigsAction;
 import wolf.action.setup.ListPlayersAction;
 import wolf.action.setup.ListSettingsAction;
-import wolf.action.setup.ListSetupAction;
+import wolf.action.setup.CurrentSetupAction;
 import wolf.action.setup.LoadConfigAction;
 import wolf.action.setup.SetFlagAction;
 import wolf.action.setup.SetRoleAction;
@@ -39,7 +39,7 @@ public class SetupStage extends Stage {
     actions.add(new LoadConfigAction(this));
     actions.add(new ListConfigsAction(this));
     actions.add(new ListPlayersAction(this));
-    actions.add(new ListSetupAction(this));
+    actions.add(new CurrentSetupAction(this));
     actions.add(new SetRoleAction(this));
     actions.add(new StartGameAction(this));
     actions.add(new DetailsAction(this));

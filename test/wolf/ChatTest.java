@@ -32,10 +32,12 @@ public class ChatTest extends SimulationTest {
     bot.msg("Snape", "!join");
     bot.msg("Potter", "!join");
 
-    bot.msg("Khaladin", "!set Villager 2");
-    bot.msg("Khaladin", "!set Wolf 1");
-    bot.msg("Khaladin", "!set Seer 1");
-    bot.msg("Khaladin", "!set Priest 1");
+    bot.msg("Khaladin", "!setrole Villager 2");
+    bot.msg("Khaladin", "!setrole Wolf 1");
+    bot.msg("Khaladin", "!setrole Seer 1");
+    bot.msg("Khaladin", "!setrole Priest 1");
+
+    bot.msg("Khaladin", "!setflag privatechat enabled");
 
     bot.msg("Khaladin", "!start");
 
@@ -48,22 +50,36 @@ public class ChatTest extends SimulationTest {
 
   private void day1Votes() {
     bot.privMsg("Khaladin", "!newroom myroom");
+    checkForMessage("Khaladin has opened private room MYROOM.");
     bot.privMsg("Khaladin", "!authorize TomM");
     bot.privMsg("Jason", "!joinroom myroom");
+    checkForMessage("<MYROOM> Jason attempted to join but is not authorized.");
     bot.privMsg("TomM", "!joinroom myroom");
+    checkForMessage("<MYROOM> TomM has joined the room.");
     bot.privMsg("Jason", "!chat hi");
+    checkForMessage("You are not in a room.");
     bot.privMsg("TomM", "!chat hi");
+    checkForMessage("<MYROOM> TomM: hi");
     bot.privMsg("TomM", "!authorize Snape");
+    checkForMessage("<MYROOM> Snape is authorized to join.");
     bot.privMsg("Snape", "!joinroom myroom");
+    checkForMessage("<MYROOM> Snape has joined the room.");
+    checkForMessage("Snape is in MYROOM with: Khaladin, TomM.");
     bot.privMsg("Snape", "!chat hi everybody!");
+    checkForMessage("<MYROOM> Snape: hi everybody");
     bot.privMsg("TomM", "!newroom coolkids");
+    checkForMessage("<MYROOM> TomM has left the room.");
+    checkForMessage("TomM has left MYROOM.");
+    checkForMessage("TomM has opened private room COOLKIDS.");
     bot.privMsg("TomM", "!authorize Jason");
+    checkForMessage("<COOLKIDS> Jason is authorized to join.");
     bot.privMsg("Jason", "!joinroom coolkids");
+    checkForMessage("<COOLKIDS> Jason has joined the room.");
     bot.privMsg("TomM", "!chat hi Jason");
     bot.privMsg("TomM", "!listrooms");
     bot.msg("Snape", "!listrooms");
-
-
+    checkForMessage("MYROOM: Khaladin, Snape");
+    checkForMessage("COOLKIDS: Jason, TomM");
     bot.privMsg("Khaladin", "!vote Snape");
     bot.privMsg("Jason", "!vote Snape");
     bot.privMsg("TomM", "!vote Snape");
@@ -99,8 +115,8 @@ public class ChatTest extends SimulationTest {
     bot.privMsg("TomM", "!peek Potter");
     bot.privMsg("Potter", "!kill TomM");
 
-    checkForMessage("RAWRRRR!! Potter is a wolf.");
-    checkForMessage("The sun dawns and you find TomM dead in the village.");
+    checkForMessage("Potter is a wolf.");
+    checkForMessage("You find that TomM is dead.");
     checkForMessage("The Wolves have won the game!");
   }
 

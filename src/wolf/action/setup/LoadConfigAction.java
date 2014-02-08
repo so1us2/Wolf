@@ -2,6 +2,7 @@ package wolf.action.setup;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import wolf.WolfException;
 import wolf.model.Player;
@@ -33,7 +34,14 @@ public class LoadConfigAction extends SetupAction {
       throw new WolfException(configName + " is an invalid configuration.");
     }
     this.getStage().getConfig().setRoles(configs.get(configName));
-    getBot().sendMessage(configName + " loaded.");
+    StringBuilder output = new StringBuilder();
+    output.append(configName + " loaded: ");
+    Map<Role, Integer> roles = getStage().getConfig().getRoles();
+    for (Entry<Role, Integer> e : roles.entrySet()) {
+      output.append(e.getKey()).append(" (").append(e.getValue()).append("), ");
+    }
+    output.setLength(output.length() - 2);
+    getBot().sendMessage(output.toString());
   }
 
   @Override

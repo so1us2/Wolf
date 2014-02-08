@@ -24,6 +24,20 @@ public class Demon extends AbstractRole {
   }
 
   @Override
+  public String getSettingsExplanation() {
+    StringBuilder output = new StringBuilder();
+    String mode = getStage().getSetting("TELL_DEMON_ON_KILL");
+    if (mode.equals("NONE")) {
+      output.append("You will find out nothing about the people you kill.");
+    } else if (mode.equals("FACTION")) {
+      output.append("You will find out the faction of people you kill.");
+    } else if (mode.equals("ROLE")) {
+      output.append("You will find out the role of people you kill.");
+    }
+    return output.toString();
+  }
+
+  @Override
   public boolean isFinishedWithNightAction() {
     return hasActed;
   }
@@ -45,7 +59,7 @@ public class Demon extends AbstractRole {
 
   @Override
   public String getDescription() {
-    return "The Demon is a solo role that wins by killing everyone else.";
+    return "The Demon is a solo role that wins by killing everyone else. Any other character that targets the demon at night will die.";
   }
 
   private Action killAction = new Action("kill", "target") {

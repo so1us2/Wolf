@@ -19,13 +19,13 @@ public class Seer extends AbstractRole {
 
   @Override
   public void onGameStart() {
+    super.onGameStart();
+
     if (getStage().getSetting("PRE_GAME_PEEK").equals("NO")) {
       return;
     }
-
     String mode = getStage().getSetting("PRE_GAME_PEEK_MODE");
-    // what is right style for villagers initialization here?
-    List<Player> villagers = null;
+    List<Player> villagers;
     if (mode.equals("REGULAR_VILLAGERS")) {
       villagers = getStage().getPlayers(Role.VILLAGER);
     } else if (mode.equals("ALL_VILLAGERS")) {
@@ -34,11 +34,33 @@ public class Seer extends AbstractRole {
         villagers.removeAll(getStage().getPlayers(Role.MINION));
       }
       villagers.remove(getPlayer());
+    } else {
+      return;
     }
 
     Player peek = villagers.get((int) (Math.random() * villagers.size()));
     peekHistory.add(peek);
     getBot().sendMessage(getPlayer().getName(), peek.getName() + " is a villager.");
+  }
+
+  @Override
+  public String getSettingsExplanation() {
+    StringBuilder output = new StringBuilder();
+    if (getStage().getSetting("PRE_GAME_PEEK").equals("NO")) {
+      output.append("You will not get a random peek before the game starts.");
+    } else {
+      String mode = getStage().getSetting("PRE_GAME_PEEK_MODE");
+      output.append("Before the game, ");
+      if (mode.equals("REGULAR_VILLAGERS")) {
+        output.append("you will get the name of a random VILLAGER (no special roles).");
+      } else if (mode.equals("ALL_VILLAGERS")) {
+        output.append("you will get the name of a random human (could have special role).");
+        if (getStage().getSetting("FIRST_PEEK_MINION").equals("NO")) {
+          output.append(" It could be a Minion.");
+        }
+      }
+    }
+    return output.toString();
   }
 
   @Override
@@ -50,7 +72,7 @@ public class Seer extends AbstractRole {
   public void onNightBegins() {
     peekTarget = null;
     if (!hasPeekedEveryone()) {
-    getBot().sendMessage(getPlayer().getName(),
+      getBot().sendMessage(getPlayer().getName(),
           "Who do you want to peek?  Message /peek <target>");
     } else {
       getBot().sendMessage(getPlayer().getName(), "You have peeked everyone.");
@@ -79,12 +101,10 @@ public class Seer extends AbstractRole {
     Player player = getPlayer();
     peekHistory.add(peekTarget);
 
-    getStage().getBot()
-        .sendMessage(
-            player.getName(),
+    getStage().getBot().sendMessage(
+        player.getName(),
         peekTarget.getName() + " is a "
-            + peekTarget.getRole().getFaction().getSingularForm().toLowerCase()
-                + ".");
+            + peekTarget.getRole().getFaction().getSingularForm().toLowerCase() + ".");
   }
 
   @Override

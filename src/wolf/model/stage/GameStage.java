@@ -1,5 +1,7 @@
 package wolf.model.stage;
 
+import static com.google.common.collect.Iterables.filter;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -46,8 +48,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
-
-import static com.google.common.collect.Iterables.filter;
 
 public class GameStage extends Stage {
 
@@ -456,7 +456,9 @@ public class GameStage extends Stage {
       actions.addAll(adminActions);
     }
     if (isDay()) {
-      actions.addAll(daytimeActions);
+      if (config.getSettings().get("PRIVATE_CHAT").equals("ENABLED")) {
+        actions.addAll(daytimeActions);
+      }
       actions.addAll(chatActions);
     } else {
       List<Action> ret = Lists.newArrayList();

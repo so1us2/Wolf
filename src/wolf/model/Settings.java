@@ -33,6 +33,9 @@ public class Settings {
     category("WOLF").name("TELL_WOLVES_ON_KILL").options("NONE", "FACTION", "ROLE")
         .defaultSetting("NONE")
         .description("Will wolves be told the role of the player that they kill?");
+    category("VIGILANTE").name("TELL_VIG_ON_KILL").options("NONE", "FACTION", "ROLE")
+        .defaultSetting("FACTION")
+        .description("Will wolves be told the role of the player that they kill?");
     category("DEMON").name("TELL_DEMON_ON_KILL").options("NONE", "FACTION", "ROLE")
         .defaultSetting("NONE")
         .description("Will the demon be told the role of the player it kills?");

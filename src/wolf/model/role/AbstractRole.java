@@ -32,6 +32,8 @@ public abstract class AbstractRole implements Comparable<AbstractRole> {
     roleMap.put(Role.DEMON, Demon.class);
     roleMap.put(Role.MASON, Mason.class);
     roleMap.put(Role.WITCH, Witch.class);
+    roleMap.put(Role.CORRUPTER, Corrupter.class);
+    roleMap.put(Role.ALPHAWOLF, AlphaWolf.class);
   }
 
   private final Role role;
@@ -54,7 +56,7 @@ public abstract class AbstractRole implements Comparable<AbstractRole> {
     return role.getFaction();
   }
 
-  public Player getTarget() {
+  public Player getKillTarget() {
     return null;
   }
 
@@ -67,6 +69,9 @@ public abstract class AbstractRole implements Comparable<AbstractRole> {
   }
 
   public String getSettingsExplanation() {
+    return null;
+  }
+  public Player getSpecialTarget() {
     return null;
   }
 

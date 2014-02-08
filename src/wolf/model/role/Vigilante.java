@@ -11,6 +11,8 @@ import com.google.common.collect.ImmutableList;
 public class Vigilante extends AbstractRole {
 
   public static String HOLD_FIRE_MESSAGE = "You holster your pistol.";
+  public static String CORRUPTED_MESSAGE = "Your gun jams and you fail to fire.";
+  // public static String KILL_CONFIRMED_MESSAGE = "You strike %s square between the eyes.";
 
   private boolean hasFired = false;
   private boolean hasActed = false;
@@ -63,8 +65,15 @@ public class Vigilante extends AbstractRole {
   }
 
   @Override
-  public Player getTarget() {
+  public Player getKillTarget() {
     return killTarget;
+  }
+
+  public void corrupt() {
+    if (killTarget != null) {
+      getStage().getBot().sendMessage(getPlayer().getName(), CORRUPTED_MESSAGE);
+    }
+    killTarget = null;
   }
 
   @Override

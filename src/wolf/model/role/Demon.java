@@ -48,7 +48,7 @@ public class Demon extends AbstractRole {
   }
 
   @Override
-  public Player getTarget() {
+  public Player getKillTarget() {
     return killTarget;
   }
 

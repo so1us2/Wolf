@@ -38,7 +38,6 @@ import wolf.model.chat.ChatServer;
 import wolf.model.role.Demon;
 import wolf.model.role.Priest;
 import wolf.model.role.Vigilante;
-import wolf.model.role.Wolf;
 
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
@@ -165,11 +164,11 @@ public class GameStage extends Stage {
     // Keys are victims, Values are killers.
     Multimap<Player, Player> killMap = TreeMultimap.create();
 
-    if (!getPlayers(Role.WOLF).isEmpty()) {
+    if (!getPlayers(Faction.WOLVES).isEmpty()) {
       List<Player> targets = Lists.newArrayList();
-      for (Player p : getPlayers(Role.WOLF)) {
-        Wolf wolf = (Wolf) p.getRole();
-        targets.add(wolf.getTarget());
+      for (Player p : getPlayers(Faction.WOLVES)) {
+        AbstractWolfRole wolf = (AbstractWolfRole) p.getRole();
+        targets.add(wolf.getKillTarget());
       }
 
       if (targets.contains(null)) {
@@ -180,7 +179,7 @@ public class GameStage extends Stage {
       // need to change this to majority from random choice.
       Player target = targets.get((int) (Math.random() * targets.size()));
       if (!isProtected(target)) {
-        for (Player p : getPlayers(Role.WOLF)) {
+        for (Player p : getPlayers(Faction.WOLVES)) {
           killMap.put(target, p);
         }
       }
@@ -188,7 +187,10 @@ public class GameStage extends Stage {
 
     for (Player p : getPlayers(Role.VIGILANTE)) {
       Vigilante vig = (Vigilante) p.getRole();
-      Player target = vig.getTarget();
+      if (isCorrupterTarget(p)) {
+        vig.corrupt();
+      }
+      Player target = vig.getKillTarget();
       if (target != null) {
         if (isProtected(target)) {
           getBot().sendMessage(p.getName(), "Your bullet bounces off of " + target.getName() + ".");
@@ -201,7 +203,7 @@ public class GameStage extends Stage {
     }
 
     for (Player p : getPlayers(Role.DEMON)) {
-      Player target = ((Demon) p.getRole()).getTarget();
+      Player target = ((Demon) p.getRole()).getKillTarget();
       if (target != null && !isProtected(target)) {
         killMap.put(target, p);
       }
@@ -211,7 +213,7 @@ public class GameStage extends Stage {
     for (Player demon : getPlayers(Role.DEMON)) {
       boolean wolfTarget = false;
       for (Player p : getPlayers()) {
-        if (p.getRole().getTarget() == demon) {
+        if (p.getRole().getKillTarget() == demon || p.getRole().getSpecialTarget() == demon) {
           if ((p.getRole().getType() == Role.WOLF)) {
             wolfTarget = true;
           } else {
@@ -337,9 +339,11 @@ public class GameStage extends Stage {
       return true;
     }
     for (Player p : getPlayers(Role.PRIEST)) {
-      Priest priest = (Priest) p.getRole();
-      if (Objects.equal(priest.getTarget(), player)) {
-        return true;
+      if (!isCorrupterTarget(p)) {
+        Priest priest = (Priest) p.getRole();
+        if (Objects.equal(priest.getSpecialTarget(), player)) {
+          return true;
+        }
       }
     }
     return false;
@@ -349,9 +353,7 @@ public class GameStage extends Stage {
     daytime = false;
 
     getBot().muteAll();
-
     server.clearAllRooms();
-
     getBot().sendMessage("Night falls on the village.");
 
     for (Player player : getPlayers()) {
@@ -458,10 +460,30 @@ public class GameStage extends Stage {
   public Set<Player> getPlayers() {
     return ImmutableSortedSet.copyOf(filter(players, alive));
   }
-  
+
+  public boolean isCorrupterTarget(Player target) {
+    for (Player p : getPlayers(Role.CORRUPTER)) {
+      Corrupter corrupter = (Corrupter) p.getRole();
+      if (corrupter.getSpecialTarget().equals(target)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public Set<Player> getWolfChatters() {
+    Set<Player> wolves = Sets.newTreeSet();
+    for (Player p : players) {
+      if (p.getRole().canWolfChat()) {
+        wolves.add(p);
+      }
+    }
+    return ImmutableSortedSet.copyOf(wolves);
+  }
+
   public Set<Player> getDeadPlayers() {
     Set<Player> dead = Sets.newTreeSet();
-    for(Player p : players) {
+    for (Player p : players) {
       if (!p.isAlive()) {
         dead.add(p);
       }

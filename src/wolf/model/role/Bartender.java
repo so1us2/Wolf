@@ -26,6 +26,9 @@ public class Bartender extends AbstractRole {
 
   @Override
   public void onNightEnds() {
+    if (getStage().isCorrupterTarget(getPlayer())) {
+      return;
+    }
     if (drinkTarget != null) {
       getBot().sendMessage(drinkTarget.getName() + " has a drink waiting for them.");
     }
@@ -43,7 +46,7 @@ public class Bartender extends AbstractRole {
   }
 
   @Override
-  public Player getTarget() {
+  public Player getSpecialTarget() {
     return drinkTarget;
   }
 

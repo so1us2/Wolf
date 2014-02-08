@@ -71,7 +71,7 @@ public class Priest extends AbstractRole {
   }
 
   @Override
-  public Player getTarget() {
+  public Player getSpecialTarget() {
     return protectTarget;
   }
 

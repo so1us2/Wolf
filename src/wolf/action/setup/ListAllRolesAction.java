@@ -50,7 +50,7 @@ public class ListAllRolesAction extends SetupAction {
     }
     output.setLength(output.length() - 2);
     getBot().sendMessage(output.toString());
-    getBot().sendMessage("For more information on a role, !details <role>");
+    getBot().sendMessage("For more information on a role, /details <role>");
   }
 
   @Override

@@ -48,6 +48,7 @@ import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
+import com.google.common.collect.Sets;
 import com.google.common.collect.TreeMultimap;
 
 public class GameStage extends Stage {
@@ -456,6 +457,16 @@ public class GameStage extends Stage {
    */
   public Set<Player> getPlayers() {
     return ImmutableSortedSet.copyOf(filter(players, alive));
+  }
+  
+  public Set<Player> getDeadPlayers() {
+    Set<Player> dead = Sets.newTreeSet();
+    for(Player p : players) {
+      if (!p.isAlive()) {
+        dead.add(p);
+      }
+    }
+    return ImmutableSortedSet.copyOf(dead);
   }
 
   public VotingHistory getVotingHistory() {

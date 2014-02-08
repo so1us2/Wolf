@@ -19,15 +19,16 @@ public class DetailsAction extends SetupAction {
     Role role = Role.parse(args.get(0));
 
     AbstractRole instance = AbstractRole.create(role, null);
-    getBot().sendMessage(role.name() + " - Team " + instance.getVictoryTeamFaction());
-    getBot().sendMessage(instance.getDescription());
+    getBot().sendMessage(invoker.getName(),
+        role.name() + " - Team " + instance.getVictoryTeamFaction());
+    getBot().sendMessage(invoker.getName(), instance.getDescription());
 
     List<Action> actions = instance.getNightActions();
     if (actions.isEmpty()) {
-      getBot().sendMessage("No special actions.");
+      getBot().sendMessage(invoker.getName(), "No special actions.");
     } else {
       for (Action a : actions) {
-        getBot().sendMessage("/" + a.getName() + ": " + a.getDescription());
+        getBot().sendMessage(invoker.getName(), "/" + a.getName() + ": " + a.getDescription());
       }
     }
   }

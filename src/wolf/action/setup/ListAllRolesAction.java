@@ -41,16 +41,16 @@ public class ListAllRolesAction extends SetupAction {
       output.append(r.getType().name()).append(", ");
     }
     output.setLength(output.length() - 2);
-    getBot().sendMessage(output.toString());
-    getBot().sendMessage("");
+    getBot().sendMessage(invoker.getName(), output.toString());
+    getBot().sendMessage(invoker.getName(), "");
     output = new StringBuilder();
     output.append("Wolf Roles: ");
     for (AbstractRole r : wolfRoles) {
       output.append(r.getType().name()).append(", ");
     }
     output.setLength(output.length() - 2);
-    getBot().sendMessage(output.toString());
-    getBot().sendMessage("For more information on a role, /details <role>");
+    getBot().sendMessage(invoker.getName(), output.toString());
+    getBot().sendMessage(invoker.getName(), "For more information on a role, /details <role>");
   }
 
   @Override

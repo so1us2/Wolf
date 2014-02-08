@@ -3,10 +3,9 @@ package wolf.action.setup;
 import java.util.List;
 import java.util.Map.Entry;
 
-import wolf.model.stage.SetupStage;
-
 import wolf.model.Player;
 import wolf.model.Role;
+import wolf.model.stage.SetupStage;
 
 public class ListConfigsAction extends SetupAction {
 
@@ -23,7 +22,7 @@ public class ListConfigsAction extends SetupAction {
         output.append(e.getKey()).append(" (").append(e.getValue()).append("), ");
       }
       output.setLength(output.length() - 2);
-      getBot().sendMessage(output.toString());
+      getBot().sendMessage(invoker.getName(), output.toString());
     }
   }
 

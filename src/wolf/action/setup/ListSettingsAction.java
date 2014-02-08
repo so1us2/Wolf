@@ -25,7 +25,7 @@ public class ListSettingsAction extends SetupAction {
     Multimap<String, Setting> settings = Settings.getSettingsByCategory();
 
     for (String c : settings.keySet()) {
-      getStage().getBot().sendMessage("CATEGORY " + c.toUpperCase());
+      getStage().getBot().sendMessage(invoker.getName(), "CATEGORY " + c.toUpperCase());
       Collection<Setting> matches = settings.get(c);
       for (Setting s : matches) {
         List<String> options = Lists.newArrayList(s.getOptions());
@@ -36,7 +36,7 @@ public class ListSettingsAction extends SetupAction {
         output.append(s.getName()).append(". Current: ").append(current)
             .append(". Other options: ").append("[")
             .append(Joiner.on(", ").join(options)).append("]");
-        getStage().getBot().sendMessage(output.toString());
+        getStage().getBot().sendMessage(invoker.getName(), output.toString());
       }
     }
 

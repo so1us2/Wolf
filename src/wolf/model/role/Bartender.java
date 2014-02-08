@@ -2,11 +2,12 @@ package wolf.model.role;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 import wolf.action.Action;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 
 public class Bartender extends AbstractRole {
 
@@ -20,7 +21,7 @@ public class Bartender extends AbstractRole {
     hasActed = false;
     getBot()
         .sendMessage(getPlayer().getName(),
-            "Who do you want to send a drink?  Message me !drink <target> or !pass to not serve anyone.");
+            "Who do you want to send a drink?  Message me /drink <target> or /pass to not serve anyone.");
   }
 
   @Override

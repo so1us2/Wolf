@@ -25,7 +25,7 @@ public class Priest extends AbstractRole {
       getBot().sendMessage(getPlayer().getName(), "There are no legal targets to protect tonight.");
     } else {
       getBot().sendMessage(getPlayer().getName(),
-          "Who do you want to protect?  Message me !protect <target>");
+          "Who do you want to protect?  Message me /protect <target>");
     }
   }
 

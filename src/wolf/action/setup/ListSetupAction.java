@@ -20,7 +20,7 @@ public class ListSetupAction extends SetupAction {
     Map<Role, Integer> roles = getStage().getConfig().getRoles();
 
     if (roles.isEmpty()) {
-      getBot().sendMessage("No roles have been added yet.");
+      getBot().sendMessage(invoker.getName(), "No roles have been added yet.");
     } else {
       StringBuilder output = new StringBuilder();
       output.append("Current roles: ");
@@ -28,7 +28,7 @@ public class ListSetupAction extends SetupAction {
         output.append(e.getKey()).append(" (").append(e.getValue()).append("), ");
       }
       output.setLength(output.length() - 2);
-      getBot().sendMessage(output.toString());
+      getBot().sendMessage(invoker.getName(), output.toString());
     }
   }
 

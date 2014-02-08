@@ -51,7 +51,7 @@ public class Seer extends AbstractRole {
     peekTarget = null;
     if (!hasPeekedEveryone()) {
     getBot().sendMessage(getPlayer().getName(),
-        "Who do you want to peek?  Message me !peek <target>");
+          "Who do you want to peek?  Message /peek <target>");
     } else {
       getBot().sendMessage(getPlayer().getName(), "You have peeked everyone.");
       int i = 0;

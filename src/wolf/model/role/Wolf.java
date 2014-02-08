@@ -15,6 +15,7 @@ public class Wolf extends AbstractRole {
 
   @Override
   public void onGameStart() {
+    super.onGameStart();
     getBot().sendMessage(getPlayer().getName(),
         "The wolves are: " + getStage().getPlayers(Role.WOLF));
   }
@@ -79,7 +80,7 @@ public class Wolf extends AbstractRole {
 
   @Override
   public String getDescription() {
-    return "The Wolves kill a villager every night. They win when their numbers equal those of the villagers.";
+    return "The Wolves kill a villager every night. They win when their numbers equal those of the villagers. They can communicate openly at night using wolf chat.";
   }
 
   private Action killAction = new Action("kill", "target") {

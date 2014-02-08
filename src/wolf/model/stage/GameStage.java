@@ -67,7 +67,7 @@ public class GameStage extends Stage {
   private final VotingHistory votingHistory = new VotingHistory();
 
   private final Map<Player, Player> votesToDayKill = Maps.newLinkedHashMap();
-
+  private final List<Multimap<Player, Player>> killHistory = Lists.newArrayList();
   private ChatServer server;
 
   /**
@@ -157,6 +157,7 @@ public class GameStage extends Stage {
   private void moveToDay() {
     // Get anyone who needs to die into the killMap. Upon being added to dying,
     // they must later die so any protection needs to be triggered beforehand.
+    // Keys are victims, Values are killers.
     Multimap<Player, Player> killMap = TreeMultimap.create();
 
     if (!getPlayers(Role.WOLF).isEmpty()) {
@@ -272,6 +273,7 @@ public class GameStage extends Stage {
       }
     }
 
+    killHistory.add(killMap);
     getBot().onPlayersChanged();
 
     if (checkForWinner() != null) {
@@ -279,6 +281,11 @@ public class GameStage extends Stage {
     }
 
     daytime = true;
+    getBot().sendMessage("");
+    getBot().sendMessage("*********************");
+    getBot().sendMessage("NEW DAY");
+    getBot().sendMessage("*********************");
+    getBot().sendMessage("");
     unmutePlayers();
   }
 
@@ -362,7 +369,7 @@ public class GameStage extends Stage {
 
     if (winner != null) {
       getBot().sendMessage("The " + winner.getPluralForm() + " have won the game!");
-      GameSummary.printGameLog(getBot(), players, winner);
+      GameSummary.printGameLog(getBot(), players, winner, killHistory);
       getBot().setStage(new InitialStage(getBot()));
       getBot().unmuteAll();
       getBot().recordGameResults(this);
@@ -457,9 +464,9 @@ public class GameStage extends Stage {
     }
     if (isDay()) {
       if (config.getSettings().get("PRIVATE_CHAT").equals("ENABLED")) {
-        actions.addAll(daytimeActions);
+        actions.addAll(chatActions);
       }
-      actions.addAll(chatActions);
+      actions.addAll(daytimeActions);
     } else {
       List<Action> ret = Lists.newArrayList();
       ret.add(commandsAction);

@@ -40,7 +40,7 @@ public class CoreRolesTest2 extends SimulationTest {
 
     bot.msg("Khaladin", "!load Default");
 
-    checkForMessage("default loaded.");
+    checkForMessage("default loaded");
 
     bot.msg("Zack", "!roles");
 

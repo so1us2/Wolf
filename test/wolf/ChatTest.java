@@ -37,7 +37,7 @@ public class ChatTest extends SimulationTest {
     bot.msg("Khaladin", "!setrole Seer 1");
     bot.msg("Khaladin", "!setrole Priest 1");
 
-    bot.msg("Khaladin", "!setflag privatechat enabled");
+    bot.msg("Khaladin", "!setflag private_chat enabled");
 
     bot.msg("Khaladin", "!start");
 

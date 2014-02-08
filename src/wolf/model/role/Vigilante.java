@@ -2,10 +2,11 @@ package wolf.model.role;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
 import wolf.action.Action;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
+
+import com.google.common.collect.ImmutableList;
 
 public class Vigilante extends AbstractRole {
 
@@ -20,7 +21,7 @@ public class Vigilante extends AbstractRole {
     if (!hasFired) {
     killTarget = null;
     getBot().sendMessage(getPlayer().getName(),
-              "Do you want to use your shot?  Message me !shoot <target> to shoot or !pass to hold fire.");
+              "Do you want to use your shot?  Message me /shoot <target> to shoot or /pass to hold fire.");
     }
   }
 

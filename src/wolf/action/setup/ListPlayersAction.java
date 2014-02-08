@@ -2,9 +2,8 @@ package wolf.action.setup;
 
 import java.util.List;
 
-import wolf.model.stage.SetupStage;
-
 import wolf.model.Player;
+import wolf.model.stage.SetupStage;
 
 public class ListPlayersAction extends SetupAction {
 
@@ -16,7 +15,7 @@ public class ListPlayersAction extends SetupAction {
   protected void execute(Player invoker, List<String> args) {
     String s = getStage().getPlayers().toString();
     s = s.substring(1, s.length() - 1); // get rid of the braces
-    getBot().sendMessage(getStage().getPlayers().size() + " Players: " + s);
+    getBot().sendMessage(invoker.getName(), getStage().getPlayers().size() + " Players: " + s);
   }
 
   @Override

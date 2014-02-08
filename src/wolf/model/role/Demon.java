@@ -20,7 +20,7 @@ public class Demon extends AbstractRole {
     hasActed = false;
     killTarget = null;
     getBot().sendMessage(getPlayer().getName(),
-        "Who do you want to kill?  Message me !kill <target> or !pass to kill no one.");
+        "Who do you want to kill?  Message me /kill <target> or /pass to kill no one.");
   }
 
   @Override

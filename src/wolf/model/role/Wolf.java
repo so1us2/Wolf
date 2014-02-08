@@ -23,7 +23,7 @@ public class Wolf extends AbstractRole {
   public void onNightBegins() {
     killTarget = null;
     getBot().sendMessage(getPlayer().getName(),
-        "Who do you want to kill?  Message me !kill <target>");
+        "Who do you want to kill?  Message me /kill <target>");
   }
 
   @Override

@@ -11,7 +11,6 @@ public class ListRoomsAction extends PrivateChatAction {
     super(server, "listrooms");
   }
 
-  // Why isn't execute passed isPrivate? Wouldn't that be useful to have?
   @Override
   protected void execute(Player invoker, List<String> args) {
     getServer().listRooms();

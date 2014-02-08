@@ -58,10 +58,10 @@ public class ChatServer {
     if (findRoomByName(name) != null) {
       throw new WolfException("A room by that name already exists.");
     }
-    ChatRoom newRoom = new ChatRoom(this, name);
-    newRoom.authorizePlayer(founder);
+    leaveCurrentRoom(founder);
+    ChatRoom newRoom = new ChatRoom(this, name, founder);
+    getBot().sendMessage(founder + " has opened private room " + newRoom.getName() + ".");
     rooms.add(newRoom);
-    joinRoom(founder, name);
   }
 
   public void closeRoom(ChatRoom room) {
@@ -76,11 +76,15 @@ public class ChatServer {
 
     // Currently if a player fails to join a new room, they still leave their old. Not sure this is
     // best behavior.
+    leaveCurrentRoom(player);
+    room.join(player);
+  }
+
+  private void leaveCurrentRoom(String player) {
     ChatRoom oldRoom = findRoomForPlayer(player);
     if (oldRoom != null) {
       oldRoom.leave(player);
     }
-    room.join(player);
   }
 
   public void listRooms() {

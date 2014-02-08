@@ -46,10 +46,12 @@ public class Wolf extends AbstractRole {
     return "has been ripped apart";
   }
 
-  public void handleChat(Player sender, String message, boolean isPrivate) {
-    if (getStage().isNight() && isPrivate) {
+  public void handleChat(Player sender, String message) {
+    if (getStage().isNight()) {
       // wolf-chat
       wolfChat(sender, message);
+    } else {
+      super.handleChat(sender, message);
     }
   }
 

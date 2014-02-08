@@ -1,12 +1,10 @@
 package wolf.model.chat;
 
-import java.util.List;
 import java.util.Set;
 
 import wolf.WolfException;
 
 import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Sets;
 
@@ -17,18 +15,12 @@ public class ChatRoom {
   private final String roomName;
   private final Set<String> authorized;
 
-  public ChatRoom(ChatServer server, String name) {
-    this(server, name, ImmutableList.<String>of());
-  }
-
-  public ChatRoom(ChatServer server, String name, List<String> founders) {
+  public ChatRoom(ChatServer server, String name, String founder) {
     members = Sets.newTreeSet();
     authorized = Sets.newTreeSet();
     this.server = server;
-    roomName = name;
-    for (String s : founders) {
-      members.add(s);
-    }
+    roomName = name.toUpperCase();
+    members.add(founder);
     sendMessageToRoom(roomName + " is created.");
     sendMessageToRoom("Players here: " + Joiner.on(", ").join(members));
   }
@@ -59,8 +51,13 @@ public class ChatRoom {
       throw new WolfException("You are not authorized to join " + roomName);
     }
     sendMessageToRoom(player + " has joined the room.");
-    server.getBot().sendMessage(
-        player + " is in " + roomName + " with: " + Joiner.on(", ").join(members));
+    StringBuilder output = new StringBuilder();
+    output.append(player).append(" is in ").append(roomName);
+    if (members.size() > 1) {
+      output.append(" with: ").append(Joiner.on(", ").join(members));
+    }
+    output.append(".");
+    server.getBot().sendMessage(output.toString());
     members.add(player);
   }
 
@@ -81,7 +78,7 @@ public class ChatRoom {
     } else {
       sendMessageToRoom(player + " has left the room.");
     }
-    server.getBot().sendMessage(player + " has left " + roomName);
+    server.getBot().sendMessage(player + " has left " + roomName + ".");
   }
 
   /**
@@ -91,7 +88,9 @@ public class ChatRoom {
     assert (members.contains(sender));
 
     for (String player : members) {
+      if (!player.equals(sender)) {
       server.getBot().sendMessage(player, "<" + roomName + "> " + sender + ": " + message);
+      }
     }
   }
 

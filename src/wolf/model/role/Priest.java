@@ -21,13 +21,12 @@ public class Priest extends AbstractRole {
   @Override
   public void onNightBegins() {
     protectTarget = null;
-
-    if (!isLegalProtection()) {
+    if (!canProtectSomeone()) {
       getBot().sendMessage(getPlayer().getName(), "There are no legal targets to protect tonight.");
+    } else {
+      getBot().sendMessage(getPlayer().getName(),
+          "Who do you want to protect?  Message me !protect <target>");
     }
-
-    getBot().sendMessage(getPlayer().getName(),
-        "Who do you want to protect?  Message me !protect <target>");
   }
 
   @Override
@@ -42,7 +41,7 @@ public class Priest extends AbstractRole {
 
   @Override
   public List<Action> getNightActions() {
-    if (!isLegalProtection()) {
+    if (!canProtectSomeone()) {
       return ImmutableList.of();
     }
     return ImmutableList.<Action>of(protectAction);
@@ -55,18 +54,20 @@ public class Priest extends AbstractRole {
 
   @Override
   public String getDescription() {
-    return "The Priest can protect a player each night, preventing that player from being killed.";
+    return "The Priest protects a player each night, preventing that player from being killed.";
   }
 
-  private boolean isLegalProtection() {
+  private boolean canProtectSomeone() {
     if (getStage().getSetting("PROTECTION_MODE").equals("ONCE_PER_GAME")) {
       for (Player p : getStage().getPlayers()) {
         if (!protectHistory.contains(p)) {
-          return false;
+          return true;
         }
       }
+    } else {
+      return true;
     }
-    return true;
+    return false;
   }
 
   private Action protectAction = new Action("protect", "target") {
@@ -103,7 +104,7 @@ public class Priest extends AbstractRole {
 
     private Player getLastProtect() {
       if (protectHistory.size() > 0) {
-        Iterables.getLast(protectHistory);
+        return Iterables.getLast(protectHistory);
       }
       return null;
     }

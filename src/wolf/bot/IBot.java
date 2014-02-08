@@ -1,5 +1,6 @@
 package wolf.bot;
 
+import wolf.model.stage.GameStage;
 import wolf.model.stage.Stage;
 
 public interface IBot {
@@ -26,6 +27,8 @@ public interface IBot {
   public void unmute(String player);
 
   public void onPlayersChanged();
+
+  public void recordGameResults(GameStage stage);
 
   // public void unmutePlayers(List<String> players);
 

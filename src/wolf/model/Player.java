@@ -12,6 +12,8 @@ public class Player implements Comparable<Player> {
   private AbstractRole role;
   private boolean alive = true;
 
+  private boolean winner = false;
+
   public Player(String name, boolean admin) {
     this.name = name;
     this.admin = admin;
@@ -63,6 +65,14 @@ public class Player implements Comparable<Player> {
   @Override
   public int compareTo(Player o) {
     return name.compareTo(o.name);
+  }
+
+  public void markWinner() {
+    this.winner = true;
+  }
+
+  public boolean isWinner() {
+    return winner;
   }
 
 }

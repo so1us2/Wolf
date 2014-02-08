@@ -3,13 +3,16 @@ package wolf.web;
 import java.io.IOException;
 import java.net.URL;
 
-import com.google.common.base.Throwables;
-import com.google.common.io.Resources;
 import org.webbitserver.HttpControl;
 import org.webbitserver.HttpHandler;
 import org.webbitserver.HttpRequest;
 import org.webbitserver.HttpResponse;
 import org.webbitserver.WebServers;
+
+import wolf.rankings.RankingsHandler;
+
+import com.google.common.base.Throwables;
+import com.google.common.io.Resources;
 
 public class WolfServer implements HttpHandler {
 
@@ -20,10 +23,6 @@ public class WolfServer implements HttpHandler {
 
     if (uri.equals("/")) {
       uri = "/wolf.html";
-    }
-
-    if (uri.equalsIgnoreCase("/rankings")) {
-      uri = "/rankings.html";
     }
 
     // System.out.println("uri: " + uri);
@@ -45,8 +44,9 @@ public class WolfServer implements HttpHandler {
   }
 
   public static void main(String[] args) throws Exception {
-    WebServers.createWebServer(80).add("/socket", new WebBot()).add(new WolfServer())
-        .start().get();
+    WebServers.createWebServer(80).add("/socket", new WebBot())
+    .add("/rankings", new RankingsHandler())
+    .add(new WolfServer()).start().get();
     System.out.println("Server Started.");
   }
 

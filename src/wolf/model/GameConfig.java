@@ -8,6 +8,7 @@ public class GameConfig {
 
   private final Map<Role, Integer> roles;
   private final Map<String, String> settings;
+  private boolean rated = true;
 
   public GameConfig() {
     roles = Maps.newLinkedHashMap();
@@ -45,6 +46,14 @@ public class GameConfig {
 
   public Map<String, String> getSettings() {
     return settings;
+  }
+
+  public boolean isRated() {
+    return rated;
+  }
+
+  public void setRated(boolean rated) {
+    this.rated = rated;
   }
 
 }

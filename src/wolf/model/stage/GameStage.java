@@ -3,16 +3,10 @@ package wolf.model.stage;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.UUID;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
+import org.joda.time.DateTime;
+
 import wolf.WolfException;
 import wolf.action.Action;
 import wolf.action.CommandsAction;
@@ -43,6 +37,16 @@ import wolf.model.role.Priest;
 import wolf.model.role.Vigilante;
 import wolf.model.role.Wolf;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
+
 import static com.google.common.collect.Iterables.filter;
 
 public class GameStage extends Stage {
@@ -50,12 +54,20 @@ public class GameStage extends Stage {
   public static final String NONE_DEAD_MSG =
       "The sun dawns and the village finds that no one has died in the night.";
 
+  private final UUID id = UUID.randomUUID();
+
   private final CommandsAction commandsAction = new CommandsAction(this);
+
   private final List<Action> daytimeActions = Lists.newArrayList();
+
   private final List<Action> adminActions = Lists.newArrayList();
+
   private final List<Action> chatActions = Lists.newArrayList();
+
   private final VotingHistory votingHistory = new VotingHistory();
+
   private final Map<Player, Player> votesToDayKill = Maps.newLinkedHashMap();
+
   private ChatServer server;
 
   /**
@@ -66,6 +78,12 @@ public class GameStage extends Stage {
   private boolean daytime = true;
 
   private final GameConfig config;
+
+  /**
+   * This is stored as part of the GameHistory.
+   */
+  private final DateTime startDate = new DateTime();
+
 
   public GameStage(IBot bot, GameConfig config, Set<Player> players) {
     super(bot);
@@ -347,6 +365,7 @@ public class GameStage extends Stage {
       GameSummary.printGameLog(getBot(), players, winner);
       getBot().setStage(new InitialStage(getBot()));
       getBot().unmuteAll();
+      getBot().recordGameResults(this);
     }
 
     return winner;
@@ -462,6 +481,18 @@ public class GameStage extends Stage {
   @Override
   public Iterable<Player> getAllPlayers() {
     return ImmutableList.copyOf(this.players);
+  }
+
+  public DateTime getStartDate() {
+    return startDate;
+  }
+
+  public GameConfig getConfig() {
+    return config;
+  }
+
+  public UUID getId() {
+    return id;
   }
 
   private static final Predicate<Player> alive = new Predicate<Player>() {

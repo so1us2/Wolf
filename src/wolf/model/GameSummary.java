@@ -17,6 +17,7 @@ public class GameSummary {
       Faction faction = player.getRole().getVictoryTeamFaction();
       if (winner == faction) {
         winners.add(player);
+        player.markWinner();
       } else {
         losers.add(player);
       }

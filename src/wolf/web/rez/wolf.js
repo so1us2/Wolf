@@ -16,9 +16,32 @@ $("#text-input").keypress(function(e){
 	}
 });
 
+$("#rankings-button").click(function(e){
+	var container = $("#rankings-modal tbody");
+	
+	container.empty();
+	container.text("Loading...");
+	
+	$.getJSON("/rankings", function(data){
+		container.empty();
+		for(var i = 0; i < data.length; i++){
+			var player = data[i];
+			console.log(player);
+			var tr = $("<tr>");
+			tr.append($("<td>").text((i+1)+""));
+			tr.append($("<td>").text(player.name));
+			tr.append($("<td>").text(player.wins));
+			tr.append($("<td>").text(player.losses));
+			tr.append($("<td>").text(player.win_percentage));
+			container.append(tr);
+			//container.append($("<div>").text(player.name));
+		}
+	});
+});
+
 if (WebSocket){
 	// Let us open a web socket
-	ws = new WebSocket("ws://localhost:80/socket");
+	ws = new WebSocket("ws://playwolf.net:80/socket");
 	ws.onopen = function() {
 		announce("Connected to chat server.");
 		var username = $.cookie("username");
@@ -86,7 +109,7 @@ function receive(msg){
 
 function append(from, msg, isPrivate){
 	var div = $("<div class='row'>");
-	var fromDiv = $("<span class='msg-author'>").text("<"+from+">").addClass("sender");
+	var fromDiv = $("<span class='msg-author'>").text(from+":").addClass("sender");
 	var msgDiv =  $("<span class='msg-text'>").text(msg).addClass("message");
 	
 	if(from=="$narrator"){

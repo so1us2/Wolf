@@ -182,9 +182,16 @@ public class GameStage extends Stage {
     }
 
     for (Player p : getPlayers(Role.VIGILANTE)) {
-      Player target = ((Vigilante) p.getRole()).getTarget();
-      if (target != null && !isProtected(target)) {
-        killMap.put(target, p);
+      Vigilante vig = (Vigilante) p.getRole();
+      Player target = vig.getTarget();
+      if (target != null) {
+        if (isProtected(target)) {
+          getBot().sendMessage(p.getName(), "Your bullet bounces off of " + target.getName() + ".");
+        } else {
+          killMap.put(target, p);
+          getBot().sendMessage(p.getName(),
+              "You shoot " + target.getName() + " square between the eyes.");
+        }
       }
     }
 
@@ -203,6 +210,9 @@ public class GameStage extends Stage {
           if ((p.getRole().getType() == Role.WOLF)) {
             wolfTarget = true;
           } else {
+            getBot()
+                .sendMessage(p.getName(),
+                    "You realize with horror that you've targeted a demon as your soul bleeds from your body.");
             killMap.put(p, demon);
           }
         }
@@ -210,6 +220,9 @@ public class GameStage extends Stage {
       if (wolfTarget) {
         List<Player> wolves = getPlayers(Role.WOLF);
         Player randomWolf = wolves.get((int) (Math.random() * wolves.size()));
+        getBot()
+            .sendMessage(randomWolf.getName(),
+                "You realize with horror that you've targeted a demon as your soul bleeds from your body.");
         killMap.put(randomWolf, demon);
       }
     }
@@ -236,7 +249,7 @@ public class GameStage extends Stage {
               output.append(killer.getRole().getKillMessage()).append(" and ");
             }
           }
-          if(wolfKiller != null) {
+          if (wolfKiller != null) {
             output.append(wolfKiller.getRole().getKillMessage());
           } else {
             output.setLength(output.length() - 5);

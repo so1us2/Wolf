@@ -1,6 +1,9 @@
 package wolf.model.role;
 
 import java.util.List;
+import java.util.Map;
+
+import org.testng.collections.Maps;
 
 import wolf.WolfException;
 import wolf.action.Action;
@@ -10,12 +13,11 @@ import wolf.model.Role;
 import wolf.model.stage.GameStage;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
 
 public class Seer extends AbstractRole {
 
   private Player peekTarget;
-  private final List<Player> peekHistory = Lists.newArrayList();
+  private final Map<Player, Faction> peekHistory = Maps.newHashMap();
 
   @Override
   public void onGameStart() {
@@ -39,8 +41,12 @@ public class Seer extends AbstractRole {
     }
 
     Player peek = villagers.get((int) (Math.random() * villagers.size()));
-    peekHistory.add(peek);
+    peekHistory.put(peek, peek.getRole().getFaction());
     getBot().sendMessage(getPlayer().getName(), peek.getName() + " is a villager.");
+  }
+
+  private String getValueFor(Player p) {
+    return peekHistory.get(p).getSingularForm().toLowerCase();
   }
 
   @Override
@@ -63,34 +69,14 @@ public class Seer extends AbstractRole {
     return output.toString();
   }
 
-  @Override
-  public Player getTarget() {
+  public Player getSpecialTarget() {
     return peekTarget;
   }
 
   @Override
   public void onNightBegins() {
     peekTarget = null;
-    if (!hasPeekedEveryone()) {
-      getBot().sendMessage(getPlayer().getName(),
-          "Who do you want to peek?  Message /peek <target>");
-    } else {
-      getBot().sendMessage(getPlayer().getName(), "You have peeked everyone.");
-      int i = 0;
-      for (Player p : peekHistory) {
-        getStage().getBot().sendMessage(getPlayer().getName(),
-            "Night " + i++ + ": " + p.getName() + " - " + p.getRole().getFaction());
-      }
-    }
-  }
-
-  private boolean hasPeekedEveryone() {
-    for (Player p : getStage().getPlayers()) {
-      if (!peekHistory.contains(p) && p != getPlayer()) {
-        return false;
-      }
-    }
-    return true;
+    getBot().sendMessage(getPlayer().getName(), "Who do you want to peek?  Message /peek <target>");
   }
 
   @Override
@@ -99,12 +85,18 @@ public class Seer extends AbstractRole {
       return;
     }
     Player player = getPlayer();
-    peekHistory.add(peekTarget);
+    Faction view = peekTarget.getRole().getFaction();
+    if (getStage().isCorrupterTarget(player)) {
+      if (peekTarget.getRole().getFaction().equals(Faction.WOLVES)) {
+        view = Faction.VILLAGERS;
+      } else {
+        view = Faction.WOLVES;
+      }
+    }
 
-    getStage().getBot().sendMessage(
-        player.getName(),
-        peekTarget.getName() + " is a "
-            + peekTarget.getRole().getFaction().getSingularForm().toLowerCase() + ".");
+    peekHistory.put(peekTarget, view);
+    getStage().getBot().sendMessage(player.getName(),
+        peekTarget.getName() + " is a " + getValueFor(peekTarget) + ".");
   }
 
   @Override
@@ -112,9 +104,9 @@ public class Seer extends AbstractRole {
     // send new player a list of all previous peeks.
     super.onPlayerSwitch();
     int i = 0;
-    for (Player p : peekHistory) {
+    for (Player p : peekHistory.keySet()) {
       getStage().getBot().sendMessage(getPlayer().getName(),
-          "Night " + i++ + ": " + p.getName() + " - " + p.getRole().getFaction());
+          "Night " + i++ + ": " + p.getName() + " - " + getValueFor(p));
     }
   }
 
@@ -125,9 +117,6 @@ public class Seer extends AbstractRole {
 
   @Override
   public List<Action> getNightActions() {
-    if (hasPeekedEveryone()) {
-      return ImmutableList.of();
-    }
     return ImmutableList.<Action>of(peekAction);
   }
 
@@ -143,10 +132,6 @@ public class Seer extends AbstractRole {
       Player peek = stage.getPlayer(args.get(0));
       if (peek == getPlayer()) {
         throw new WolfException("You cannot peek yourself.");
-      }
-      if (peekHistory.contains(peek)) {
-        throw new WolfException("You have already peeked " + peek + ". They are a "
-            + peek.getRole().getFaction().getSingularForm().toLowerCase() + ".");
       } else {
         peekTarget = peek;
         stage.getBot().sendMessage(invoker.getName(),

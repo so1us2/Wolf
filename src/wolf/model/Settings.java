@@ -45,6 +45,9 @@ public class Settings {
         .description("Will the killers of each person killed at night be revealed?");
     category("VOTES").name("ANNOUNCE_ON_TIE").options("NONE", "TOTALS", "ALL")
         .defaultSetting("NONE").description("What should be announced when a day vote ties?");
+    category("CORRUPTER").name("CORRUPTION_MODE")
+        .options("EVERY_OTHER_NIGHT", "ONCE_PER_GAME", "NO_RULES")
+        .defaultSetting("EVERY_OTHER_NIGHT").description("How often can a target be corrupted?");
   }
 
   public static final Setting get(String name) {

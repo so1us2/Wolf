@@ -18,3 +18,8 @@
 	background-color: #DFF0D8;
 	font-weight: bold;
 }
+#sidebar-players{
+  position: fixed;
+  right: 20px;
+  width: 400px;
+}

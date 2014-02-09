@@ -20,15 +20,15 @@ public class GameHistory {
   private DB db = WolfDB.get();
 
   public GameHistory() {
-    if (!db.hasTable("games")) {
-      db.addTable(new Table("games").primary("id", UUID.class).column("rated", Boolean.class)
-          .column("start_date", Long.class).column("end_date", Long.class)
-          .column("num_players", Integer.class));
-    }
-    if (!db.hasTable("players")) {
-      db.addTable(new Table("players").column("game_id", UUID.class)
-          .column("name", String.class).column("role", String.class)
-          .column("winner", Boolean.class).column("alive", Boolean.class));
+    if (db != null) {
+      if (!db.hasTable("games")) {
+        db.addTable(new Table("games").primary("id", UUID.class).column("rated", Boolean.class).column("start_date", Long.class)
+            .column("end_date", Long.class).column("num_players", Integer.class));
+      }
+      if (!db.hasTable("players")) {
+        db.addTable(new Table("players").column("game_id", UUID.class).column("name", String.class).column("role", String.class)
+            .column("winner", Boolean.class).column("alive", Boolean.class));
+      }
     }
   }
 

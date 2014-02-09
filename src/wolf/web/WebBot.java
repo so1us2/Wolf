@@ -82,15 +82,17 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
   private void handle(WebSocketConnection from, String command, List<String> args) {
     if (command.equalsIgnoreCase("login")) {
       if (connectionNameMap.containsKey(from)) {
-        from.send("You are already logged in.");
+        from.send(constructJson("LOGIN_FAILED", "reason", "You are already logged in."));
         return;
       }
       if (nameConnectionMap.containsKey(args.get(0))) {
-        from.send("Already a user with that name!");
+        from.send(constructJson("LOGIN_FAILED", "reason", "Already a user with that name!"));
         return;
       }
       connectionNameMap.put(from, args.get(0));
       nameConnectionMap.put(args.get(0), from);
+      
+      from.send(constructJson("LOGIN_SUCCESS", "username", args.get(0)));
 
       sendRemote(createPlayersObject());
     } else if (command.equalsIgnoreCase("chat")) {
@@ -129,30 +131,29 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
 
   @Override
   public void sendToAll(String from, String message) {
-    sendToAll("CHAT", from, message);
-  }
-
-  private void sendToAll(String command, Object... args) {
-    String s = constructJson(command, args);
+    String s = constructChatJson(from, message);
     sendRemote(s);
   }
 
-  private String constructJson(String command, Object... args) {
+  private String constructChatJson(String from, String message) {
+    return constructJson("CHAT", "from", from, "msg", message);
+  }
+
+  private String constructJson(String command, String... params) {
     JsonObject o = new JsonObject();
+
     o.addProperty("command", command);
 
-    JsonArray argsArray = new JsonArray();
-    for (Object arg : args) {
-      argsArray.add(new JsonPrimitive(arg.toString()));
+    for (int i = 0; i < params.length; i += 2) {
+      o.addProperty(params[i], params[i + 1]);
     }
-    o.add("args", argsArray);
 
     return o.toString();
   }
 
   @Override
   public void sendMessage(String message) {
-    sendToAll("CHAT", "$narrator", message);
+    sendToAll("$narrator", message);
   }
 
   @Override
@@ -162,7 +163,7 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
       System.out.println("Tried to send message to offline user: " + user + " :: " + message);
       return;
     }
-    String s = constructJson("CHAT", "$narrator", message);
+    String s = constructChatJson("$narrator", message);
     conn.send(s);
   }
 

@@ -34,14 +34,13 @@ $("#rankings-button").click(function(e){
 			tr.append($("<td>").text(player.losses));
 			tr.append($("<td>").text(player.win_percentage));
 			container.append(tr);
-			//container.append($("<div>").text(player.name));
 		}
 	});
 });
 
 if (WebSocket){
 	// Let us open a web socket
-	ws = new WebSocket("ws://playwolf.net:80/socket");
+	ws = new WebSocket("ws://localhost:80/socket");
 	ws.onopen = function() {
 		announce("Connected to chat server.");
 		var username = $.cookie("username");
@@ -64,6 +63,9 @@ else {
 
 function login(username){
 	send("LOGIN", username);
+}
+
+function loginSuccess(username){
 	$("#text-input").prop("placeholder", "Chat");
 	$("#text-input").animate({"width":500});
 	announce("Logged in as '"+username+"'");
@@ -84,11 +86,15 @@ function receive(msg){
 	console.log(msg);
 	
 	var command = msg.command;
-	var args = msg.args;
 	
 	if(command=="CHAT"){
-		append(args[0], args[1], false);
-	} else if(command=="PLAYERS"){
+		append(msg.from, msg.msg, false);
+	} else if(command=="LOGIN_SUCCESS"){
+		loginSuccess(msg.username);
+	} else if(command=="LOGIN_FAILED"){
+		announce("LOGIN FAILED: "+msg.reason);
+	}
+	else if(command=="PLAYERS"){
 		$(".list-group-item").remove();
 		
 		$("#viewers-count").text(msg.num_viewers);

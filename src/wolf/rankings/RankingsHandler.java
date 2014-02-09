@@ -40,6 +40,11 @@ public class RankingsHandler implements HttpHandler {
   public void handleHttpRequest(HttpRequest request, HttpResponse response, HttpControl control)
       throws Exception {
 
+    if (db == null) {
+      response.content("{}").end();
+      return;
+    }
+
     Set<String> ratedGames = Sets.newLinkedHashSet();
     for (Row game : db.select("SELECT id FROM games WHERE rated = TRUE ORDER BY start_date ASC")) {
       ratedGames.add(game.<String>get("id"));

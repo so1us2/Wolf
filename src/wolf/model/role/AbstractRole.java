@@ -74,7 +74,6 @@ public abstract class AbstractRole implements Comparable<AbstractRole> {
   public Player getSpecialTarget() {
     return null;
   }
-
   public void onNightBegins() {}
 
   public void onNightEnds() {}

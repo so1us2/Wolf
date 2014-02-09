@@ -471,16 +471,6 @@ public class GameStage extends Stage {
     return false;
   }
 
-  public Set<Player> getWolfChatters() {
-    Set<Player> wolves = Sets.newTreeSet();
-    for (Player p : players) {
-      if (p.getRole().canWolfChat()) {
-        wolves.add(p);
-      }
-    }
-    return ImmutableSortedSet.copyOf(wolves);
-  }
-
   public Set<Player> getDeadPlayers() {
     Set<Player> dead = Sets.newTreeSet();
     for (Player p : players) {

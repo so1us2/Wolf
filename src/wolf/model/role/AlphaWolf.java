@@ -85,10 +85,6 @@ public class AlphaWolf extends AbstractWolfRole {
         throw new WolfException("You cannot sniff yourself.");
       } else if (sniff.getRole().getFaction() == Faction.WOLVES) {
         throw new WolfException("You cannot sniff a wolf.");
-      }
-      if (sniffHistory.keySet().contains(sniff)) {
-        throw new WolfException("You have already sniffed " + sniff + ". They are a "
-            + getValueFor(sniff) + ".");
       } else {
         sniffTarget = sniff;
         stage.getBot().sendMessage(invoker.getName(),

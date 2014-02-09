@@ -47,6 +47,7 @@ import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
@@ -492,7 +493,6 @@ public class GameStage extends Stage {
 
   @Override
   public List<Action> getAvailableActions(Player player) {
-
     List<Action> actions = Lists.newArrayList();
 
     if (player.isAdmin()) {
@@ -513,6 +513,11 @@ public class GameStage extends Stage {
       actions.addAll(ret);
     }
     return actions;
+  }
+
+  @Override
+  public List<Action> getAdminActions() {
+    return ImmutableList.copyOf(Iterables.concat(hostActions, adminActions));
   }
 
   @Override
@@ -539,6 +544,7 @@ public class GameStage extends Stage {
     return config;
   }
 
+  @Override
   public void setHost(Player newHost) {
     config.setHost(newHost);
     if (config.getHost() == null) {
@@ -548,6 +554,7 @@ public class GameStage extends Stage {
     }
   }
 
+  @Override
   public Player getHost() {
     return config.getHost();
   }

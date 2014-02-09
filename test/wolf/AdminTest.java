@@ -67,6 +67,8 @@ public class AdminTest extends SimulationTest {
     bot.privMsg("TomM", "!help");
     bot.privMsg("TomM", "!announce I AM TOM");
     checkForMessage("ANNOUNCEMENT - I AM TOM");
+    bot.privMsg("satnam", "!announce I AM SATNAM");
+    checkForMessage("ANNOUNCEMENT - I AM SATNAM");
     bot.privMsg("TomM", "!remind");
     checkForMessage("Reminder: please take your night action. The game is waiting on you.");
 

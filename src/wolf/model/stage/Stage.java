@@ -7,6 +7,7 @@ import wolf.action.Action;
 import wolf.bot.IBot;
 import wolf.model.Player;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 
 public abstract class Stage {
@@ -30,8 +31,15 @@ public abstract class Stage {
   }
 
   public void handle(IBot bot, String sender, String command, List<String> args) {
+    if (admins.contains(sender)) {
+      Action adminAction = getAdminAction(command);
+      if (adminAction != null) {
+        adminAction.apply(new Player(sender, true), args);
+        return;
+      }
+    }
+  
     Player player = getPlayer(sender);
-
     Action action = getActionForCommand(command, player);
 
     if (action == null) {
@@ -58,7 +66,20 @@ public abstract class Stage {
     return null;
   }
 
+  private Action getAdminAction(String command) {
+    for (Action a : getAdminActions()) {
+      if (a.getName().equalsIgnoreCase(command)) {
+        return a;
+      }
+    }
+    return null;
+  }
+
   public abstract List<Action> getAvailableActions(Player player);
+
+  public List<Action> getAdminActions() {
+    return ImmutableList.of();
+  }
 
   public IBot getBot() {
     return bot;

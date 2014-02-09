@@ -32,7 +32,7 @@ public class Witch extends AbstractRole {
   }
 
   private String getValueFor(Player p) {
-    return readHistory.get(p).name();
+    return readHistory.get(p).name().toLowerCase();
   }
 
   @Override
@@ -53,7 +53,7 @@ public class Witch extends AbstractRole {
 
     getStage().getBot().sendMessage(
         player.getName(),
-        readTarget.getName() + " is a " + getValueFor(readTarget)
+        readTarget.getName() + " was a " + getValueFor(readTarget)
                 + ".");
   }
 

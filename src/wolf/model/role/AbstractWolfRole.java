@@ -20,7 +20,7 @@ public abstract class AbstractWolfRole extends AbstractRole {
   }
 
   public void wolfChat(Player sender, String message) {
-    for (Player wolf : getStage().getWolfChatters()) {
+    for (Player wolf : getStage().getPlayers(Faction.WOLVES)) {
       if (wolf != sender) {
         getBot().sendMessage(wolf.getName(), "<WolfChat> " + sender + ": " + message);
       }

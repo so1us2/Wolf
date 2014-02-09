@@ -1,5 +1,4 @@
 var ws;
-var loggedIn = false;
 
 $("#text-input").keypress(function(e){
 	if(e.which==13){ //enter
@@ -7,45 +6,19 @@ $("#text-input").keypress(function(e){
 		var msg = target.val().trim();
 		target.val("");
 		if(msg) {
-			if(loggedIn){
-				send("CHAT",msg);
-			} else{
-				login(msg);
-			}
+		   send("CHAT", msg);
 		}
 	}
 });
 
-$("#rankings-button").click(function(e){
-	var container = $("#rankings-modal tbody");
-	
-	container.empty();
-	container.text("Loading...");
-	
-	$.getJSON("/rankings", function(data){
-		container.empty();
-		for(var i = 0; i < data.length; i++){
-			var player = data[i];
-			console.log(player);
-			var tr = $("<tr>");
-			tr.append($("<td>").text((i+1)+""));
-			tr.append($("<td>").text(player.name));
-			tr.append($("<td>").text(player.wins));
-			tr.append($("<td>").text(player.losses));
-			tr.append($("<td>").text(player.win_percentage));
-			container.append(tr);
-		}
-	});
-});
-
+//open websocket
 if (WebSocket){
-	// Let us open a web socket
-	ws = new WebSocket("ws://localhost:80/socket");
+	ws = new WebSocket("ws://playwolf.net:80/socket");
 	ws.onopen = function() {
 		announce("Connected to chat server.");
-		var username = $.cookie("username");
-		if(username){
-			login(username);
+		var userID = $.cookie("userID");
+		if(userID){
+			loginWithUserID(userID);
 		}
 	};
 	ws.onmessage = function (evt) { 
@@ -56,21 +29,27 @@ if (WebSocket){
 		ws = null;
 		$(".input-label").html("Enter your username:");
 	};
-}
-else {
+} else {
 	alert("Please upgrade your browser to one that supports WebSockets.");
 }
 
-function login(username){
-	send("LOGIN", username);
+function loginComplete(data){
+	console.log(data);
+	loginWithUserID(data.authResponse.userID);
+}
+
+function loginWithUserID(userID){
+	$.cookie("userID", userID,{expires: 7});
+	send("LOGIN", userID);
+	
+    $(".fb-login-button").addClass("hidden");
+    $(".login-advertise").addClass("hidden");
+    
+    $("#text-input").removeClass("hidden");
 }
 
 function loginSuccess(username){
-	$("#text-input").prop("placeholder", "Chat");
-	$("#text-input").animate({"width":500});
 	announce("Logged in as '"+username+"'");
-	loggedIn=true;
-	$.cookie("username",username,{expires: 7});
 }
 
 function send(command, arg){
@@ -95,7 +74,12 @@ function receive(msg){
 	}
 	else if(command=="LOGIN_SUCCESS"){
 		loginSuccess(msg.username);
-	} else if(command=="LOGIN_FAILED"){
+	} 
+	else if(command == "PROMPT_NAME"){
+	   var username = window.prompt("Enter your username:");
+	   send("USERNAME", username);
+	}
+	else if(command=="LOGIN_FAILED"){
 		announce("LOGIN FAILED: "+msg.reason);
 	}
 	else if(command=="PLAYERS"){
@@ -150,3 +134,25 @@ function scrollToBottom(){
 		window.scrollTo(0, document.body.scrollHeight);
 	}
 }
+
+$("#rankings-button").click(function(e){
+	var container = $("#rankings-modal tbody");
+	
+	container.empty();
+	container.text("Loading...");
+	
+	$.getJSON("/rankings", function(data){
+		container.empty();
+		for(var i = 0; i < data.length; i++){
+			var player = data[i];
+			console.log(player);
+			var tr = $("<tr>");
+			tr.append($("<td>").text((i+1)+""));
+			tr.append($("<td>").text(player.name));
+			tr.append($("<td>").text(player.wins));
+			tr.append($("<td>").text(player.losses));
+			tr.append($("<td>").text(player.win_percentage));
+			container.append(tr);
+		}
+	});
+});

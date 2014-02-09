@@ -64,7 +64,7 @@ public class Player implements Comparable<Player> {
 
   @Override
   public int compareTo(Player o) {
-    return name.compareTo(o.name);
+    return name.toLowerCase().compareTo(o.name.toLowerCase());
   }
 
   public void markWinner() {

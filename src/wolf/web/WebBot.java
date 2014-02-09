@@ -34,6 +34,8 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
   private final Map<String, WebSocketConnection> nameConnectionMap = Maps.newConcurrentMap();
   private final List<WebSocketConnection> allConnections = Lists.newArrayList();
 
+  private final Map<WebSocketConnection, Integer> connectionIds = Maps.newConcurrentMap();
+
   private final JsonParser parser = new JsonParser();
 
   private Stage stage = new InitialStage(this);
@@ -42,6 +44,8 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
   private Set<String> playersAllowedToSpeak = Sets.newHashSet();
   
   private final GameHistory history = new GameHistory();
+
+  private final LoginService loginService = new LoginService();
 
   @Override
   public void onOpen(WebSocketConnection connection) {
@@ -52,6 +56,7 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
   @Override
   public void onClose(WebSocketConnection connection) {
     allConnections.remove(connection);
+    connectionIds.remove(connection);
     String user = connectionNameMap.remove(connection);
     if (user != null) {
       nameConnectionMap.remove(user);
@@ -82,18 +87,31 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
 
   private void handle(WebSocketConnection from, String command, List<String> args) {
     if (command.equalsIgnoreCase("login")) {
-      if (connectionNameMap.containsKey(from)) {
-        from.send(constructJson("LOGIN_FAILED", "reason", "You are already logged in."));
-        return;
-      }
-      if (nameConnectionMap.containsKey(args.get(0))) {
-        from.send(constructJson("LOGIN_FAILED", "reason", "Already a user with that name!"));
-        return;
-      }
-      connectionNameMap.put(from, args.get(0));
-      nameConnectionMap.put(args.get(0), from);
+      int userID = Integer.parseInt(args.get(0));
+      connectionIds.put(from, userID);
       
-      from.send(constructJson("LOGIN_SUCCESS", "username", args.get(0)));
+      String name = loginService.handleLogin(userID);
+
+      if (name == null) {
+        from.send(constructJson("PROMPT_NAME"));
+        return;
+      }
+
+      connectionNameMap.put(from, name);
+      nameConnectionMap.put(name, from);
+
+      from.send(constructJson("LOGIN_SUCCESS", "username", name));
+
+      sendRemote(createPlayersObject());
+
+    } else if (command.equalsIgnoreCase("username")) {
+      int userID = connectionIds.get(from);
+      String name = args.get(0);
+      loginService.createAccount(userID, name);
+      from.send(constructJson("LOGIN_SUCCESS", "username", name));
+
+      connectionNameMap.put(from, name);
+      nameConnectionMap.put(name, from);
 
       sendRemote(createPlayersObject());
     } else if (command.equalsIgnoreCase("chat")) {

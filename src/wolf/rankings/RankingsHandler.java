@@ -72,7 +72,7 @@ public class RankingsHandler implements HttpHandler {
       public int compare(String a, String b) {
         int ret = total(scores.get(b)) - total(scores.get(a));
         if (ret == 0) {
-          return a.compareTo(b);
+          return a.toLowerCase().compareTo(b.toLowerCase());
         }
         return ret;
       }

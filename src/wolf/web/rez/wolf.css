@@ -24,9 +24,24 @@
 }
 #sidebar-players{
   position: fixed;
-  right: 20px;
-  width: 400px;
+  right: 60px;
+  width: 200px;
 }
 #rules-modal .modal-body {
 	min-height: 400px;
+}
+#text-input{
+	width: 500px;
+}
+.hidden{
+	display: none;
+}
+.login-button{
+	display: inline;
+}
+.login-advertise{
+	font-weight: bold;
+}
+.list-group-item{
+	height: 40px;
 }

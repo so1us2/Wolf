@@ -45,7 +45,7 @@ public class AdvancedWolfTest extends SimulationTest {
 
     bot.msg("Khaladin", "!setrole Villager 3");
     bot.msg("Khaladin", "!setrole Corrupter 1");
-    bot.msg("Tom", "!setrole AlphaWolf 1");
+    bot.msg("Khaladin", "!setrole AlphaWolf 1");
     bot.msg("Khaladin", "!setrole Seer 1");
     bot.msg("Khaladin", "!setrole Priest 1");
     bot.msg("Khaladin", "!setrole Vigilante 1");

@@ -35,6 +35,8 @@ import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.VotingHistory;
 import wolf.model.chat.ChatServer;
+import wolf.model.role.AbstractWolfRole;
+import wolf.model.role.Corrupter;
 import wolf.model.role.Demon;
 import wolf.model.role.Priest;
 import wolf.model.role.Vigilante;

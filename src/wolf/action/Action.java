@@ -44,7 +44,6 @@ public abstract class Action implements Comparable<Action> {
     }
     
     if (requiresHost() && !(invoker.equals(stage.getHost()) || invoker.isAdmin())) {
-      getStage().getBot().sendMessage("Invoker is admin = " + invoker.isAdmin());
       throw new WolfException("You must be the game host to do that.");
     }
 

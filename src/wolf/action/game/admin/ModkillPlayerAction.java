@@ -13,6 +13,11 @@ public class ModkillPlayerAction extends GameAction {
   }
 
   @Override
+  public boolean requiresAdmin() {
+    return true;
+  }
+
+  @Override
   protected void execute(Player invoker, List<String> args) {
     if (getStage().isNight()) {
       getStage().getBot().sendMessage(invoker.getName(),

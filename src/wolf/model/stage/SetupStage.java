@@ -13,7 +13,6 @@ import wolf.action.setup.ListAllConfigsAction;
 import wolf.action.setup.ListAllRolesAction;
 import wolf.action.setup.ListPlayersAction;
 import wolf.action.setup.ListSettingsAction;
-import wolf.action.setup.admin.SetHostAction;
 import wolf.action.setup.host.AppointHostAction;
 import wolf.action.setup.host.KickPlayerAction;
 import wolf.action.setup.host.LoadConfigAction;
@@ -34,13 +33,10 @@ public class SetupStage extends Stage {
   private final Set<Action> actions = Sets.newTreeSet();
   private final Set<Player> players = Sets.newLinkedHashSet();
   private final Set<Action> hostActions = Sets.newTreeSet();
-  private final Set<Action> adminActions = Sets.newTreeSet();
   private final GameConfig config = new GameConfig();
 
   public SetupStage(IBot bot) {
     super(bot);
-
-    adminActions.add(new SetHostAction(this));
 
     hostActions.add(new AppointHostAction(this));
     hostActions.add(new KickPlayerAction(this));
@@ -113,10 +109,7 @@ public class SetupStage extends Stage {
   @Override
   public List<Action> getAvailableActions(Player player) {
     List<Action> playerActions = Lists.newArrayList();
-    if (player.isAdmin()) {
-      playerActions.addAll(hostActions);
-      playerActions.addAll(adminActions);
-    } else if (player.equals(config.getHost())) {
+    if (player.equals(config.getHost()) || player.isAdmin()) {
       playerActions.addAll(hostActions);
     }
     playerActions.addAll(actions);

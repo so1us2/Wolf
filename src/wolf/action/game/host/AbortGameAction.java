@@ -1,4 +1,4 @@
-package wolf.action.moderator;
+package wolf.action.game.host;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class AbortGameAction extends GameAction {
   }
 
   @Override
-  public boolean requiresAdmin() {
+  public boolean requiresHost() {
     return true;
   }
 

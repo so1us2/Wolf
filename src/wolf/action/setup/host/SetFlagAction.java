@@ -1,8 +1,9 @@
-package wolf.action.setup;
+package wolf.action.setup.host;
 
 import java.util.List;
 
 import wolf.WolfException;
+import wolf.action.setup.SetupAction;
 import wolf.model.Player;
 import wolf.model.Settings;
 import wolf.model.stage.SetupStage;
@@ -11,6 +12,11 @@ public class SetFlagAction extends SetupAction {
 
   public SetFlagAction(SetupStage stage) {
     super(stage, "setflag", "flag", "option");
+  }
+
+  @Override
+  public boolean requiresHost() {
+    return true;
   }
 
   @Override

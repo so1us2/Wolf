@@ -1,24 +1,27 @@
 package wolf.action.setup;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Map.Entry;
 
+import wolf.action.setup.host.LoadConfigAction;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.stage.SetupStage;
 
-public class ListConfigsAction extends SetupAction {
+public class ListAllConfigsAction extends SetupAction {
 
-  public ListConfigsAction(SetupStage stage) {
+  public ListAllConfigsAction(SetupStage stage) {
     super(stage, "configs");
   }
 
   @Override
   protected void execute(Player invoker, List<String> args) {
-    for (String s : LoadConfigAction.configs.keySet()) {
+    Map<String, Map<Role, Integer>> configs = LoadConfigAction.getConfigs();
+    for (String s : configs.keySet()) {
       StringBuilder output = new StringBuilder();
       output.append(s).append(": ");
-      for (Entry<Role, Integer> e : LoadConfigAction.configs.get(s).entrySet()) {
+      for (Entry<Role, Integer> e : configs.get(s).entrySet()) {
         output.append(e.getKey()).append(" (").append(e.getValue()).append("), ");
       }
       output.setLength(output.length() - 2);

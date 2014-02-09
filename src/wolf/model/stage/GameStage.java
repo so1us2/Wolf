@@ -11,14 +11,14 @@ import org.joda.time.DateTime;
 
 import wolf.WolfException;
 import wolf.action.Action;
-import wolf.action.CommandsAction;
+import wolf.action.GetHelpAction;
 import wolf.action.game.ListPlayersAction;
 import wolf.action.game.VoteAction;
 import wolf.action.game.VoteCountAction;
-import wolf.action.moderator.AbortGameAction;
-import wolf.action.moderator.AnnounceAction;
-import wolf.action.moderator.GetVotersAction;
-import wolf.action.moderator.ReminderAction;
+import wolf.action.game.admin.GetVotersAction;
+import wolf.action.game.host.AbortGameAction;
+import wolf.action.game.host.AnnounceAction;
+import wolf.action.game.host.ReminderAction;
 import wolf.action.privatechats.AuthorizePlayerAction;
 import wolf.action.privatechats.ChatAction;
 import wolf.action.privatechats.JoinRoomAction;
@@ -56,7 +56,7 @@ public class GameStage extends Stage {
 
   private final UUID id = UUID.randomUUID();
 
-  private final CommandsAction commandsAction = new CommandsAction(this);
+  private final GetHelpAction commandsAction = new GetHelpAction(this);
 
   private final List<Action> daytimeActions = Lists.newArrayList();
 
@@ -511,6 +511,19 @@ public class GameStage extends Stage {
 
   public GameConfig getConfig() {
     return config;
+  }
+
+  public void setHost(Player newHost) {
+    config.setHost(newHost);
+    if (config.getHost() == null) {
+      getBot().sendMessage("There is now no host.");
+    } else {
+      getBot().sendMessage(config.getHost() + " is now the host of the game.");
+    }
+  }
+
+  public Player getHost() {
+    return config.getHost();
   }
 
   public UUID getId() {

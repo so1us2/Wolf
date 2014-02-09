@@ -5,14 +5,14 @@ import java.util.List;
 import wolf.model.Player;
 import wolf.model.stage.Stage;
 
-public class CommandsAction extends Action {
+public class GetHelpAction extends Action {
 
-  public CommandsAction(Stage stage) {
-    super(stage, "commands");
+  public GetHelpAction(Stage stage) {
+    super(stage, "help");
   }
 
   @Override
-  public void apply(Player invoker, List<String> args) {
+  protected void execute(Player invoker, List<String> args) {
     getBot().sendMessage(invoker.getName(), "Supported Commands:");
     for (Action a : this.getStage().getAvailableActions(invoker)) {
       getBot().sendMessage(invoker.getName(), a.getUsage() + " - " + a.getDescription());
@@ -20,13 +20,13 @@ public class CommandsAction extends Action {
   }
 
   @Override
-  protected void execute(Player invoker, List<String> args) {
-    // we only need the apply() method in this case.
+  public String getDescription() {
+    return "Prints out a list of all supported commands.";
   }
 
   @Override
-  public String getDescription() {
-    return "Prints out a list of all supported commands.";
+  protected boolean onlyIfAlive() {
+    return false;
   }
 
 }

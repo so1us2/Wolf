@@ -1,4 +1,4 @@
-package wolf.action.moderator;
+package wolf.action.game.host;
 
 import java.util.List;
 
@@ -22,7 +22,7 @@ public class AnnounceAction extends Action {
   }
 
   @Override
-  public boolean requiresAdmin() {
+  public boolean requiresHost() {
     return true;
   }
 

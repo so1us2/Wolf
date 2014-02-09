@@ -8,6 +8,7 @@ public class GameConfig {
 
   private final Map<Role, Integer> roles;
   private final Map<String, String> settings;
+  private Player host = null;
   private boolean rated = true;
 
   public GameConfig() {
@@ -17,6 +18,14 @@ public class GameConfig {
     for (Setting setting : Settings.getSettingsByCategory().values()) {
       settings.put(setting.getName(), setting.getDefault());
     }
+  }
+
+  public Player getHost() {
+    return host;
+  }
+
+  public void setHost(Player host) {
+    this.host = host;
   }
 
   public Map<Role, Integer> getRoles() {

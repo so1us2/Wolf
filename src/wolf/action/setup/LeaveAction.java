@@ -14,13 +14,10 @@ public class LeaveAction extends SetupAction {
 
   @Override
   protected void execute(Player invoker, List<String> args) {
-    boolean removed = getStage().getPlayers().remove(invoker);
+    boolean removed = getStage().removePlayer(invoker);
     if (!removed) {
-      throw new WolfException(invoker.getName() + " isn't in the game!");
+      throw new WolfException("You aren't in the game!");
     }
-    getBot().sendMessage(
-        invoker.getName() + " left the game (" + getStage().getPlayers().size() + " players)");
-    getBot().onPlayersChanged();
   }
 
   @Override

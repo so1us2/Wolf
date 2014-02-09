@@ -21,7 +21,9 @@ public class InitGameAction extends Action {
   protected void execute(Player invoker, List<String> args) {
     getBot().sendMessage("A new game is forming -- type /join");
 
-    getBot().setStage(new SetupStage(stage.getBot()));
+    SetupStage setup = new SetupStage(stage.getBot());
+    setup.addPlayer(invoker);
+    getBot().setStage(setup);
   }
 
   @Override

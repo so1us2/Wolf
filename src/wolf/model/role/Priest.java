@@ -1,6 +1,7 @@
 package wolf.model.role;
 
 import java.util.List;
+import java.util.Set;
 
 import wolf.WolfException;
 import wolf.action.Action;
@@ -11,6 +12,7 @@ import com.google.common.base.Objects;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 public class Priest extends AbstractRole {
 
@@ -41,7 +43,12 @@ public class Priest extends AbstractRole {
     } else if (mode.equals("NO_RULES")) {
       output.append("You can protect any player you want each night.");
     }
-
+    mode = getStage().getSetting("SELF_PROTECT");
+    if (mode.equals("YES")) {
+      output.append(" You may not protect yourself.");
+    } else if (mode.equals("NO")) {
+      output.append(" You may protect yourself.");
+    }
     return output.toString();
   }
 
@@ -75,7 +82,11 @@ public class Priest extends AbstractRole {
 
   private boolean canProtectSomeone() {
     if (getStage().getSetting("PROTECTION_MODE").equals("ONCE_PER_GAME")) {
-      for (Player p : getStage().getPlayers()) {
+      Set<Player> players = Sets.newHashSet(getStage().getPlayers());
+      if (getStage().getSetting("SELF_PROTECT").equals("NO")) {
+        players.remove(getPlayer());
+      }
+      for (Player p : players) {
         if (!protectHistory.contains(p)) {
           return true;
         }

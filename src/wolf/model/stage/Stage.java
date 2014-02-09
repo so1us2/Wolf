@@ -19,6 +19,12 @@ public abstract class Stage {
     this.bot = bot;
   }
 
+  public Player getHost() {
+    return null;
+  }
+
+  public void setHost(Player p) {}
+
   public void handleChat(IBot bot, String sender, String message) {
     bot.sendToAll(sender, message);
   }
@@ -31,7 +37,7 @@ public abstract class Stage {
     if (action == null) {
       String message = "Invalid command: " + command;
       bot.sendMessage(sender, message);
-      action = getActionForCommand("commands", player);
+      action = getActionForCommand("help", player);
     }
 
     action.apply(player, args);

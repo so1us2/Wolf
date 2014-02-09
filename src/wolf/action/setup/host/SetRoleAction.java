@@ -1,8 +1,9 @@
-package wolf.action.setup;
+package wolf.action.setup.host;
 
 import java.util.List;
 
 import wolf.WolfException;
+import wolf.action.setup.SetupAction;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.stage.SetupStage;
@@ -26,6 +27,11 @@ public class SetRoleAction extends SetupAction {
 
     getStage().getConfig().setRole(role, num);
     getBot().sendMessage(role + " set to " + num + ".");
+  }
+
+  @Override
+  public boolean requiresHost() {
+    return true;
   }
 
   @Override

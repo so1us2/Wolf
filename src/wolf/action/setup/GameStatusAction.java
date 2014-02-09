@@ -8,17 +8,26 @@ import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.stage.SetupStage;
 
-public class ListSetupAction extends SetupAction {
+public class GameStatusAction extends SetupAction {
 
-  public ListSetupAction(SetupStage stage) {
-    super(stage, "current");
+  public GameStatusAction(SetupStage stage) {
+    super(stage, "status");
   }
 
   @Override
   protected void execute(Player invoker, List<String> args) {
-
+    if (getStage().getHost() == null) {
+      getBot().sendMessage(invoker.getName(), "There is currently no host.");
+    } else {
+      getBot().sendMessage(invoker.getName(), "The game host is " + getStage().getHost() + ".");
+    }
+    if (getStage().getPlayers().isEmpty()) {
+      getBot().sendMessage(invoker.getName(), "There are no players in the game.");
+    } else {
+      getBot().sendMessage(invoker.getName(),
+          "There are " + getStage().getPlayers().size() + " players registered.");
+    }
     Map<Role, Integer> roles = getStage().getConfig().getRoles();
-
     if (roles.isEmpty()) {
       getBot().sendMessage(invoker.getName(), "No roles have been added yet.");
     } else {
@@ -34,7 +43,7 @@ public class ListSetupAction extends SetupAction {
 
   @Override
   public String getDescription() {
-    return "List roles currently loaded in the game.";
+    return "List the status of the currently forming game.";
   }
 
 }

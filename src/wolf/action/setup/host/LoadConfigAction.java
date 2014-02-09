@@ -1,10 +1,11 @@
-package wolf.action.setup;
+package wolf.action.setup.host;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import wolf.WolfException;
+import wolf.action.setup.SetupAction;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.stage.SetupStage;
@@ -25,6 +26,15 @@ public class LoadConfigAction extends SetupAction {
 
   public LoadConfigAction(SetupStage stage) {
     super(stage, "load", "configName");
+  }
+
+  public static Map<String, Map<Role, Integer>> getConfigs() {
+    return ImmutableMap.copyOf(configs);
+  }
+
+  @Override
+  public boolean requiresHost() {
+    return true;
   }
 
   @Override

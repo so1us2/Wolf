@@ -1,14 +1,15 @@
 package wolf.action;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
 import wolf.WolfException;
 import wolf.bot.IBot;
 import wolf.model.Player;
 import wolf.model.stage.Stage;
 
-import static com.google.common.base.Preconditions.checkNotNull;
+import com.google.common.collect.ImmutableList;
 
 public abstract class Action implements Comparable<Action> {
 
@@ -41,8 +42,21 @@ public abstract class Action implements Comparable<Action> {
     if (onlyIfAlive() && !invoker.isAlive()) {
       throw new WolfException("You cannot do anything while dead.");
     }
+    
+    if (requiresHost() && !(invoker.equals(stage.getHost()) || invoker.isAdmin())) {
+      getStage().getBot().sendMessage("Invoker is admin = " + invoker.isAdmin());
+      throw new WolfException("You must be the game host to do that.");
+    }
 
     execute(invoker, args);
+  }
+
+  protected boolean requiresHost() {
+    return false;
+  }
+
+  protected boolean requiresAdmin() {
+    return false;
   }
 
   protected boolean onlyIfAlive() {
@@ -75,11 +89,6 @@ public abstract class Action implements Comparable<Action> {
 
   public int getNumArgs() {
     return argNames.size();
-  }
-
-  protected boolean requiresAdmin() {
-    // subclasses can override
-    return false;
   }
 
   public IBot getBot() {

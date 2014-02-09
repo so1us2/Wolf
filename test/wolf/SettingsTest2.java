@@ -35,11 +35,11 @@ public class SettingsTest2 extends SimulationTest {
     bot.msg("Ian", "!join");
     bot.msg("Mongo", "!join");
 
-    bot.msg("Tom", "!settings");
-    bot.msg("Tom", "!setflag REVEAL_NIGHT_KILLERS yes");
-    bot.msg("Tom", "!setflag TELL_WOLVES_ON_KILL ROLE");
-    bot.msg("Tom", "!setflag self_protect no");
-    bot.msg("Tom", "!setflag protection_mode once_per_game");
+    bot.msg("Khaladin", "!settings");
+    bot.msg("Khaladin", "!setflag REVEAL_NIGHT_KILLERS yes");
+    bot.msg("Khaladin", "!setflag TELL_WOLVES_ON_KILL ROLE");
+    bot.msg("Khaladin", "!setflag self_protect no");
+    bot.msg("Khaladin", "!setflag protection_mode once_per_game");
 
     bot.msg("Khaladin", "!setrole Villager 2");
     bot.msg("Khaladin", "!setrole Wolf 1");

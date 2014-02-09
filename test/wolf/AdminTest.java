@@ -59,7 +59,7 @@ public class AdminTest extends SimulationTest {
   private void night1Actions() {
     bot.privMsg("Jason", "!protect TomM");
 
-    bot.privMsg("TomM", "!commands");
+    bot.privMsg("TomM", "!help");
     bot.privMsg("TomM", "!announce I AM TOM");
     checkForMessage("ANNOUNCEMENT - I AM TOM");
     bot.privMsg("TomM", "!remind");

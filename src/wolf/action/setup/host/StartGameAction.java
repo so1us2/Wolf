@@ -1,10 +1,11 @@
-package wolf.action.setup;
+package wolf.action.setup.host;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 
 import wolf.WolfException;
+import wolf.action.setup.SetupAction;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.role.AbstractRole;
@@ -17,6 +18,11 @@ public class StartGameAction extends SetupAction {
 
   public StartGameAction(SetupStage stage) {
     super(stage, "start");
+  }
+
+  @Override
+  public boolean requiresHost() {
+    return true;
   }
 
   @Override

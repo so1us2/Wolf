@@ -1,14 +1,15 @@
-package wolf.action.moderator;
+package wolf.action.game.admin;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import com.google.common.base.Joiner;
-import com.google.common.collect.Sets;
 import wolf.action.game.GameAction;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
+
+import com.google.common.base.Joiner;
+import com.google.common.collect.Sets;
 
 public class GetVotersAction extends GameAction {
 

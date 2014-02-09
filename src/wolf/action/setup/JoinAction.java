@@ -14,13 +14,10 @@ public class JoinAction extends SetupAction {
 
   @Override
   protected void execute(Player invoker, List<String> args) {
-    boolean added = getStage().getPlayers().add(invoker);
+    boolean added = getStage().addPlayer(invoker);
     if (!added) {
       throw new WolfException(invoker.getName() + " already joined!");
     }
-    getBot().sendMessage(
-        invoker.getName() + " joined the game (" + getStage().getPlayers().size() + " players)");
-    getBot().onPlayersChanged();
   }
 
   @Override

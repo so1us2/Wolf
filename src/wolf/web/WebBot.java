@@ -9,6 +9,7 @@ import org.webbitserver.WebSocketConnection;
 
 import wolf.WolfException;
 import wolf.bot.IBot;
+import wolf.model.Faction;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
 import wolf.model.stage.InitialStage;
@@ -119,8 +120,10 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
           spectatorChat(sender, message);
           return;
         } else if (!playersAllowedToSpeak.contains(sender.toLowerCase())) {
-          sendMessage(sender, "You cannot speak at night.");
-          return;
+          if (player.getRole().getFaction() != Faction.WOLVES) {
+            sendMessage(sender, "You cannot speak at night.");
+            return;
+          }
         }
       }
 

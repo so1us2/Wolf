@@ -23,3 +23,6 @@
   right: 20px;
   width: 400px;
 }
+#rules-modal .modal-body {
+	min-height: 400px;
+}

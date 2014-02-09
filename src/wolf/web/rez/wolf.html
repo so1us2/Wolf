@@ -11,6 +11,7 @@
         <a class="navbar-brand" href="#">Wolf</a>
           <ul class="nav navbar-nav">
              <li><a id="rankings-button" href="#" data-toggle="modal" data-target="#rankings-modal">Rankings</a></li>
+             <li><a id="rules-button" href="#" data-toggle="modal" data-target="#rules-modal">Rules</a></li>
           </ul>
            <div class="navbar-text navbar-right" id="viewers">
              <span id="viewers-count">0</span>
@@ -66,6 +67,33 @@
 	      	 	</tbody>
 	      	 </table>
 	      </div>
+	    </div><!-- /.modal-content -->
+	  </div><!-- /.modal-dialog -->
+	</div><!-- /.modal -->
+	
+  <div class="modal fade bs-modal-lg" id="rules-modal">
+	  <div class="modal-dialog modal-lg">
+	    <div class="modal-content">
+	    <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        <h4 class="modal-title">Game Rules</h4>
+	      </div>
+	     <div class="modal-body">
+		   <ul class="nav nav-pills nav-stacked col-md-4">
+			  <li class="active"><a href="#">Objectives</a></li>
+			 <!--   <li><a href="#">Villager</a></li>
+			  <li><a href="#">Wolf</a></li>
+			  <li><a href="#">Seer</a></li>-->
+			</ul>
+			<div class="col-md-8" id="rules-content">
+			   <p>
+                  In its simplest form Wolf is played by two teams: the Werewolves, whose members know each other's identity, and the innocents (a.k.a. "civilians," "townspeople," "village," "town," etc.), who at first know only the number of wolves in the game.
+               </p>
+			   <p>
+                 There are two phases: "night," when the wolves may eliminate a player from the game, and "day," during which players vote to kill a suspect. These phases follow each other continuously until all wolves have been eliminated or the wolves outnumbers the innocents.
+               </p>
+			</div>
+		  </div>
 	    </div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->

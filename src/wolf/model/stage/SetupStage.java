@@ -13,6 +13,9 @@ import wolf.action.setup.ListAllConfigsAction;
 import wolf.action.setup.ListAllRolesAction;
 import wolf.action.setup.ListPlayersAction;
 import wolf.action.setup.ListSettingsAction;
+import wolf.action.setup.admin.SetHostAction;
+import wolf.action.setup.host.AppointHostAction;
+import wolf.action.setup.host.KickPlayerAction;
 import wolf.action.setup.host.LoadConfigAction;
 import wolf.action.setup.host.SetFlagAction;
 import wolf.action.setup.host.SetRoleAction;
@@ -21,33 +24,41 @@ import wolf.bot.IBot;
 import wolf.model.GameConfig;
 import wolf.model.Player;
 
-import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 public class SetupStage extends Stage {
 
   private final Set<Action> actions = Sets.newTreeSet();
   private final Set<Player> players = Sets.newLinkedHashSet();
+  private final Set<Action> hostActions = Sets.newTreeSet();
+  private final Set<Action> adminActions = Sets.newTreeSet();
   private final GameConfig config = new GameConfig();
 
   public SetupStage(IBot bot) {
     super(bot);
 
+    adminActions.add(new SetHostAction(this));
+
+    hostActions.add(new AppointHostAction(this));
+    hostActions.add(new KickPlayerAction(this));
+    hostActions.add(new StartGameAction(this));
+    hostActions.add(new LoadConfigAction(this));
+    hostActions.add(new SetRoleAction(this));
+    hostActions.add(new SetFlagAction(this));
+
     actions.add(new JoinAction(this));
     actions.add(new GetHelpAction(this));
     actions.add(new LeaveAction(this));
-    actions.add(new LoadConfigAction(this));
     actions.add(new ListAllConfigsAction(this));
     actions.add(new ListPlayersAction(this));
     actions.add(new CurrentSetupAction(this));
-    actions.add(new SetRoleAction(this));
-    actions.add(new StartGameAction(this));
     actions.add(new DetailsAction(this));
     actions.add(new ListAllRolesAction(this));
     actions.add(new ListSettingsAction(this));
-    actions.add(new SetFlagAction(this));
+
   }
 
   public void setHost(Player newHost) {
@@ -101,7 +112,15 @@ public class SetupStage extends Stage {
 
   @Override
   public List<Action> getAvailableActions(Player player) {
-    return ImmutableList.copyOf(actions);
+    List<Action> playerActions = Lists.newArrayList();
+    if (player.isAdmin()) {
+      playerActions.addAll(hostActions);
+      playerActions.addAll(adminActions);
+    } else if (player.equals(config.getHost())) {
+      playerActions.addAll(hostActions);
+    }
+    playerActions.addAll(actions);
+    return playerActions;
   }
 
   @Override

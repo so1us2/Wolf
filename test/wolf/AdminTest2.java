@@ -5,9 +5,8 @@ import org.testng.annotations.Test;
 
 import wolf.bot.TestBot;
 import wolf.model.Role;
-import wolf.model.stage.GameStage;
 
-public class AdminTest extends SimulationTest {
+public class AdminTest2 extends SimulationTest {
 
   @BeforeMethod
   public void before() {
@@ -30,15 +29,11 @@ public class AdminTest extends SimulationTest {
     bot.msg("TomM", "!join");
     bot.msg("Snape", "!join");
     bot.msg("Potter", "!join");
-    bot.msg("Mark", "!join");
-    
-    bot.msg("Khaladin", "!help");
 
-    bot.msg("Khaladin", "!kick Mark");
     bot.msg("Khaladin", "!setrole Villager 2");
     bot.msg("Khaladin", "!setrole Wolf 1");
     bot.msg("Khaladin", "!setrole Seer 1");
-    bot.msg("Khaladin", "!setrole Priest 1");
+    bot.msg("Khaladin", "!setrole Vigilante 1");
 
     bot.msg("Khaladin", "!start");
 
@@ -46,14 +41,12 @@ public class AdminTest extends SimulationTest {
     setRole(Role.VILLAGER, "Snape", "Khaladin");
     setRole(Role.WOLF, "Potter");
     setRole(Role.SEER, "TomM");
-    setRole(Role.PRIEST, "Jason");
+    setRole(Role.VIGILANTE, "Jason");
   }
 
   private void day1Votes() {
     bot.privMsg("Khaladin", "!vote Snape");
     bot.privMsg("Jason", "!vote Snape");
-    bot.privMsg("Khaladin", "!appoint Jason");
-    bot.privMsg("Jason", "!commands");
     bot.privMsg("TomM", "!vote Snape");
     bot.privMsg("Snape", "!vote Potter");
     bot.privMsg("TomM", "!commands");
@@ -62,7 +55,7 @@ public class AdminTest extends SimulationTest {
   }
 
   private void night1Actions() {
-    bot.privMsg("Jason", "!protect TomM");
+    bot.privMsg("Jason", "!shoot Khaladin");
 
     bot.privMsg("TomM", "!help");
     bot.privMsg("TomM", "!announce I AM TOM");
@@ -71,30 +64,20 @@ public class AdminTest extends SimulationTest {
     checkForMessage("Reminder: please take your night action. The game is waiting on you.");
 
     bot.privMsg("TomM", "!peek Jason");
-    bot.privMsg("Potter", "!kill TomM");
-
-    checkForMessage("Jason is a villager.");
-    checkForMessage("Your wish to protect TomM has been received.");
-    checkForMessage(GameStage.NONE_DEAD_MSG);
+    bot.privMsg("Potter", "!kill Khaladin");
 
     bot.getMessageLog().clear();
   }
 
   private void day2Votes() {
     bot.msg("Jason", "!players");
-    checkForMessage("Alive players: [Jason, Khaladin, Potter, TomM]");
+    checkForMessage("Alive players: [Jason, Potter, TomM]");
 
-    bot.privMsg("Khaladin", "!vote Potter");
     bot.privMsg("Jason", "!vote Potter");
-    bot.privMsg("TomM", "!vote Khaladin");
+    bot.privMsg("TomM", "!vote Potter");
     bot.privMsg("TomM", "!modkill jason");
-    bot.privMsg("TomM", "!players");
 
     checkForMessage("TOMM OBLITERATES JASON IN A PILLAR OF BANEFIRE!");
-    checkForMessage("Alive players: [Khaladin, Potter, TomM]");
-
-    bot.privMsg("Potter", "!vote Khaladin");
-
     checkForMessage("The Wolves have won the game!");
   }
 }

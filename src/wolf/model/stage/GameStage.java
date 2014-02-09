@@ -16,6 +16,7 @@ import wolf.action.game.ListPlayersAction;
 import wolf.action.game.VoteAction;
 import wolf.action.game.VoteCountAction;
 import wolf.action.game.admin.GetVotersAction;
+import wolf.action.game.admin.ModkillPlayerAction;
 import wolf.action.game.host.AbortGameAction;
 import wolf.action.game.host.AnnounceAction;
 import wolf.action.game.host.ReminderAction;
@@ -56,10 +57,11 @@ public class GameStage extends Stage {
 
   private final UUID id = UUID.randomUUID();
 
-  private final GetHelpAction commandsAction = new GetHelpAction(this);
+  private final GetHelpAction getHelpAction = new GetHelpAction(this);
 
   private final List<Action> daytimeActions = Lists.newArrayList();
 
+  private final List<Action> hostActions = Lists.newArrayList();
   private final List<Action> adminActions = Lists.newArrayList();
 
   private final List<Action> chatActions = Lists.newArrayList();
@@ -93,15 +95,17 @@ public class GameStage extends Stage {
 
     server = new ChatServer(bot);
 
-    daytimeActions.add(commandsAction);
+    daytimeActions.add(getHelpAction);
     daytimeActions.add(new VoteAction(this));
     daytimeActions.add(new VoteCountAction(this));
     daytimeActions.add(new ListPlayersAction(this));
 
-    adminActions.add(new AnnounceAction(this));
-    adminActions.add(new AbortGameAction(this));
+    adminActions.add(new ModkillPlayerAction(this));
     adminActions.add(new GetVotersAction(this));
-    adminActions.add(new ReminderAction(this));
+
+    hostActions.add(new AnnounceAction(this));
+    hostActions.add(new AbortGameAction(this));
+    hostActions.add(new ReminderAction(this));
 
     chatActions.add(new AuthorizePlayerAction(server));
     chatActions.add(new ChatAction(server));
@@ -424,7 +428,6 @@ public class GameStage extends Stage {
         }
       }
     }
-
     throw new WolfException("No such player: " + name);
   }
 
@@ -473,7 +476,10 @@ public class GameStage extends Stage {
     List<Action> actions = Lists.newArrayList();
 
     if (player.isAdmin()) {
+      actions.addAll(hostActions);
       actions.addAll(adminActions);
+    } else if (player.equals(config.getHost())) {
+      actions.addAll(hostActions);
     }
     if (isDay()) {
       if (config.getSettings().get("PRIVATE_CHAT").equals("ENABLED")) {
@@ -482,7 +488,7 @@ public class GameStage extends Stage {
       actions.addAll(daytimeActions);
     } else {
       List<Action> ret = Lists.newArrayList();
-      ret.add(commandsAction);
+      ret.add(getHelpAction);
       ret.addAll(player.getRole().getNightActions());
       actions.addAll(ret);
     }

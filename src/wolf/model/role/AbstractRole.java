@@ -31,7 +31,7 @@ public abstract class AbstractRole implements Comparable<AbstractRole> {
     roleMap.put(Role.MINION, Minion.class);
     roleMap.put(Role.DEMON, Demon.class);
     roleMap.put(Role.MASON, Mason.class);
-    roleMap.put(Role.WITCH, Witch.class);
+    // roleMap.put(Role.WITCH, Witch.class);
     roleMap.put(Role.CORRUPTER, Corrupter.class);
     roleMap.put(Role.ALPHAWOLF, AlphaWolf.class);
   }

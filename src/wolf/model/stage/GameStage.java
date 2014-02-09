@@ -42,12 +42,12 @@ import wolf.model.role.Vigilante;
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSortedSet;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
-import com.google.common.collect.Sets;
 import com.google.common.collect.TreeMultimap;
 
 public class GameStage extends Stage {
@@ -210,6 +210,7 @@ public class GameStage extends Stage {
     }
 
     // Kill anyone who targets the demon - this ignores protection. May want to settings this later.
+    // Clean this up later to not loop through demons.
     for (Player demon : getPlayers(Role.DEMON)) {
       boolean wolfTarget = false;
       for (Player p : getPlayers()) {
@@ -461,6 +462,10 @@ public class GameStage extends Stage {
     return ImmutableSortedSet.copyOf(filter(players, alive));
   }
 
+  public Set<Player> getDeadPlayers() {
+    return ImmutableSortedSet.copyOf(filter(players, Predicates.not(alive)));
+  }
+
   public boolean isCorrupterTarget(Player target) {
     for (Player p : getPlayers(Role.CORRUPTER)) {
       Corrupter corrupter = (Corrupter) p.getRole();
@@ -469,16 +474,6 @@ public class GameStage extends Stage {
       }
     }
     return false;
-  }
-
-  public Set<Player> getDeadPlayers() {
-    Set<Player> dead = Sets.newTreeSet();
-    for (Player p : players) {
-      if (!p.isAlive()) {
-        dead.add(p);
-      }
-    }
-    return ImmutableSortedSet.copyOf(dead);
   }
 
   public VotingHistory getVotingHistory() {

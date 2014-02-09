@@ -34,8 +34,8 @@ public class SettingsTest extends SimulationTest {
     bot.msg("Ian", "!join");
     bot.msg("Mongo", "!join");
 
-    bot.msg("Tom", "!settings");
-    bot.msg("Tom", "!setflag REVEAL_NIGHT_KILLERS yes");
+    bot.msg("Khaladin", "!settings");
+    bot.msg("Khaladin", "!setflag REVEAL_NIGHT_KILLERS yes");
 
     bot.msg("Khaladin", "!setrole Villager 2");
     bot.msg("Khaladin", "!setrole Wolf 1");

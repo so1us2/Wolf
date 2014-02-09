@@ -108,11 +108,22 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
 
   private void handleChat(String sender, String message) {
     if (!message.startsWith("/")) {
-      if (moderated && !playersAllowedToSpeak.contains(sender.toLowerCase())) {
-        sendMessage(sender, "You are not allowed to chat while"
-            + " the game is going on. Wait for the next game.");
-        return;
+      Player player = null;
+      try {
+        player = stage.getPlayer(sender);
+      } catch (Exception e) {
       }
+
+      if (moderated) {
+        if (player == null || !player.isAlive()) {
+          spectatorChat(sender, message);
+          return;
+        } else if (!playersAllowedToSpeak.contains(sender.toLowerCase())) {
+          sendMessage(sender, "You cannot speak at night.");
+          return;
+        }
+      }
+
       getStage().handleChat(this, sender, message);
       return;
     }
@@ -126,6 +137,34 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
       getStage().handle(this, sender, command, args);
     } catch (WolfException e) {
       sendMessage(sender, e.getMessage());
+    }
+  }
+
+  private Set<WebSocketConnection> getSpectators() {
+    Set<String> alivePlayers = Sets.newHashSet();
+    for (Player p : stage.getAllPlayers()) {
+      if (p.isAlive()) {
+        alivePlayers.add(p.getName());
+      }
+    }
+    Set<WebSocketConnection> ret = Sets.newHashSet();
+    for (WebSocketConnection conn : ImmutableSet.copyOf(allConnections)) {
+      String user = connectionNameMap.get(conn);
+      if (!alivePlayers.contains(user)) {
+        ret.add(conn);
+      }
+    }
+    return ret;
+  }
+
+  public void spectatorChat(String from, String message) {
+    String s = constructJson("S_CHAT", "from", from, "msg", message);
+    for (WebSocketConnection conn : getSpectators()) {
+      try {
+        conn.send(s);
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
   }
 

@@ -5,6 +5,10 @@
 .private{
 	color: purple;
 }
+.spectator{
+	color: blue;
+	font-style: italic;
+}
 .msg-author{
 	margin-right: 10px;
 	font-weight: bold;

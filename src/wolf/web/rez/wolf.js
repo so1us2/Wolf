@@ -89,7 +89,11 @@ function receive(msg){
 	
 	if(command=="CHAT"){
 		append(msg.from, msg.msg, false);
-	} else if(command=="LOGIN_SUCCESS"){
+	}
+	else if(command == "S_CHAT"){
+		append(msg.from, msg.msg, true);
+	}
+	else if(command=="LOGIN_SUCCESS"){
 		loginSuccess(msg.username);
 	} else if(command=="LOGIN_FAILED"){
 		announce("LOGIN FAILED: "+msg.reason);
@@ -113,7 +117,7 @@ function receive(msg){
 	}
 }
 
-function append(from, msg, isPrivate){
+function append(from, msg, isSpectator){
 	var div = $("<div class='row'>");
 	var fromDiv = $("<span class='msg-author'>").text(from+":").addClass("sender");
 	var msgDiv =  $("<span class='msg-text'>").text(msg).addClass("message");
@@ -122,6 +126,10 @@ function append(from, msg, isPrivate){
 		msgDiv.addClass("private");
 		div.append(msgDiv);
 	} else{
+		if(isSpectator){
+			fromDiv.addClass("spectator");
+			msgDiv.addClass("spectator");
+		}
 		div.append(fromDiv).append(msgDiv);
 	}
 	

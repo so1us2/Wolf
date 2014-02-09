@@ -3,10 +3,11 @@ package wolf.model.stage;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
 import wolf.action.Action;
 import wolf.bot.IBot;
 import wolf.model.Player;
+
+import com.google.common.collect.ImmutableSet;
 
 public abstract class Stage {
 

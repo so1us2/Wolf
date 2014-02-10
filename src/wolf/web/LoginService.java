@@ -20,7 +20,7 @@ public class LoginService {
     }
   }
 
-  public String handleLogin(int userID) {
+  public String handleLogin(long userID) {
     List<Row> rows = db.select("SELECT name FROM users WHERE id = " + userID);
     if (rows.isEmpty()) {
       db.insert("users", new Row().with("id", userID));
@@ -29,7 +29,7 @@ public class LoginService {
     return Iterables.getOnlyElement(rows).get("name");
   }
 
-  public void createAccount(int userID, String name) {
+  public void createAccount(long userID, String name) {
     db.update("UPDATE users SET name = ? WHERE id = ?", name, userID);
   }
 

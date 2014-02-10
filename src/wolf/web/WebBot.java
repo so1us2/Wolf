@@ -34,7 +34,7 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
   private final Map<String, WebSocketConnection> nameConnectionMap = Maps.newConcurrentMap();
   private final List<WebSocketConnection> allConnections = Lists.newArrayList();
 
-  private final Map<WebSocketConnection, Integer> connectionIds = Maps.newConcurrentMap();
+  private final Map<WebSocketConnection, Long> connectionIds = Maps.newConcurrentMap();
 
   private final JsonParser parser = new JsonParser();
 
@@ -87,7 +87,7 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
 
   private void handle(WebSocketConnection from, String command, List<String> args) {
     if (command.equalsIgnoreCase("login")) {
-      int userID = Integer.parseInt(args.get(0));
+      long userID = Long.parseLong(args.get(0));
       connectionIds.put(from, userID);
       
       String name = loginService.handleLogin(userID);
@@ -105,7 +105,7 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
       sendRemote(createPlayersObject());
 
     } else if (command.equalsIgnoreCase("username")) {
-      int userID = connectionIds.get(from);
+      long userID = connectionIds.get(from);
       String name = args.get(0);
       loginService.createAccount(userID, name);
       from.send(constructJson("LOGIN_SUCCESS", "username", name));

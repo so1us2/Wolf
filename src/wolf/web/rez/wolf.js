@@ -1,3 +1,5 @@
+var testing = false;
+
 var ws;
 
 $("#text-input").keypress(function(e){
@@ -13,10 +15,14 @@ $("#text-input").keypress(function(e){
 
 //open websocket
 if (WebSocket){
-	ws = new WebSocket("ws://playwolf.net:80/socket");
+	var domain = testing ? "localhost" : "playwolf.net";
+	ws = new WebSocket("ws://"+domain+":80/socket");
 	ws.onopen = function() {
 		announce("Connected to chat server.");
 		var userID = $.cookie("userID");
+		if(testing){
+			userID = 1;
+		}
 		if(userID){
 			loginWithUserID(userID);
 		}
@@ -39,7 +45,9 @@ function loginComplete(data){
 }
 
 function loginWithUserID(userID){
-	$.cookie("userID", userID,{expires: 7});
+	if(!testing){
+		$.cookie("userID", userID,{expires: 7});
+	}
 	send("LOGIN", userID);
 	
     $(".fb-login-button").addClass("hidden");
@@ -119,6 +127,15 @@ function append(from, msg, isSpectator){
 	
 	$("#chat-text").append(div);
 	scrollToBottom();
+	
+	if(msg.indexOf("A new game is forming")==0){
+		var audio = new Audio('new_game.mp3');
+		audio.play();
+	}
+	if(msg.indexOf("Assigning roles...")==0){
+		var audio = new Audio('game_started.mp3');
+		audio.play();
+	}
 }
 
 function announce(msg){

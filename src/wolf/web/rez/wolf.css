@@ -28,7 +28,7 @@
   width: 200px;
 }
 #rules-modal .modal-body {
-	min-height: 400px;
+	min-height: 600px;
 }
 #text-input{
 	width: 500px;
@@ -38,6 +38,9 @@
 }
 .login-button{
 	display: inline;
+}
+.rules-text{
+	margin-top: 10px;
 }
 .login-advertise{
 	font-weight: bold;

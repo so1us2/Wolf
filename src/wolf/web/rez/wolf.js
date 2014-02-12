@@ -152,6 +152,47 @@ function scrollToBottom(){
 	}
 }
 
+rulesLoaded = false;
+$("#rules-button").click(function(e){
+	if(rulesLoaded){
+		return;
+	}
+	rulesLoaded = true;
+	
+	$.getJSON("/rules", function(data){
+		var list = $("#rules-list");
+		
+		for(var i = 0; i < data.length; i++){
+			var rule = data[i];
+			var ahref = $("<a href='#'>").text(rule);
+			var li = $("<li data-rule='"+rule+"'>").append(ahref);
+			list.append(li);
+			li.click(rulesListener);
+			if(i==0){
+				ahref.click();
+			}
+		}
+	});
+});
+
+var lastRule;
+function rulesListener(e){
+	if(lastRule){
+		lastRule.removeClass("active");
+	}
+	
+	var parent = $(e.target).parent();
+    parent.addClass("active");
+    
+    lastRule = parent;
+    
+    var container = $("#rules-content");
+    
+    $.get("/rules/"+parent.data("rule"), function(data){
+    	container.html(data);
+    });
+}
+
 $("#rankings-button").click(function(e){
 	var container = $("#rankings-modal tbody");
 	

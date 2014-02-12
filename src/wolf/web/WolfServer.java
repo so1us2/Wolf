@@ -46,6 +46,7 @@ public class WolfServer implements HttpHandler {
   public static void main(String[] args) throws Exception {
     WebServers.createWebServer(80).add("/socket", new WebBot())
     .add("/rankings", new RankingsHandler())
+    .add("/rules.*", new RulesHandler())
     .add(new WolfServer()).start().get();
     System.out.println("Server Started.");
   }

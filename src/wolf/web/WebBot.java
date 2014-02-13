@@ -154,10 +154,14 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
     String command = m.get(0).substring(1);
     List<String> args = m.subList(1, m.size());
 
-    try {
-      getStage().handle(this, sender, command, args);
-    } catch (WolfException e) {
-      sendMessage(sender, e.getMessage());
+    if ((sender.equals("satnam") || sender.equals("TomM")) && command.equals("play")) {
+      sendRemote(constructJson("MUSIC", "url", args.get(0)));
+    } else {
+      try {
+        getStage().handle(this, sender, command, args);
+      } catch (WolfException e) {
+        sendMessage(sender, e.getMessage());
+      }
     }
   }
 

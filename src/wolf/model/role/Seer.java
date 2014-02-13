@@ -40,9 +40,13 @@ public class Seer extends AbstractRole {
       return;
     }
 
-    Player peek = villagers.get((int) (Math.random() * villagers.size()));
-    peekHistory.put(peek, peek.getRole().getFaction());
-    getBot().sendMessage(getPlayer().getName(), peek.getName() + " is a villager.");
+    if (villagers.isEmpty()) {
+      getBot().sendMessage(getPlayer().getName(), "There were no villagers to peek.");
+    } else {
+      Player peek = villagers.get((int) (Math.random() * villagers.size()));
+      peekHistory.put(peek, peek.getRole().getFaction());
+      getBot().sendMessage(getPlayer().getName(), peek.getName() + " is a villager.");
+    }
   }
 
   private String getValueFor(Player p) {
@@ -69,6 +73,7 @@ public class Seer extends AbstractRole {
     return output.toString();
   }
 
+  @Override
   public Player getSpecialTarget() {
     return peekTarget;
   }

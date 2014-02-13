@@ -106,6 +106,8 @@ function receive(msg){
 			var player = msg.watchers[i];
 			$("#list-watching").append($("<li class='list-group-item'>").text(player));
 		}
+	} else if(command == "MUSIC"){
+		new Audio(msg.url).play();
 	}
 }
 

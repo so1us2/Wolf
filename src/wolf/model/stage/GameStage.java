@@ -1,7 +1,5 @@
 package wolf.model.stage;
 
-import static com.google.common.collect.Iterables.filter;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -52,6 +50,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
+
+import static com.google.common.collect.Iterables.filter;
 
 public class GameStage extends Stage {
 
@@ -122,7 +122,14 @@ public class GameStage extends Stage {
       player.getRole().setStage(this);
     }
 
-    beginGame();
+    try {
+      beginGame();
+    } catch (Exception e) {
+      e.printStackTrace();
+      bot.sendMessage("There was a server error when initializing the game!");
+      bot.setStage(new InitialStage(getBot()));
+      return;
+    }
   }
 
   private void beginGame() {

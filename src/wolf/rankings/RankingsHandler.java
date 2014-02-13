@@ -19,6 +19,7 @@ import wolf.WolfDB;
 import wolf.model.Faction;
 import wolf.model.Role;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Lists;
@@ -64,6 +65,12 @@ public class RankingsHandler implements HttpHandler {
     for (String game : gameRows.keySet()) {
       for (Entry<String, Integer> score : getScores(gameRows.get(game)).entrySet()) {
         scores.put(score.getKey(), score.getValue());
+      }
+    }
+
+    for (String score : ImmutableList.copyOf(scores.keySet())) {
+      if (scores.get(score).size() < 3) {
+        scores.removeAll(score);
       }
     }
 

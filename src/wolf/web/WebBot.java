@@ -4,6 +4,19 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.webbitserver.BaseWebSocketHandler;
+import org.webbitserver.WebSocketConnection;
+
+import wolf.WolfException;
+import wolf.bot.IBot;
+import wolf.model.Faction;
+import wolf.model.Player;
+import wolf.model.stage.GameStage;
+import wolf.model.stage.InitialStage;
+import wolf.model.stage.Stage;
+import wolf.rankings.GameHistory;
+import wolf.web.LoginService.User;
+
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -15,17 +28,6 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
-import org.webbitserver.BaseWebSocketHandler;
-import org.webbitserver.WebSocketConnection;
-import wolf.WolfException;
-import wolf.bot.IBot;
-import wolf.model.Faction;
-import wolf.model.Player;
-import wolf.model.stage.GameStage;
-import wolf.model.stage.InitialStage;
-import wolf.model.stage.Stage;
-import wolf.rankings.GameHistory;
-import wolf.web.LoginService.User;
 
 public class WebBot extends BaseWebSocketHandler implements IBot {
 
@@ -37,7 +39,6 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
 
   private final JsonParser parser = new JsonParser();
 
-  private Stage stage = new InitialStage(this);
 
   private boolean moderated = false;
   private Set<String> playersAllowedToSpeak = Sets.newHashSet();
@@ -45,6 +46,8 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
   private final GameHistory history = new GameHistory();
 
   private final LoginService loginService = new LoginService();
+
+  private Stage stage = new InitialStage(this);
 
   @Override
   public void onOpen(WebSocketConnection connection) {

@@ -41,7 +41,14 @@
 }
 .login-advertise{
 	font-weight: bold;
+	margin-top: 5px;
 }
 .list-group-item{
 	height: 40px;
+}
+.fb-login-button{
+	margin-left: 5px;
+}
+.inline{
+	display: inline;
 }

@@ -25,6 +25,8 @@ if (WebSocket){
 		}
 		if(userID){
 			loginWithUserID(userID);
+		} else{
+			$(".login-advertise").clone().appendTo($("#chat-text"));
 		}
 	};
 	ws.onmessage = function (evt) { 
@@ -50,14 +52,17 @@ function loginWithUserID(userID){
 	}
 	send("LOGIN", userID);
 	
-    $(".fb-login-button").addClass("hidden");
     $(".login-advertise").addClass("hidden");
     
     $("#text-input").removeClass("hidden");
 }
 
-function loginSuccess(username){
-	announce("Logged in as '"+username+"'");
+function loginSuccess(msg){
+	announce("Logged in as '"+msg.username+"'");
+	
+	$("#enable-sounds-checkbox").prop("checked", msg.enable_sounds);
+	
+	$("#settings-button").removeClass("hidden");
 }
 
 function send(command, arg){
@@ -81,7 +86,7 @@ function receive(msg){
 		append(msg.from, msg.msg, true);
 	}
 	else if(command=="LOGIN_SUCCESS"){
-		loginSuccess(msg.username);
+		loginSuccess(msg);
 	} 
 	else if(command == "PROMPT_NAME"){
 	   var username = window.prompt("Enter your username:");
@@ -93,7 +98,13 @@ function receive(msg){
 	else if(command=="PLAYERS"){
 		$(".list-group-item").remove();
 		
-		$("#viewers-count").text(msg.num_viewers);
+		if(msg.num_not_signed_in){
+			$("#viewers-count").text(msg.num_not_signed_in + " not signed in");
+		} else{
+			$("#viewers-count").text("");
+		}			
+		
+		
 		for(var i=0; i<msg.alive.length; i++){
 			var player = msg.alive[i];
 			$("#list-players").append($("<li class='list-group-item alive'>").text(player));
@@ -107,16 +118,24 @@ function receive(msg){
 			$("#list-watching").append($("<li class='list-group-item'>").text(player));
 		}
 	} else if(command == "MUSIC"){
-		new Audio(msg.url).play();
+		playSound(msg.url);
 	}
 }
 
 function append(from, msg, isSpectator){
+	var fromNarrator = from=="$narrator";
+	
 	var div = $("<div class='row'>");
 	var fromDiv = $("<span class='msg-author'>").text(from+":").addClass("sender");
-	var msgDiv =  $("<span class='msg-text'>").text(msg).addClass("message");
+	var msgDiv =  $("<span class='msg-text'>").addClass("message");
 	
-	if(from=="$narrator"){
+	if(fromNarrator){
+		msgDiv.html(msg);
+	} else{
+		msgDiv.text(msg);
+	}
+	
+	if(fromNarrator){
 		msgDiv.addClass("private");
 		div.append(msgDiv);
 	} else{
@@ -130,13 +149,20 @@ function append(from, msg, isSpectator){
 	$("#chat-text").append(div);
 	scrollToBottom();
 	
-	if(msg.indexOf("A new game is forming")==0){
-		var audio = new Audio('new_game.mp3');
-		audio.play();
+	if(fromNarrator){
+		if(msg.indexOf("A new game is forming")==0){
+			playSound("new_game.mp3");
+		}
+		if(msg.indexOf("Assigning roles...")==0){
+			playSound("game_started.mp3");
+		}
 	}
-	if(msg.indexOf("Assigning roles...")==0){
-		var audio = new Audio('game_started.mp3');
-		audio.play();
+}
+
+function playSound(url){
+	var enable_sounds = $("#enable-sounds-checkbox").is(":checked");
+	if(enable_sounds){
+		new Audio(url).play();
 	}
 }
 
@@ -215,4 +241,9 @@ $("#rankings-button").click(function(e){
 			container.append(tr);
 		}
 	});
+});
+
+$("#enable-sounds-checkbox").click(function(e){
+	var checked = $(this).is(":checked");
+	send("CHAT","/enable-sounds " + checked);
 });

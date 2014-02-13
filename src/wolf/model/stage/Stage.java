@@ -3,16 +3,15 @@ package wolf.model.stage;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 import wolf.action.Action;
 import wolf.bot.IBot;
 import wolf.model.Player;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
-
 public abstract class Stage {
 
-  private static final Set<String> admins = ImmutableSet.of("satnam", "TomM");
+  public static final Set<String> admins = ImmutableSet.of("satnam", "TomM");
 
   private final IBot bot;
 

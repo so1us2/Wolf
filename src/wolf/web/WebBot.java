@@ -4,18 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.webbitserver.BaseWebSocketHandler;
-import org.webbitserver.WebSocketConnection;
-
-import wolf.WolfException;
-import wolf.bot.IBot;
-import wolf.model.Faction;
-import wolf.model.Player;
-import wolf.model.stage.GameStage;
-import wolf.model.stage.InitialStage;
-import wolf.model.stage.Stage;
-import wolf.rankings.GameHistory;
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -27,6 +15,17 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonPrimitive;
+import org.webbitserver.BaseWebSocketHandler;
+import org.webbitserver.WebSocketConnection;
+import wolf.WolfException;
+import wolf.bot.IBot;
+import wolf.model.Faction;
+import wolf.model.Player;
+import wolf.model.stage.GameStage;
+import wolf.model.stage.InitialStage;
+import wolf.model.stage.Stage;
+import wolf.rankings.GameHistory;
+import wolf.web.LoginService.User;
 
 public class WebBot extends BaseWebSocketHandler implements IBot {
 
@@ -90,17 +89,18 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
       long userID = Long.parseLong(args.get(0));
       connectionIds.put(from, userID);
       
-      String name = loginService.handleLogin(userID);
+      User user = loginService.handleLogin(userID);
 
-      if (name == null) {
+      if (user == null) {
         from.send(constructJson("PROMPT_NAME"));
         return;
       }
 
-      connectionNameMap.put(from, name);
-      nameConnectionMap.put(name, from);
+      connectionNameMap.put(from, user.name);
+      nameConnectionMap.put(user.name, from);
 
-      from.send(constructJson("LOGIN_SUCCESS", "username", name));
+      from.send(constructJson("LOGIN_SUCCESS", "username", user.name, "enable_sounds",
+          user.enableSounds));
 
       sendRemote(createPlayersObject());
 
@@ -126,36 +126,28 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
   }
 
   private void handleChat(String sender, String message) {
-    if (!message.startsWith("/")) {
-      Player player = null;
-      try {
-        player = stage.getPlayer(sender);
-      } catch (Exception e) {
-      }
-
-      if (moderated) {
-        if (player == null || !player.isAlive()) {
-          spectatorChat(sender, message);
-          return;
-        } else if (!playersAllowedToSpeak.contains(sender.toLowerCase())) {
-          if (player.getRole().getFaction() != Faction.WOLVES) {
-            sendMessage(sender, "You cannot speak at night.");
-            return;
-          }
-        }
-      }
-
-      getStage().handleChat(this, sender, message);
-      return;
+    if (message.startsWith("/")) {
+      handleCommand(sender, message);
+    } else {
+      handleNormalChat(sender, message);
     }
+  }
 
+  private void handleCommand(String sender, String message) {
     List<String> m = ImmutableList.copyOf(Splitter.on(" ").split(message));
 
     String command = m.get(0).substring(1);
     List<String> args = m.subList(1, m.size());
 
-    if ((sender.equals("satnam") || sender.equals("TomM")) && command.equals("play")) {
-      sendRemote(constructJson("MUSIC", "url", args.get(0)));
+    boolean isAdmin = Stage.admins.contains(sender);
+
+    if (command.equals("enable-sounds")) {
+      boolean enableSounds = Boolean.valueOf(args.get(0));
+      loginService.setSoundsEnabled(sender, enableSounds);
+    } else if (command.equals("play")) {
+      if (isAdmin) {
+        sendRemote(constructJson("MUSIC", "url", args.get(0)));
+      }
     } else {
       try {
         getStage().handle(this, sender, command, args);
@@ -163,6 +155,27 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
         sendMessage(sender, e.getMessage());
       }
     }
+  }
+
+  private void handleNormalChat(String sender, String message) {
+    Player player = null;
+    try {
+      player = stage.getPlayer(sender);
+    } catch (Exception e) {}
+
+    if (moderated) {
+      if (player == null || !player.isAlive()) {
+        spectatorChat(sender, message);
+        return;
+      } else if (!playersAllowedToSpeak.contains(sender.toLowerCase())) {
+        if (player.getRole().getFaction() != Faction.WOLVES) {
+          sendMessage(sender, "You cannot speak at night.");
+          return;
+        }
+      }
+    }
+
+    getStage().handleChat(this, sender, message);
   }
 
   private Set<WebSocketConnection> getSpectators() {
@@ -203,13 +216,19 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
     return constructJson("CHAT", "from", from, "msg", message);
   }
 
-  private String constructJson(String command, String... params) {
+  private String constructJson(String command, Object... params) {
     JsonObject o = new JsonObject();
 
     o.addProperty("command", command);
 
     for (int i = 0; i < params.length; i += 2) {
-      o.addProperty(params[i], params[i + 1]);
+      String key = params[i].toString();
+      Object val = params[i + 1];
+      if (val instanceof Boolean) {
+        o.addProperty(key, (Boolean) val);
+      } else {
+        o.addProperty(key, val.toString());
+      }
     }
 
     return o.toString();
@@ -272,7 +291,6 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
     JsonObject o = new JsonObject();
 
     o.addProperty("command", "PLAYERS");
-    o.addProperty("num_viewers", allConnections.size());
 
     JsonArray alive = new JsonArray();
     JsonArray dead = new JsonArray();
@@ -299,6 +317,7 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
     o.add("alive", alive);
     o.add("dead", dead);
     o.add("watchers", watchers);
+    o.addProperty("num_not_signed_in", allConnections.size() - nameConnectionMap.size());
 
     return o.toString();
   }

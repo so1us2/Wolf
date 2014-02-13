@@ -16,6 +16,8 @@ public class InitialStage extends Stage {
 
   public InitialStage(IBot bot) {
     super(bot);
+
+    bot.unmuteAll();
   }
   
   @Override

@@ -125,7 +125,10 @@ function updatePlayers(players){
 		
 		if("alive" in player){
 			li.addClass("alive");
+		} else if("in_game" in player){
+			li.addClass("dead");
 		}
+		
 		li.data("name", player.name);
 		
 		li.click(clickPlayerHandler);

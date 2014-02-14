@@ -4,12 +4,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.google.common.base.Objects;
+import com.google.common.collect.Maps;
 import wolf.WolfException;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
-
-import com.google.common.base.Objects;
-import com.google.common.collect.Maps;
 
 public class VoteAction extends GameAction {
 
@@ -35,6 +34,7 @@ public class VoteAction extends GameAction {
     if (prevTarget == null) {
       getBot().sendMessage(invoker.getName(), "Voted for " + target.getName());
       getBot().sendMessage("A player voted. (" + votes.size() + " total)");
+      getBot().onPlayersChanged();
     } else {
       getBot().sendMessage(invoker.getName(), "Switched vote to " + target.getName());
       getBot().sendMessage("A player switched their vote. (" + votes.size() + " total)");

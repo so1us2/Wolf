@@ -279,11 +279,9 @@ function filter(clicked){
 		author = clicked;
 	}
 	
-	if(author == null){
-		console.log("clearing filter.");
-		$(".msg").removeClass("hidden");
-		$(".msg-author").removeClass("highlight");
-	} else {
+	$(".msg").removeClass("hidden");
+	$(".msg-author").removeClass("highlight");
+	if(author != null){
 		console.log("Filtering on: "+author);
 		$(".msg-author").each(function(){
 			var t = $(this);

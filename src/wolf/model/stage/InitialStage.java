@@ -2,12 +2,13 @@ package wolf.model.stage;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
 import wolf.action.Action;
 import wolf.action.GetHelpAction;
 import wolf.action.setup.NewGameAction;
 import wolf.bot.IBot;
 import wolf.model.Player;
+
+import com.google.common.collect.ImmutableList;
 
 public class InitialStage extends Stage {
 
@@ -29,6 +30,11 @@ public class InitialStage extends Stage {
   @Override
   public Iterable<Player> getAllPlayers() {
     return ImmutableList.of();
+  }
+
+  @Override
+  public Player getPlayerOrNull(String name) {
+    return null;
   }
 
 }

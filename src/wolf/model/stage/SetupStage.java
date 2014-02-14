@@ -3,10 +3,6 @@ package wolf.model.stage;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import wolf.action.Action;
 import wolf.action.GetHelpAction;
 import wolf.action.game.host.AbortGameAction;
@@ -27,6 +23,11 @@ import wolf.action.setup.host.StartGameAction;
 import wolf.bot.IBot;
 import wolf.model.GameConfig;
 import wolf.model.Player;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 public class SetupStage extends Stage {
 
@@ -58,6 +59,17 @@ public class SetupStage extends Stage {
 
   }
 
+  @Override
+  public Player getPlayerOrNull(String name) {
+    for (Player p : players) {
+      if (p.getName().equalsIgnoreCase(name)) {
+        return p;
+      }
+    }
+    return null;
+  }
+
+  @Override
   public void setHost(Player newHost) {
     config.setHost(newHost);
     if (config.getHost() == null) {
@@ -67,6 +79,7 @@ public class SetupStage extends Stage {
     }
   }
 
+  @Override
   public Player getHost() {
     return config.getHost();
   }

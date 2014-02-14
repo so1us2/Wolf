@@ -121,11 +121,14 @@ function updatePlayers(players){
 			name += "<image class='voted' data-toggle='tooltip' title='Voted!' src='pics/checkbox.png'>";
 		}
 		
-		var li = $("<li class='list-group-item'>").html(name);
+		var li = $("<li class='list-group-item player-item'>").html(name);
 		
 		if("alive" in player){
 			li.addClass("alive");
 		}
+		li.data("name", player.name);
+		
+		li.click(clickPlayerHandler);
 		
 		list.append(li);
 	}
@@ -259,9 +262,17 @@ $("#enable-sounds-checkbox").click(function(e){
 	send("CHAT","/enable-sounds " + checked);
 });
 
+function clickPlayerHandler(e){
+	var name = $(e.target).data("name")+":";
+	filter(name);
+}
+
 var author;
 function authorFilter(e){
-	var clicked = $(e.target).text();
+	filter($(e.target).text());
+}
+
+function filter(clicked){
 	if(clicked == author){
 		author = null;
 	} else{

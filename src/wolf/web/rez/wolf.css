@@ -64,3 +64,6 @@
 .twitter-follow-button{
 	margin-top: 15px;
 }
+.player-item{
+	 cursor: pointer;
+}

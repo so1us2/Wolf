@@ -51,7 +51,7 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
   @Override
   public void onOpen(WebSocketConnection connection) {
     allConnections.add(connection);
-    connection.send(createPlayersObject());
+    sendRemote(createPlayersObject());
   }
 
   @Override

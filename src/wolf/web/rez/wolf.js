@@ -63,6 +63,12 @@ function loginSuccess(msg){
 	$("#enable-sounds-checkbox").prop("checked", msg.enable_sounds);
 	
 	$("#settings-button").removeClass("hidden");
+	
+	append("satnam", "You are a wolf!", false);
+	append("satnam", "You are a wolf!", false);
+	append("satnam", "You are a wolf!", false);
+	append("satnam", "You are a wolf!", false);
+	append("satnam", "You are a wolf!", false);
 }
 
 function send(command, arg){
@@ -134,8 +140,8 @@ function updatePlayers(players){
 function append(from, msg, isSpectator){
 	var fromNarrator = from=="$narrator";
 	
-	var div = $("<div class='row'>");
-	var fromDiv = $("<span class='msg-author'>").text(from+":").addClass("sender");
+	var div = $("<div class='row msg'>");
+	var authorDiv = $("<span class='msg-author'>").text(from + ":").addClass("sender");
 	var msgDiv =  $("<span class='msg-text'>").addClass("message");
 	
 	if(fromNarrator){
@@ -149,14 +155,16 @@ function append(from, msg, isSpectator){
 		div.append(msgDiv);
 	} else{
 		if(isSpectator){
-			fromDiv.addClass("spectator");
+			authorDiv.addClass("spectator");
 			msgDiv.addClass("spectator");
 		}
-		div.append(fromDiv).append(msgDiv);
+		div.append(authorDiv).append(msgDiv);
 	}
 	
 	$("#chat-text").append(div);
 	scrollToBottom();
+	
+	authorDiv.click(authorFilter);
 	
 	if(fromNarrator){
 		if(msg.indexOf("A new game is forming")==0){
@@ -256,3 +264,29 @@ $("#enable-sounds-checkbox").click(function(e){
 	var checked = $(this).is(":checked");
 	send("CHAT","/enable-sounds " + checked);
 });
+
+var author;
+function authorFilter(e){
+	var clicked = $(e.target).text();
+	if(clicked == author){
+		author = null;
+	} else{
+		author = clicked;
+	}
+	
+	if(author == null){
+		console.log("clearing filter.");
+		$(".msg").removeClass("hidden");
+		$(".msg-author").removeClass("highlight");
+	} else {
+		console.log("Filtering on: "+author);
+		$(".msg-author").each(function(){
+			var t = $(this);
+			if(author == t.text()){
+				t.addClass("highlight");
+			} else{
+				t.parent().addClass("hidden");
+			}
+		});
+	}
+}

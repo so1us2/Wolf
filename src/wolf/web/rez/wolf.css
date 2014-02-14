@@ -12,6 +12,7 @@
 .msg-author{
 	margin-right: 10px;
 	font-weight: bold;
+	cursor: pointer;
 }
 .dead{
 	background-color: #000;
@@ -56,4 +57,7 @@
 	position: relative;
   left: 7px;
   bottom: 3px;
+}
+.highlight{
+	background-color: #FFFF00;
 }

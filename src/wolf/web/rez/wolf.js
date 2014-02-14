@@ -63,12 +63,6 @@ function loginSuccess(msg){
 	$("#enable-sounds-checkbox").prop("checked", msg.enable_sounds);
 	
 	$("#settings-button").removeClass("hidden");
-	
-	append("satnam", "You are a wolf!", false);
-	append("satnam", "You are a wolf!", false);
-	append("satnam", "You are a wolf!", false);
-	append("satnam", "You are a wolf!", false);
-	append("satnam", "You are a wolf!", false);
 }
 
 function send(command, arg){

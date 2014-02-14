@@ -3,6 +3,7 @@ package wolf.web;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.webbitserver.BaseWebSocketHandler;
 import org.webbitserver.WebSocketConnection;
@@ -95,7 +96,7 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
       
       User user = loginService.handleLogin(userID);
 
-      if (user == null) {
+      if (user == null || user.name == null) {
         from.send(constructJson("PROMPT_NAME"));
         return;
       }
@@ -105,10 +106,6 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
 
       from.send(constructJson("LOGIN_SUCCESS", "username", user.name, "enable_sounds",
           user.enableSounds));
-
-      from.send(constructChatJson(
-          NARRATOR,
-          "<b>Big new feature!</b> Click on someone's name and see what happens."));
 
       sendRemote(createPlayersObject());
 
@@ -308,7 +305,15 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
 
     JsonArray players = new JsonArray();
 
-    for (String s : Sets.newTreeSet(nameConnectionMap.keySet())) {
+    TreeSet<String> set = Sets.newTreeSet();
+
+    set.addAll(nameConnectionMap.keySet());
+
+    for (Player p : stage.getAllPlayers()) {
+      set.add(p.getName());
+    }
+
+    for (String s : set) {
       JsonObject p = new JsonObject();
 
       p.addProperty("name", s);

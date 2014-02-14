@@ -4,11 +4,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Maps;
 import wolf.WolfException;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
+
+import com.google.common.base.Objects;
+import com.google.common.collect.Maps;
 
 public class VoteAction extends GameAction {
 
@@ -25,9 +26,10 @@ public class VoteAction extends GameAction {
 
     if (Objects.equal(target, prevTarget)) {
       throw new WolfException("Your vote was already set to " + target.getName());
-    } else if (Objects.equal(target, invoker)) {
-      throw new WolfException("You cannot vote for yourself.");
     }
+    // else if (Objects.equal(target, invoker)) {
+    // throw new WolfException("You cannot vote for yourself.");
+    // }
 
     getStage().getVotingHistory().record(invoker, target);
 

@@ -5,8 +5,18 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import org.joda.time.DateTime;
-
 import wolf.WolfException;
 import wolf.action.Action;
 import wolf.action.GetHelpAction;
@@ -38,18 +48,6 @@ import wolf.model.role.Corrupter;
 import wolf.model.role.Demon;
 import wolf.model.role.Priest;
 import wolf.model.role.Vigilante;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
 
 import static com.google.common.collect.Iterables.filter;
 
@@ -433,16 +431,32 @@ public class GameStage extends Stage {
    */
   @Override
   public Player getPlayer(String name) {
+    Player p = getPlayerOrNull(name);
+
+    if (p == null) {
+      throw new WolfException("No such player: " + name);
+    }
+
+    if (!p.isAlive()) {
+      throw new WolfException(name + " is dead.");
+    }
+
+    return p;
+  }
+
+  /**
+   * Gets the player with the given name (alive or dead).
+   * 
+   * Returns 'null' if that player doesn't exist.
+   */
+  @Override
+  public Player getPlayerOrNull(String name) {
     for (Player p : this.players) {
       if (p.getName().equalsIgnoreCase(name)) {
-        if (p.isAlive()) {
-          return p;
-        } else {
-          throw new WolfException(name + " is dead.");
-        }
+        return p;
       }
     }
-    throw new WolfException("No such player: " + name);
+    return null;
   }
 
   public List<Player> getPlayers(Role role) {

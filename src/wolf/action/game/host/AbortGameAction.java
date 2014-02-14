@@ -2,14 +2,14 @@ package wolf.action.game.host;
 
 import java.util.List;
 
-import wolf.action.game.GameAction;
+import wolf.action.Action;
 import wolf.model.Player;
-import wolf.model.stage.GameStage;
 import wolf.model.stage.InitialStage;
+import wolf.model.stage.Stage;
 
-public class AbortGameAction extends GameAction {
+public class AbortGameAction extends Action {
 
-  public AbortGameAction(GameStage stage) {
+  public AbortGameAction(Stage stage) {
     super(stage, "abort");
   }
 

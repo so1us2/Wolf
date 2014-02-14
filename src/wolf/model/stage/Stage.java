@@ -56,6 +56,10 @@ public abstract class Stage {
     return new Player(name, admins.contains(name));
   }
 
+  public Player getPlayerOrNull(String name) {
+    return getPlayer(name);
+  }
+
   private Action getActionForCommand(String command, Player player) {
     for (Action a : getAvailableActions(player)) {
       if (a.getName().equalsIgnoreCase(command)) {

@@ -52,3 +52,8 @@
 .inline{
 	display: inline;
 }
+.voted{
+	position: relative;
+  left: 7px;
+  bottom: 3px;
+}

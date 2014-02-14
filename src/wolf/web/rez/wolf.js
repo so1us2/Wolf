@@ -1,4 +1,4 @@
-var testing = false;
+var testing = true;
 
 var ws;
 
@@ -104,21 +104,30 @@ function receive(msg){
 			$("#viewers-count").text("");
 		}			
 		
-		
-		for(var i=0; i<msg.alive.length; i++){
-			var player = msg.alive[i];
-			$("#list-players").append($("<li class='list-group-item alive'>").text(player));
-		}
-		for(var i=0; i<msg.dead.length; i++){
-			var player = msg.dead[i];
-			$("#list-players").append($("<li class='list-group-item dead'>").text(player));
-		}
-		for(var i=0; i<msg.watchers.length; i++){
-			var player = msg.watchers[i];
-			$("#list-watching").append($("<li class='list-group-item'>").text(player));
-		}
+		updatePlayers(msg.players);
 	} else if(command == "MUSIC"){
 		playSound(msg.url);
+	}
+}
+
+function updatePlayers(players){
+	for(var i = 0; i < players.length; i++){
+		var player = players[i];
+		
+		var list = "in_game" in player ? $("#list-players") : $("#list-watching");
+		
+		var name = player.name;
+		if("voted" in player){
+			name += "<image class='voted' data-toggle='tooltip' title='Voted!' src='pics/checkbox.png'>";
+		}
+		
+		var li = $("<li class='list-group-item'>").html(name);
+		
+		if("alive" in player){
+			li.addClass("alive");
+		}
+		
+		list.append(li);
 	}
 }
 

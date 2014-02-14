@@ -4,19 +4,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.webbitserver.BaseWebSocketHandler;
-import org.webbitserver.WebSocketConnection;
-
-import wolf.WolfException;
-import wolf.bot.IBot;
-import wolf.model.Faction;
-import wolf.model.Player;
-import wolf.model.stage.GameStage;
-import wolf.model.stage.InitialStage;
-import wolf.model.stage.Stage;
-import wolf.rankings.GameHistory;
-import wolf.web.LoginService.User;
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -27,9 +14,21 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
+import org.webbitserver.BaseWebSocketHandler;
+import org.webbitserver.WebSocketConnection;
+import wolf.WolfException;
+import wolf.bot.IBot;
+import wolf.model.Faction;
+import wolf.model.Player;
+import wolf.model.stage.GameStage;
+import wolf.model.stage.InitialStage;
+import wolf.model.stage.Stage;
+import wolf.rankings.GameHistory;
+import wolf.web.LoginService.User;
 
 public class WebBot extends BaseWebSocketHandler implements IBot {
+
+  private static final String NARRATOR = "$narrator";
 
   private final Map<WebSocketConnection, String> connectionNameMap = Maps.newConcurrentMap();
   private final Map<String, WebSocketConnection> nameConnectionMap = Maps.newConcurrentMap();
@@ -110,6 +109,12 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
     } else if (command.equalsIgnoreCase("username")) {
       long userID = connectionIds.get(from);
       String name = args.get(0);
+
+      if (name.contains("<") || name.contains(">")) {
+        from.send(constructChatJson(NARRATOR, "Invalid username."));
+        return;
+      }
+
       loginService.createAccount(userID, name);
       from.send(constructJson("LOGIN_SUCCESS", "username", name));
 
@@ -239,7 +244,7 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
 
   @Override
   public void sendMessage(String message) {
-    sendToAll("$narrator", message);
+    sendToAll(NARRATOR, message);
   }
 
   @Override
@@ -249,7 +254,7 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
       System.out.println("Tried to send message to offline user: " + user + " :: " + message);
       return;
     }
-    String s = constructChatJson("$narrator", message);
+    String s = constructChatJson(NARRATOR, message);
     conn.send(s);
   }
 
@@ -295,32 +300,37 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
 
     o.addProperty("command", "PLAYERS");
 
-    JsonArray alive = new JsonArray();
-    JsonArray dead = new JsonArray();
-    JsonArray watchers = new JsonArray();
+    JsonArray players = new JsonArray();
 
-    Set<String> players = Sets.newHashSet();
+    for (String s : Sets.newTreeSet(nameConnectionMap.keySet())) {
+      JsonObject p = new JsonObject();
 
-    for (Player p : Sets.newTreeSet(stage.getAllPlayers())) {
-      players.add(p.getName());
-      JsonPrimitive e = new JsonPrimitive(p.getName());
-      if (p.isAlive()) {
-        alive.add(e);
-      } else {
-        dead.add(e);
+      p.addProperty("name", s);
+
+      if (Stage.admins.contains(s)) {
+        p.addProperty("admin", true);
       }
+
+      Player player = stage.getPlayerOrNull(s);
+      if (player != null) {
+        p.addProperty("in_game", true);
+        if (player.isAlive()) {
+          p.addProperty("alive", true);
+        }
+
+        if (stage instanceof GameStage) {
+          Map<Player, Player> votes = ((GameStage) stage).getVotesToDayKill();
+          if (votes.containsKey(player)) {
+            p.addProperty("voted", true);
+          }
+        }
+      }
+
+      players.add(p);
     }
 
-    for (String s : ImmutableSet.copyOf(nameConnectionMap.keySet())) {
-      if (!players.contains(s)) {
-        watchers.add(new JsonPrimitive(s));
-      }
-    }
-
-    o.add("alive", alive);
-    o.add("dead", dead);
-    o.add("watchers", watchers);
     o.addProperty("num_not_signed_in", allConnections.size() - nameConnectionMap.size());
+    o.add("players", players);
 
     return o.toString();
   }

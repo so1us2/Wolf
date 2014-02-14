@@ -7,11 +7,11 @@ import wolf.model.Player;
 import wolf.model.stage.InitialStage;
 import wolf.model.stage.SetupStage;
 
-public class InitGameAction extends Action {
+public class NewGameAction extends Action {
 
   private final InitialStage stage;
 
-  public InitGameAction(InitialStage stage) {
+  public NewGameAction(InitialStage stage) {
     super(stage, "newgame");
 
     this.stage = stage;
@@ -22,8 +22,9 @@ public class InitGameAction extends Action {
     getBot().sendMessage("A new game is forming -- type /join");
 
     SetupStage setup = new SetupStage(stage.getBot());
-    setup.addPlayer(invoker);
     getBot().setStage(setup);
+
+    setup.addPlayer(invoker);
   }
 
   @Override

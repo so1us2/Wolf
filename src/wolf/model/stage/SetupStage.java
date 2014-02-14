@@ -3,8 +3,13 @@ package wolf.model.stage;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import wolf.action.Action;
 import wolf.action.GetHelpAction;
+import wolf.action.game.host.AbortGameAction;
 import wolf.action.setup.CurrentSetupAction;
 import wolf.action.setup.DetailsAction;
 import wolf.action.setup.JoinAction;
@@ -23,11 +28,6 @@ import wolf.bot.IBot;
 import wolf.model.GameConfig;
 import wolf.model.Player;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-
 public class SetupStage extends Stage {
 
   private final Set<Action> actions = Sets.newTreeSet();
@@ -44,6 +44,7 @@ public class SetupStage extends Stage {
     hostActions.add(new LoadConfigAction(this));
     hostActions.add(new SetRoleAction(this));
     hostActions.add(new SetFlagAction(this));
+    hostActions.add(new AbortGameAction(this));
 
     actions.add(new JoinAction(this));
     actions.add(new GetHelpAction(this));

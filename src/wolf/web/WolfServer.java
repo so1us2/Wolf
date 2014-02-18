@@ -21,6 +21,12 @@ public class WolfServer implements HttpHandler {
       throws Exception {
     String uri = request.uri();
 
+    if (request.header("Host").startsWith("www")) {
+      System.out.println("Redirecting from WWW");
+      response.header("Location", "http://playwolf.net").status(302).end();
+      return;
+    }
+
     if (uri.equals("/")) {
       uri = "/wolf.html";
     }

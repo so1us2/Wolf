@@ -3,15 +3,16 @@ package wolf.web;
 import java.net.URL;
 import java.util.List;
 
+import org.webbitserver.HttpControl;
+import org.webbitserver.HttpHandler;
+import org.webbitserver.HttpRequest;
+import org.webbitserver.HttpResponse;
+
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Resources;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonPrimitive;
-import org.webbitserver.HttpControl;
-import org.webbitserver.HttpHandler;
-import org.webbitserver.HttpRequest;
-import org.webbitserver.HttpResponse;
 
 public class RulesHandler implements HttpHandler {
 
@@ -34,6 +35,7 @@ public class RulesHandler implements HttpHandler {
       ret.add(new JsonPrimitive("Seer"));
       ret.add(new JsonPrimitive("Priest"));
       ret.add(new JsonPrimitive("Demon"));
+      ret.add(new JsonPrimitive("Misconduct"));
       // for (Role role : Role.values()) {
       // ret.add(new JsonPrimitive(role.toString()));
       // }

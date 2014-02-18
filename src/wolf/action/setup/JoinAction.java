@@ -14,6 +14,12 @@ public class JoinAction extends SetupAction {
 
   @Override
   protected void execute(Player invoker, List<String> args) {
+    if (invoker.getName().equalsIgnoreCase("oscar")) {
+      System.out.println(invoker + "You are suspended.");
+      getBot().sendMessage(invoker.getName(), "You are suspended.");
+      return;
+    }
+
     boolean added = getStage().addPlayer(invoker);
     if (!added) {
       throw new WolfException(invoker.getName() + " already joined!");

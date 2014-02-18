@@ -130,6 +130,12 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
         return;
       }
 
+      if (sender.equalsIgnoreCase("oscar")) {
+        System.out.println("BANNED!");
+        from.send("You are banned.");
+        return;
+      }
+
       handleChat(sender, args.get(0));
     }
   }
@@ -157,6 +163,9 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
       if (isAdmin) {
         sendRemote(constructJson("MUSIC", "url", args.get(0)));
       }
+    } else if (command.equals("report")) {
+      System.err.println(sender + " REPORTED: " + args);
+      sendMessage(sender, "Report recorded.");
     } else {
       try {
         getStage().handle(this, sender, command, args);
@@ -293,7 +302,9 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
 
   @Override
   public void onPlayersChanged() {
-    sendRemote(createPlayersObject());
+    if (stage != null) {
+      sendRemote(createPlayersObject());
+    }
   }
 
   private String createPlayersObject() {

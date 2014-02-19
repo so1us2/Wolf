@@ -190,9 +190,10 @@ function announce(msg){
 	scrollToBottom();
 }
 
-function scrollToBottom(){
+function scrollToBottom(force){
 	var win = $(window);
-	if(win.scrollTop() + win.height() >= $(document).height()-100){
+	var doScroll = force || (win.scrollTop() + win.height() >= $(document).height()-100);
+	if(doScroll){
 		window.scrollTo(0, document.body.scrollHeight);
 	}
 }
@@ -295,4 +296,6 @@ function filter(clicked){
 			}
 		});
 	}
+	
+	scrollToBottom(true);
 }

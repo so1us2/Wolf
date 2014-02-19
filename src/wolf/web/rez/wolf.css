@@ -45,7 +45,8 @@
 	margin-top: 5px;
 }
 .list-group-item{
-	height: 40px;
+	height: 30px;
+	padding: 4px 0px 0px 10px;
 }
 .fb-login-button{
 	margin-left: 5px;
@@ -54,7 +55,7 @@
 	display: inline;
 }
 .voted{
-	position: relative;
+  position: relative;
   left: 7px;
   bottom: 3px;
 }

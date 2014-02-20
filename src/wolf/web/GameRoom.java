@@ -52,6 +52,8 @@ public class GameRoom implements IBot {
 
     connections.add(info);
     info.setRoom(this);
+
+    onPlayersChanged();
   }
 
   /**
@@ -61,6 +63,8 @@ public class GameRoom implements IBot {
     System.out.println(info + " left room: " + name);
     connections.remove(info);
     info.setRoom(null);
+
+    onPlayersChanged();
 
     return !name.equals(MAIN_ROOM) && connections.isEmpty();
   }

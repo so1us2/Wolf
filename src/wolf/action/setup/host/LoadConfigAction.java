@@ -52,6 +52,10 @@ public class LoadConfigAction extends SetupAction {
     }
     output.setLength(output.length() - 2);
     getBot().sendMessage(output.toString());
+
+    if (configName.equals("fives")) {
+      getStage().getConfig().getSettings().put("PRE_GAME_PEEK_MODE", "ALL_VILLAGERS");
+    }
   }
 
   @Override

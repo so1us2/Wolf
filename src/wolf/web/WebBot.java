@@ -5,6 +5,19 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.webbitserver.BaseWebSocketHandler;
+import org.webbitserver.WebSocketConnection;
+
+import wolf.WolfException;
+import wolf.bot.IBot;
+import wolf.model.Faction;
+import wolf.model.Player;
+import wolf.model.stage.GameStage;
+import wolf.model.stage.InitialStage;
+import wolf.model.stage.Stage;
+import wolf.rankings.GameHistory;
+import wolf.web.LoginService.User;
+
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
@@ -15,17 +28,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.webbitserver.BaseWebSocketHandler;
-import org.webbitserver.WebSocketConnection;
-import wolf.WolfException;
-import wolf.bot.IBot;
-import wolf.model.Faction;
-import wolf.model.Player;
-import wolf.model.stage.GameStage;
-import wolf.model.stage.InitialStage;
-import wolf.model.stage.Stage;
-import wolf.rankings.GameHistory;
-import wolf.web.LoginService.User;
 
 public class WebBot extends BaseWebSocketHandler implements IBot {
 
@@ -130,7 +132,7 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
         return;
       }
 
-      if (sender.equalsIgnoreCase("oscar")) {
+      if (sender.equalsIgnoreCase("oscar") || sender.equalsIgnoreCase("wwkaye")) {
         System.out.println("BANNED!");
         from.send("You are banned.");
         return;

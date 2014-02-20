@@ -33,6 +33,8 @@ public class RulesHandler implements HttpHandler {
       ret.add(new JsonPrimitive("Villager"));
       ret.add(new JsonPrimitive("Wolf"));
       ret.add(new JsonPrimitive("Seer"));
+      ret.add(new JsonPrimitive("Hunter"));
+      ret.add(new JsonPrimitive("Minion"));
       ret.add(new JsonPrimitive("Priest"));
       ret.add(new JsonPrimitive("Demon"));
       ret.add(new JsonPrimitive("Misconduct"));

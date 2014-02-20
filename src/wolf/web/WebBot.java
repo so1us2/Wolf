@@ -101,6 +101,8 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
         return;
       }
 
+      System.out.println(user.name + " logged in from: " + from.httpRequest().remoteAddress());
+
       connectionNameMap.put(from, user.name);
       nameConnectionMap.put(user.name, from);
 
@@ -118,7 +120,10 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
         return;
       }
 
+      System.out.println(name + " created an account from: " + from.httpRequest().remoteAddress());
+
       loginService.createAccount(userID, name);
+
       from.send(constructJson("LOGIN_SUCCESS", "username", name));
 
       connectionNameMap.put(from, name);
@@ -132,7 +137,8 @@ public class WebBot extends BaseWebSocketHandler implements IBot {
         return;
       }
 
-      if (sender.equalsIgnoreCase("oscar") || sender.equalsIgnoreCase("wwkaye")) {
+      if (sender.equalsIgnoreCase("oscar") || sender.equalsIgnoreCase("wwkaye")
+          || sender.equalsIgnoreCase("tony") || sender.equalsIgnoreCase("ray56")) {
         System.out.println("BANNED!");
         from.send("You are banned.");
         return;

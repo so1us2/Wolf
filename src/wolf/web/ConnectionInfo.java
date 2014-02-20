@@ -54,7 +54,7 @@ public class ConnectionInfo {
 
   @Override
   public String toString() {
-    return name;
+    return name == null ? "Unknown" : name;
   }
 
 }

@@ -58,6 +58,9 @@ public class RankingsHandler implements HttpHandler {
       if (!ratedGames.contains(id)) {
         continue;
       }
+      if (row.get("name").equals("wwkaye")) {
+        continue;
+      }
       gameRows.put(id, row);
     }
 

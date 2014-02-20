@@ -1,5 +1,6 @@
 package org.webbitserver.netty;
 
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.net.HttpCookie;
@@ -201,8 +202,12 @@ public class NettyHttpResponse implements org.webbitserver.HttpResponse {
     content(message);
     flushResponse();
 
-    exceptionHandler.uncaughtException(Thread.currentThread(),
-        WebbitException.fromException(error, ctx.getChannel()));
+    if (error instanceof IOException || error instanceof WebbitException) {
+      System.err.println("NettyHttpResponse: " + error);
+    } else {
+      exceptionHandler.uncaughtException(Thread.currentThread(),
+          WebbitException.fromException(error, ctx.getChannel()));
+    }
 
     return this;
   }

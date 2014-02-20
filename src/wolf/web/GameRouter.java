@@ -123,6 +123,8 @@ public class GameRouter extends BaseWebSocketHandler {
 
       from.send(constructJson("LOGIN_SUCCESS", "username", user.name, "enable_sounds",
           user.enableSounds));
+
+      from.getRoom().onPlayersChanged();
     } else if (command.equalsIgnoreCase("username")) {
       long userID = from.getUserID();
       String name = args.get(0);
@@ -141,6 +143,7 @@ public class GameRouter extends BaseWebSocketHandler {
 
       from.send(constructJson("LOGIN_SUCCESS", "username", name));
 
+      from.getRoom().onPlayersChanged();
     } else if (command.equalsIgnoreCase("switch_room")) {
       String room = args.get(0);
       GameRoom newRoom = getRoom(room);

@@ -5,18 +5,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
 import org.joda.time.DateTime;
+
 import wolf.WolfException;
 import wolf.action.Action;
 import wolf.action.GetHelpAction;
@@ -48,6 +38,18 @@ import wolf.model.role.Corrupter;
 import wolf.model.role.Demon;
 import wolf.model.role.Priest;
 import wolf.model.role.Vigilante;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 
 import static com.google.common.collect.Iterables.filter;
 
@@ -397,7 +399,7 @@ public class GameStage extends Stage {
     }
 
     if (winner != null) {
-      getBot().sendMessage("The " + winner.getPluralForm() + " have won the game!");
+      getBot().sendMessage("<h2>The " + winner.getPluralForm() + " have won the game!</h2>");
       GameSummary.printGameLog(getBot(), players, winner, killHistory);
       getBot().setStage(new InitialStage(getBot()));
       getBot().unmuteAll();

@@ -33,7 +33,7 @@ public class RoomHandler implements HttpHandler {
 
       roomName = roomName.replace(" ", "_");
 
-      if (roomName.contains("<")) {
+      if (roomName.isEmpty() || roomName.contains("<")) {
         throw new RuntimeException("Bad room name: " + roomName);
       }
       

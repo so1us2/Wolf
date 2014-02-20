@@ -1,4 +1,4 @@
-var testing = true;
+var testing = false;
 
 var ws;
 var currentRoom = "Main Room";
@@ -98,6 +98,7 @@ function newRoom(){
      if(!roomName){
     	 return;
      }
+     roomName = roomName.replace(" ", "_");
      $.post("/rooms/" + roomName).success(function(){
     	 send("SWITCH_ROOM", roomName);
     	 setRoom(roomName);
@@ -111,7 +112,7 @@ function setRoom(room){
 	console.log("Switching rooms: "+room);
 	currentRoom = room;
 	 $("#room-name").text(room + " ");
-	 $("#chat-text").empty();
+	// $("#chat-text").empty();
 	 append("$narrator", "Joined room: "+room);
 }
 

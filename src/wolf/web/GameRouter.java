@@ -3,15 +3,17 @@ package wolf.web;
 import java.util.List;
 import java.util.Map;
 
+import org.webbitserver.BaseWebSocketHandler;
+import org.webbitserver.WebSocketConnection;
+
+import wolf.web.LoginService.User;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import org.webbitserver.BaseWebSocketHandler;
-import org.webbitserver.WebSocketConnection;
-import wolf.web.LoginService.User;
 
 public class GameRouter extends BaseWebSocketHandler {
 
@@ -50,6 +52,8 @@ public class GameRouter extends BaseWebSocketHandler {
   }
 
   public void createRoom(String name) {
+    System.out.println("CREATE ROOM: " + name);
+
     for (GameRoom room : rooms) {
       if (room.name.equalsIgnoreCase(name)) {
         throw new RuntimeException("Already a room with this name: " + name);
@@ -141,7 +145,7 @@ public class GameRouter extends BaseWebSocketHandler {
       String room = args.get(0);
       GameRoom newRoom = getRoom(room);
       GameRoom oldRoom = from.getRoom();
-      if (newRoom == oldRoom) {
+      if (newRoom == oldRoom || newRoom == null) {
         return;
       }
       if (oldRoom != null && oldRoom.onLeave(from)) {

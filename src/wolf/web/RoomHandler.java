@@ -2,14 +2,15 @@ package wolf.web;
 
 import java.util.List;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonPrimitive;
 import org.webbitserver.HttpControl;
 import org.webbitserver.HttpHandler;
 import org.webbitserver.HttpRequest;
 import org.webbitserver.HttpResponse;
+
+import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonPrimitive;
 
 public class RoomHandler implements HttpHandler {
 
@@ -29,6 +30,12 @@ public class RoomHandler implements HttpHandler {
       String uri = request.uri();
       List<String> m = ImmutableList.copyOf(Splitter.on("/").omitEmptyStrings().split(uri));
       String roomName = m.get(1);
+
+      roomName = roomName.replace(" ", "_");
+
+      if (roomName.contains("<")) {
+        throw new RuntimeException("Bad room name: " + roomName);
+      }
       
       router.createRoom(roomName);
 

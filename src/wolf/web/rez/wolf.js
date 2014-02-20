@@ -1,6 +1,7 @@
-var testing = false;
+var testing = true;
 
 var ws;
+var currentRoom = "Main Room";
 
 $("#text-input").keypress(function(e){
 	if(e.which==13){ //enter
@@ -28,6 +29,8 @@ if (WebSocket){
 		} else{
 			$(".login-advertise").clone().appendTo($("#chat-text"));
 		}
+		
+		loadRoomMenu();
 	};
 	ws.onmessage = function (evt) { 
 		receive(evt.data);
@@ -65,6 +68,53 @@ function loginSuccess(msg){
 	$("#settings-button").removeClass("hidden");
 }
 
+function loadRoomMenu(){
+	$.getJSON("/rooms", function(data){
+		var roomMenu = $("#room-menu");
+		roomMenu.empty();
+		
+		for(var i = 0; i < data.length; i++){
+			var room = data[i];
+			var li = $("<li>").append($("<a href='#' data-room='"+room+"'>").text(room).click(roomListener));
+			roomMenu.append(li);
+		}
+		
+		roomMenu.append($("<li class='divider'>"));
+		roomMenu.append($("<li>").append($("<a href='#'>").text("New Room").click(newRoom)));
+	});
+}
+
+function roomListener(e){
+	var room = $(e.target).data("room");
+	if(room == currentRoom){
+		return;
+	}
+	send("SWITCH_ROOM", room);
+	setRoom(room);
+}
+
+function newRoom(){
+     var roomName = window.prompt("Enter room name:");
+     if(!roomName){
+    	 return;
+     }
+     $.post("/rooms/" + roomName).success(function(){
+    	 send("SWITCH_ROOM", roomName);
+    	 setRoom(roomName);
+     });
+}
+
+function setRoom(room){
+	if(currentRoom == room){
+		return;
+	}
+	console.log("Switching rooms: "+room);
+	currentRoom = room;
+	 $("#room-name").text(room + " ");
+	 $("#chat-text").empty();
+	 append("$narrator", "Joined room: "+room);
+}
+
 function send(command, arg){
 	var jsonData = {
 		command:command,
@@ -85,12 +135,17 @@ function receive(msg){
 	else if(command == "S_CHAT"){
 		append(msg.from, msg.msg, true);
 	}
+	else if(command=="LOAD_ROOMS"){
+		loadRoomMenu();
+	}
 	else if(command=="LOGIN_SUCCESS"){
 		loginSuccess(msg);
 	} 
 	else if(command == "PROMPT_NAME"){
 	   var username = window.prompt("Enter your username:");
-	   send("USERNAME", username);
+	   if(username){
+		   send("USERNAME", username);
+	   }
 	}
 	else if(command=="LOGIN_FAILED"){
 		announce("LOGIN FAILED: "+msg.reason);

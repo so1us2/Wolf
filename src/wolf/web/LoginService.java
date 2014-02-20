@@ -6,7 +6,10 @@ import com.google.common.collect.Iterables;
 import ez.DB;
 import ez.Row;
 import ez.Table;
+import org.apache.commons.lang3.StringUtils;
 import wolf.WolfDB;
+
+import static com.google.common.base.Preconditions.checkState;
 
 public class LoginService {
 
@@ -36,6 +39,13 @@ public class LoginService {
   }
 
   public void createAccount(long userID, String name) {
+    if (!StringUtils.isAlphanumeric(name)) {
+      throw new RuntimeException("Invalid name: " + name);
+    }
+
+    int n = db.select("SELECT * FROM users WHERE name = '" + name + "'").size();
+    checkState(n == 0, "Duplicate username: " + name);
+
     db.update("UPDATE users SET name = ? WHERE id = ?", name, userID);
   }
 

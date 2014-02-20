@@ -10,6 +10,16 @@
       <div class="container">
         <a class="navbar-brand" href="#">Wolf</a>
           <ul class="nav navbar-nav">
+            <li>
+             <div class="btn-group">
+                <button type="button" id="room-chooser-button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                  <span id="room-name">Main Room </span><span class="caret"></span>
+                </button>
+                <ul id="room-menu" class="dropdown-menu" role="menu">
+                   <li><a href="#">Loading Rooms...</a></li>
+                </ul>
+              </div>
+            </li>
              <li><a id="rankings-button" href="#" data-toggle="modal" data-target="#rankings-modal">Rankings</a></li>
              <li><a id="rules-button" href="#" data-toggle="modal" data-target="#rules-modal">Rules</a></li>
              <li><a id="settings-button" class="hidden" href="#" data-toggle="modal" data-target="#settings-modal">Settings</a></li>

@@ -2,6 +2,15 @@
   margin-top: 60px;
   margin-bottom: 55px;
 }
+#sidebar-players{
+  position: fixed;
+  right: 60px;
+  width: 250px;
+}
+#sidebar-rooms{
+  position: fixed;
+  left: 60px;
+}
 .private{
 	color: purple;
 }
@@ -22,11 +31,6 @@
 .alive{
 	background-color: #DFF0D8;
 	font-weight: bold;
-}
-#sidebar-players{
-  position: fixed;
-  right: 60px;
-  width: 250px;
 }
 #rules-modal .modal-body {
 	min-height: 600px;
@@ -67,4 +71,8 @@
 }
 .player-item{
 	 cursor: pointer;
+}
+#room-chooser-button{
+	position: relative;
+	top: 8px;
 }

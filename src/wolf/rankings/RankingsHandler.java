@@ -20,7 +20,6 @@ import wolf.model.Faction;
 import wolf.model.Role;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -58,9 +57,6 @@ public class RankingsHandler implements HttpHandler {
       if (!ratedGames.contains(id)) {
         continue;
       }
-      if (row.get("name").equals("wwkaye")) {
-        continue;
-      }
       gameRows.put(id, row);
     }
 
@@ -89,20 +85,23 @@ public class RankingsHandler implements HttpHandler {
       }
     });
 
-    if (rankings.size() > 10) {
-      int worstScore = total(scores.get(rankings.get(9)));
-      while (true) {
-        int lastScore = total(scores.get(Iterables.getLast(rankings)));
-        if (lastScore < worstScore) {
-          rankings.remove(rankings.size() - 1);
-        } else {
-          break;
-        }
-      }
-    }
+    // if (rankings.size() > 10) {
+    // int worstScore = total(scores.get(rankings.get(9)));
+    // while (true) {
+    // int lastScore = total(scores.get(Iterables.getLast(rankings)));
+    // if (lastScore < worstScore) {
+    // rankings.remove(rankings.size() - 1);
+    // } else {
+    // break;
+    // }
+    // }
+    // }
 
     JsonArray ret = new JsonArray();
     for (String player : rankings) {
+      if (player.equalsIgnoreCase("wwkaye") || player.equalsIgnoreCase("pbigelow")) {
+        continue;
+      }
       JsonObject o = new JsonObject();
       o.addProperty("name", player);
       o.addProperty("wins", getWins(scores.get(player)));

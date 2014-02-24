@@ -37,6 +37,10 @@ public class RoomHandler implements HttpHandler {
         throw new RuntimeException("Bad room name: " + roomName);
       }
       
+      if (roomName.length() > 64) {
+        throw new RuntimeException("Too long.");
+      }
+
       router.createRoom(roomName);
 
       response.end();

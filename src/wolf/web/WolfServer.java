@@ -3,14 +3,16 @@ package wolf.web;
 import java.io.IOException;
 import java.net.URL;
 
-import com.google.common.base.Throwables;
-import com.google.common.io.Resources;
 import org.webbitserver.HttpControl;
 import org.webbitserver.HttpHandler;
 import org.webbitserver.HttpRequest;
 import org.webbitserver.HttpResponse;
 import org.webbitserver.WebServers;
+
 import wolf.rankings.RankingsHandler;
+
+import com.google.common.base.Throwables;
+import com.google.common.io.Resources;
 
 public class WolfServer implements HttpHandler {
 
@@ -19,7 +21,8 @@ public class WolfServer implements HttpHandler {
       throws Exception {
     String uri = request.uri();
 
-    if (request.header("Host").startsWith("www")) {
+    String host = request.header("Host");
+    if (host != null && host.startsWith("www")) {
       System.out.println("Redirecting from WWW");
       response.header("Location", "http://playwolf.net").status(302).end();
       return;

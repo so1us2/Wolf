@@ -31,6 +31,8 @@ public class ModkillPlayerAction extends GameAction {
         invoker.getName().toUpperCase() + " OBLITERATES " + target.getName().toUpperCase()
             + " IN A PILLAR OF BANEFIRE!");
     getStage().checkForWinner();
+
+    getBot().onPlayersChanged();
   }
 
   @Override

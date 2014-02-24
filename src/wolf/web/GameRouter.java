@@ -1,5 +1,6 @@
 package wolf.web;
 
+import java.awt.Toolkit;
 import java.util.List;
 import java.util.Map;
 
@@ -73,7 +74,9 @@ public class GameRouter extends BaseWebSocketHandler {
       return;
     }
 
-    System.out.println(message);
+    ConnectionInfo info = connectionInfo.get(connection);
+
+    System.out.println(info + ": " + message);
 
     JsonObject o = parser.parse(message).getAsJsonObject();
 
@@ -83,7 +86,7 @@ public class GameRouter extends BaseWebSocketHandler {
       args.add(e.getAsString());
     }
 
-    handle(connectionInfo.get(connection), command, args);
+    handle(info, command, args);
   }
 
   private void handle(ConnectionInfo from, String command, List<String> args) {
@@ -94,8 +97,10 @@ public class GameRouter extends BaseWebSocketHandler {
         return;
       }
 
+      // TODO pbigelow logged in from: /65.130.25.203:49733
       if (sender.equalsIgnoreCase("oscar") || sender.equalsIgnoreCase("wwkaye")
-          || sender.equalsIgnoreCase("tony") || sender.equalsIgnoreCase("ray56")) {
+          || sender.equalsIgnoreCase("tony") || sender.equalsIgnoreCase("ray56")
+          || sender.equalsIgnoreCase("pbigelow")) {
         System.out.println("BANNED!");
         from.send(constructChatJson(GameRoom.NARRATOR, "You are banned."));
         return;
@@ -116,8 +121,13 @@ public class GameRouter extends BaseWebSocketHandler {
         return;
       }
 
-      System.out.println(user.name + " logged in from: "
-          + from.getConnection().httpRequest().remoteAddress());
+      String ip = from.getConnection().httpRequest().remoteAddress() + "";
+      System.out.println(user.name + " logged in from: " + ip);
+
+      if (ip.contains("65.130.25.203")) {
+        Toolkit.getDefaultToolkit().beep();
+        System.err.println("OSCAR ALERT :: " + user.name);
+      }
 
       from.setName(user.name);
 

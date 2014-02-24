@@ -4,7 +4,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 
-import com.google.common.collect.Lists;
 import wolf.WolfException;
 import wolf.action.setup.SetupAction;
 import wolf.model.Player;
@@ -12,6 +11,8 @@ import wolf.model.Role;
 import wolf.model.role.AbstractRole;
 import wolf.model.stage.GameStage;
 import wolf.model.stage.SetupStage;
+
+import com.google.common.collect.Lists;
 
 public class StartGameAction extends SetupAction {
 

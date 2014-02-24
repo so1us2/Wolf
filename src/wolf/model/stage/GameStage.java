@@ -330,7 +330,7 @@ public class GameStage extends Stage {
         } else if (killer.getRole().getType() == Role.WOLF) {
           mode = config.getSettings().get("TELL_WOLVES_ON_KILL");
         } else if (killer.getRole().getType() == Role.VIGILANTE) {
-          mode = config.getSettings().get("TELL_VIGILANTE_ON_KILL");
+          mode = config.getSettings().get("TELL_VIG_ON_KILL");
         }
         if (mode != null) {
           if (mode.equals("FACTION")) {

@@ -5,13 +5,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import org.webbitserver.WebSocketConnection;
+
 import wolf.WolfException;
 import wolf.bot.IBot;
 import wolf.model.Faction;
@@ -20,6 +15,13 @@ import wolf.model.stage.GameStage;
 import wolf.model.stage.InitialStage;
 import wolf.model.stage.Stage;
 import wolf.rankings.GameHistory;
+
+import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 public class GameRoom implements IBot {
 
@@ -48,10 +50,14 @@ public class GameRoom implements IBot {
   }
 
   public void onJoin(ConnectionInfo info) {
-    System.out.println(info + " joined room: " + name);
+     System.out.println(info + " joined room: " + name);
 
     connections.add(info);
     info.setRoom(this);
+
+    if (name != MAIN_ROOM && info.getName() != null) {
+      sendMessage(info.getName() + " joined the room.");
+    }
 
     onPlayersChanged();
   }
@@ -160,7 +166,7 @@ public class GameRoom implements IBot {
 
   private WebSocketConnection getConnection(String user) {
     for (ConnectionInfo conn : connections) {
-      if (conn.getName().equalsIgnoreCase(user)) {
+      if (user.equalsIgnoreCase(conn.getName())) {
         return conn.getConnection();
       }
     }
@@ -180,6 +186,7 @@ public class GameRoom implements IBot {
 
   @Override
   public void setStage(Stage stage) {
+    System.out.println("Setting stage to: " + stage + " in room: " + name);
     this.stage = stage;
   }
 

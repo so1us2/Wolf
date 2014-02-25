@@ -295,28 +295,6 @@ function rulesListener(e){
     });
 }
 
-$("#rankings-button").click(function(e){
-	var container = $("#rankings-modal tbody");
-	
-	container.empty();
-	container.text("Loading...");
-	
-	$.getJSON("/rankings", function(data){
-		container.empty();
-		for(var i = 0; i < data.length; i++){
-			var player = data[i];
-			console.log(player);
-			var tr = $("<tr>");
-			tr.append($("<td>").text((i+1)+""));
-			tr.append($("<td>").text(player.name));
-			tr.append($("<td>").text(player.wins));
-			tr.append($("<td>").text(player.losses));
-			tr.append($("<td>").text(player.win_percentage));
-			container.append(tr);
-		}
-	});
-});
-
 $("#enable-sounds-checkbox").click(function(e){
 	var checked = $(this).is(":checked");
 	send("CHAT","/enable-sounds " + checked);

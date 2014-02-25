@@ -3,18 +3,26 @@ package wolf.web;
 import java.io.IOException;
 import java.net.URL;
 
+import com.google.common.base.Charsets;
+import com.google.common.base.Throwables;
+import com.google.common.io.Resources;
 import org.webbitserver.HttpControl;
 import org.webbitserver.HttpHandler;
 import org.webbitserver.HttpRequest;
 import org.webbitserver.HttpResponse;
 import org.webbitserver.WebServers;
-
 import wolf.rankings.RankingsHandler;
 
-import com.google.common.base.Throwables;
-import com.google.common.io.Resources;
-
 public class WolfServer implements HttpHandler {
+
+  private String getModalHTML() {
+    URL url = WolfServer.class.getResource("rez/modals.html");
+    try {
+      return Resources.toString(url, Charsets.UTF_8);
+    } catch (IOException e) {
+      throw Throwables.propagate(e);
+    }
+  }
 
   @Override
   public void handleHttpRequest(HttpRequest request, HttpResponse response, HttpControl control)
@@ -47,16 +55,26 @@ public class WolfServer implements HttpHandler {
       throw Throwables.propagate(e);
     }
 
+    if (uri.equalsIgnoreCase("/wolf.html")) {
+      String s = new String(data, Charsets.UTF_8);
+      s = s.replace("$modals.html", getModalHTML());
+      data = s.getBytes(Charsets.UTF_8);
+    }
+
     response.content(data).end();
   }
 
   public static void main(String[] args) throws Exception {
     GameRouter bot = new GameRouter();
+    WolfServer server = new WolfServer();
+    
     WebServers.createWebServer(80).add("/socket", bot)
-    .add("/rankings", new RankingsHandler())
+    .add(".*js", server)
+    .add("/rankings.*", new RankingsHandler())
+    .add("/player.*", new PlayerHandler())
     .add("/rules.*", new RulesHandler())
     .add("/rooms.*", new RoomHandler(bot))
-    .add(new WolfServer()).start().get();
+    .add(server).start().get();
     System.out.println("Server Started.");
   }
 

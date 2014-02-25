@@ -72,6 +72,9 @@
 .player-item{
 	 cursor: pointer;
 }
+#rankings-modal tr {
+   cursor: pointer;
+}
 #room-chooser-button{
 	position: relative;
 	top: 8px;

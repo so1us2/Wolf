@@ -10,6 +10,7 @@ import org.joda.time.DateTime;
 import wolf.WolfException;
 import wolf.action.Action;
 import wolf.action.GetHelpAction;
+import wolf.action.game.GetRoleAction;
 import wolf.action.game.ListPlayersAction;
 import wolf.action.game.VoteAction;
 import wolf.action.game.VoteCountAction;
@@ -102,6 +103,7 @@ public class GameStage extends Stage {
     daytimeActions.add(new VoteAction(this));
     daytimeActions.add(new VoteCountAction(this));
     daytimeActions.add(new ListPlayersAction(this));
+    daytimeActions.add(new GetRoleAction(this));
 
     adminActions.add(new ModkillPlayerAction(this));
     adminActions.add(new GetVotersAction(this));

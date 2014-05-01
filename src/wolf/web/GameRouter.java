@@ -1,14 +1,15 @@
 package wolf.web;
 
-import java.awt.Toolkit;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.webbitserver.BaseWebSocketHandler;
 import org.webbitserver.WebSocketConnection;
 
 import wolf.web.LoginService.User;
 
+import com.beust.jcommander.internal.Sets;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -17,6 +18,18 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 
 public class GameRouter extends BaseWebSocketHandler {
+
+  public static final Set<String> banned = Sets.newHashSet();
+  static {
+    // banned.add("oscar");
+    banned.add("wwkaye");
+    banned.add("tony");
+    banned.add("ray56");
+    banned.add("pbigelow");
+
+    // TODO pbigelow logged in from: /65.130.25.203:49733
+    // TODO oscar logged in from /71.219.0.137:57998
+  }
 
   private final Map<WebSocketConnection, ConnectionInfo> connectionInfo = Maps.newConcurrentMap();
 
@@ -97,10 +110,7 @@ public class GameRouter extends BaseWebSocketHandler {
         return;
       }
 
-      // TODO pbigelow logged in from: /65.130.25.203:49733
-      if (sender.equalsIgnoreCase("oscar") || sender.equalsIgnoreCase("wwkaye")
-          || sender.equalsIgnoreCase("tony") || sender.equalsIgnoreCase("ray56")
-          || sender.equalsIgnoreCase("pbigelow")) {
+      if (banned.contains(sender.toLowerCase())) {
         System.out.println("BANNED!");
         from.send(constructChatJson(GameRoom.NARRATOR, "You are banned."));
         return;
@@ -124,10 +134,10 @@ public class GameRouter extends BaseWebSocketHandler {
       String ip = from.getConnection().httpRequest().remoteAddress() + "";
       System.out.println(user.name + " logged in from: " + ip);
 
-      if (ip.contains("65.130.25.203")) {
-        Toolkit.getDefaultToolkit().beep();
-        System.err.println("OSCAR ALERT :: " + user.name);
-      }
+      // if (ip.contains("65.130.25.203")) {
+      // Toolkit.getDefaultToolkit().beep();
+      // System.err.println("OSCAR ALERT :: " + user.name);
+      // }
 
       from.setName(user.name);
 

@@ -2,12 +2,6 @@ package wolf.web;
 
 import java.util.List;
 
-import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
-import ez.DB;
-import ez.Row;
 import org.joda.time.DateTime;
 import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
@@ -15,8 +9,16 @@ import org.webbitserver.HttpControl;
 import org.webbitserver.HttpHandler;
 import org.webbitserver.HttpRequest;
 import org.webbitserver.HttpResponse;
+
 import wolf.WolfDB;
 
+import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+
+import ez.DB;
+import ez.Row;
 import static com.google.common.base.Preconditions.checkState;
 
 public class PlayerHandler implements HttpHandler {
@@ -33,10 +35,13 @@ public class PlayerHandler implements HttpHandler {
       return;
     }
 
+
     List<String> m = ImmutableList.copyOf(Splitter.on("/").omitEmptyStrings().split(request.uri()));
 
     String player = m.get(1);
     checkState("history".equals(m.get(2)));
+
+    System.out.println("Getting rankings for: " + player);
 
     List<Row> rows =
         db.select("SELECT a.role, a.winner, a.alive, b.rated, b.start_date, b.end_date, b.num_players "

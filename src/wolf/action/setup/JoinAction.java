@@ -5,6 +5,7 @@ import java.util.List;
 import wolf.WolfException;
 import wolf.model.Player;
 import wolf.model.stage.SetupStage;
+import wolf.web.GameRouter;
 
 public class JoinAction extends SetupAction {
 
@@ -14,7 +15,7 @@ public class JoinAction extends SetupAction {
 
   @Override
   protected void execute(Player invoker, List<String> args) {
-    if (invoker.getName().equalsIgnoreCase("oscar")) {
+    if (GameRouter.banned.contains(invoker.getName().toLowerCase())) {
       System.out.println(invoker + "You are suspended.");
       getBot().sendMessage(invoker.getName(), "You are suspended.");
       return;

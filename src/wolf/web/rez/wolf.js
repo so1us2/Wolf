@@ -197,7 +197,11 @@ function append(from, msg, isSpectator){
 	var fromNarrator = from=="$narrator";
 	
 	var div = $("<div class='row msg'>");
-	var authorDiv = $("<span class='msg-author'>").text(from + ":").addClass("sender");
+
+	var authorDiv = $("<span class='msg-author'>");
+	starize(authorDiv, from, true);
+	authorDiv.addClass("sender");
+	
 	var msgDiv =  $("<span class='msg-text'>").addClass("message");
 	
 	if(fromNarrator){
@@ -229,6 +233,18 @@ function append(from, msg, isSpectator){
 		if(msg.indexOf("Assigning roles...")==0){
 			playSound("game_started.mp3");
 		}
+	}
+}
+
+function starize(div, player, addColon){
+	var addStar = player.toUpperCase() === "AMATOMATO";
+	if(addColon){
+		player += ":";
+	}
+	if(addStar) {
+		div.append("<img src='pics/star.png' title='Player Of The Month' class='star'>" + player)
+	} else{
+		div.text(player);
 	}
 }
 
@@ -311,6 +327,10 @@ function authorFilter(e){
 }
 
 function filter(clicked){
+	if(!clicked){
+		return;
+	}
+	
 	if(clicked == author){
 		author = null;
 	} else{

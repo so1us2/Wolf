@@ -10,7 +10,13 @@ $("#rankings-button").click(function(e){
 			var player = data[i];
 			var tr = $("<tr>");
 			tr.append($("<td>").text((i+1)+""));
-			tr.append($("<td>").text(player.name));
+			
+			var playerTD = $("<td>");
+			starize(playerTD, player.name);
+			tr.append(playerTD);
+			
+//			tr.append($("<td>").text(player.name));
+			
 			tr.append($("<td>").text(player.wins));
 			tr.append($("<td>").text(player.losses));
 			tr.append($("<td>").text(player.win_percentage));
@@ -24,8 +30,10 @@ $("#rankings-button").click(function(e){
 
 function rankingsListener(e){
 	var player = $(e.target).parent().data("player");
+	if(!player){
+		return;
+	}
 	
-	console.log("hi3");
 	$("#game-history .modal-title").text(player+"'s Game History")
 	
 	var container = $("#game-history tbody");

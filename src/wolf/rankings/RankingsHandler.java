@@ -10,6 +10,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import org.webbitserver.HttpControl;
+import org.webbitserver.HttpHandler;
+import org.webbitserver.HttpRequest;
+import org.webbitserver.HttpResponse;
+
+import wolf.WolfDB;
+import wolf.model.Faction;
+import wolf.model.Role;
+
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Lists;
@@ -18,15 +27,9 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+
 import ez.DB;
 import ez.Row;
-import org.webbitserver.HttpControl;
-import org.webbitserver.HttpHandler;
-import org.webbitserver.HttpRequest;
-import org.webbitserver.HttpResponse;
-import wolf.WolfDB;
-import wolf.model.Faction;
-import wolf.model.Role;
 
 public class RankingsHandler implements HttpHandler {
 
@@ -44,7 +47,8 @@ public class RankingsHandler implements HttpHandler {
     }
 
     Set<String> ratedGames = Sets.newLinkedHashSet();
-    for (Row game : db.select("SELECT id FROM games WHERE rated = TRUE ORDER BY start_date ASC")) {
+    for (Row game : db
+        .select("SELECT id FROM games WHERE rated = TRUE AND season=2 ORDER BY start_date ASC")) {
       ratedGames.add(game.<String>get("id"));
     }
 
@@ -65,7 +69,7 @@ public class RankingsHandler implements HttpHandler {
     }
 
     for (String score : ImmutableList.copyOf(scores.keySet())) {
-      if (scores.get(score).size() < 3) {
+      if (scores.get(score).size() < 1) {
         scores.removeAll(score);
       }
     }
@@ -96,9 +100,9 @@ public class RankingsHandler implements HttpHandler {
 
     JsonArray ret = new JsonArray();
     for (String player : rankings) {
-      if (player.equalsIgnoreCase("wwkaye") || player.equalsIgnoreCase("pbigelow")) {
-        continue;
-      }
+      // if (player.equalsIgnoreCase("wwkaye") || player.equalsIgnoreCase("pbigelow")) {
+      // continue;
+      // }
       JsonObject o = new JsonObject();
       o.addProperty("name", player);
       o.addProperty("wins", getWins(scores.get(player)));

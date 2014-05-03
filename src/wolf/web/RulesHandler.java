@@ -36,11 +36,10 @@ public class RulesHandler implements HttpHandler {
       ret.add(new JsonPrimitive("Hunter"));
       ret.add(new JsonPrimitive("Minion"));
       ret.add(new JsonPrimitive("Priest"));
+      ret.add(new JsonPrimitive("Bartender"));
+      ret.add(new JsonPrimitive("Vigilante"));
       ret.add(new JsonPrimitive("Demon"));
       ret.add(new JsonPrimitive("Misconduct"));
-      // for (Role role : Role.values()) {
-      // ret.add(new JsonPrimitive(role.toString()));
-      // }
 
       response.content(ret.toString()).end();
     } else {

@@ -45,9 +45,9 @@ public class Priest extends AbstractRole {
     }
     mode = getStage().getSetting("SELF_PROTECT");
     if (mode.equals("YES")) {
-      output.append(" You may not protect yourself.");
-    } else if (mode.equals("NO")) {
       output.append(" You may protect yourself.");
+    } else if (mode.equals("NO")) {
+      output.append(" You may not protect yourself.");
     }
     return output.toString();
   }

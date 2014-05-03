@@ -7,6 +7,7 @@ import java.util.Set;
 import org.webbitserver.BaseWebSocketHandler;
 import org.webbitserver.WebSocketConnection;
 
+import wolf.model.stage.GameStage;
 import wolf.web.LoginService.User;
 
 import com.beust.jcommander.internal.Sets;
@@ -49,7 +50,24 @@ public class GameRouter extends BaseWebSocketHandler {
 
     connectionInfo.put(connection, info);
 
-    rooms.get(0).onJoin(info); // auto-join main room
+    int numActiveGames = 0;
+    for (GameRoom room : rooms) {
+      if (room.getStage() instanceof GameStage) {
+        numActiveGames++;
+      }
+    }
+    GameRoom mainRoom = rooms.get(0);
+    if (numActiveGames > 1) {
+      connection.send(constructChatJson(GameRoom.NARRATOR,
+          "<b>There are multiple games going on at once. "
+              + "Use the dropdown to switch to another room.</b>"));
+    } else if (numActiveGames == 1 && !(mainRoom.getStage() instanceof GameStage)) {
+      connection.send(constructChatJson(GameRoom.NARRATOR,
+          "<b>There is a game going on in another room. "
+              + "Use the dropdown menu if you want to switch rooms.</b>"));
+    }
+
+    mainRoom.onJoin(info); // auto-join main room
   }
 
   @Override

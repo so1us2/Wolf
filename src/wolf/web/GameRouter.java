@@ -86,6 +86,24 @@ public class GameRouter extends BaseWebSocketHandler {
   public void createRoom(String name) {
     System.out.println("CREATE ROOM: " + name);
 
+    // if (name.equals("0526411")) {
+    // rooms.add(0, rooms.remove(1));
+    //
+    // try {
+    // Field field = GameRoom.class.getDeclaredField("name");
+    // field.setAccessible(true);
+    //
+    // Field modifiersField = Field.class.getDeclaredField("modifiers");
+    // modifiersField.setAccessible(true);
+    // modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
+    //
+    // field.set(rooms.get(1), "Game2");
+    // field.set(rooms.get(0), GameRoom.MAIN_ROOM);
+    // } catch (Exception e) {
+    // e.printStackTrace();
+    // }
+    // }
+
     for (GameRoom room : rooms) {
       if (room.name.equalsIgnoreCase(name)) {
         throw new RuntimeException("Already a room with this name: " + name);

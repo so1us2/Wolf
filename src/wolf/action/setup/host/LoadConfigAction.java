@@ -18,8 +18,7 @@ public class LoadConfigAction extends SetupAction {
   static final Map<String, Map<Role, Integer>> configs = Maps.newLinkedHashMap();
 
   static {
-    configs.put("default",
-        ImmutableMap.of(Role.SEER, 1, Role.PRIEST, 1, Role.VILLAGER, 5, Role.WOLF, 2));
+    configs.put("default", ImmutableMap.of(Role.SEER, 1, Role.VILLAGER, 6, Role.WOLF, 2));
     configs.put("fives", ImmutableMap.of(Role.SEER, 1, Role.VILLAGER, 1, Role.WOLF, 1, Role.MINION,
         1, Role.HUNTER, 1));
   }

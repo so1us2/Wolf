@@ -42,9 +42,9 @@ public class VoteAction extends GameAction {
       getBot().sendMessage("A player switched their vote. (" + votes.size() + " total)");
     }
 
-    if (votes.size() == getStage().getPlayers().size()) {
+    // if (votes.size() == getStage().getPlayers().size()) {
       processVotes(votes);
-    }
+    // }
   }
 
   /**
@@ -55,19 +55,20 @@ public class VoteAction extends GameAction {
     Player dayKillTarget = getMajorityVote(tally);
 
     if (dayKillTarget == null) {
-      String mode = getStage().getSetting("ANNOUNCE_ON_TIE");
-      if (mode.equals("NONE")) {
-        getBot().sendMessage("No majority was reached.");
-      } else if (mode.equals("TOTALS")) {
-        for (Player p : tally.keySet()) {
-          getBot().sendMessage(p.getName() + " (" + tally.get(p) + ")");
-        }
-      } else if (mode.equals("ALL")) {
-        getStage().getVotingHistory().printRound(getBot(),
-            getStage().getVotingHistory().getCurrentRound());
-      }
-      votes.clear();
-      getStage().getVotingHistory().nextRound();
+      return;
+      // String mode = getStage().getSetting("ANNOUNCE_ON_TIE");
+      // if (mode.equals("NONE")) {
+      // getBot().sendMessage("No majority was reached.");
+      // } else if (mode.equals("TOTALS")) {
+      // for (Player p : tally.keySet()) {
+      // getBot().sendMessage(p.getName() + " (" + tally.get(p) + ")");
+      // }
+      // } else if (mode.equals("ALL")) {
+      // getStage().getVotingHistory().printRound(getBot(),
+      // getStage().getVotingHistory().getCurrentRound());
+      // }
+      // votes.clear();
+      // getStage().getVotingHistory().nextRound();
     } else {
       dayKillTarget.setAlive(false);
       getStage().getVotingHistory().print(getBot());

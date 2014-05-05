@@ -28,7 +28,7 @@ public class GameRoom implements IBot {
   public static final String MAIN_ROOM = "Main Room";
   public static final String NARRATOR = "$narrator";
 
-  public final String name;
+  public String name;
 
   private final LoginService loginService = new LoginService();
 
@@ -56,7 +56,7 @@ public class GameRoom implements IBot {
     info.setRoom(this);
 
     if (name != MAIN_ROOM && info.getName() != null) {
-      sendMessage(info.getName() + " joined the room.");
+      // sendMessage(info.getName() + " joined the room.");
     }
 
     onPlayersChanged();

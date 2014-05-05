@@ -63,7 +63,7 @@ public class Bartender extends AbstractRole {
       hasActed = true;
       drinkTarget = stage.getPlayer(args.get(0));
       stage.getBot().sendMessage(invoker.getName(),
-          "You plan to make a drink for " + drinkTarget + ".");
+          "You plan to make a drink for " + drinkTarget + " ;)");
     }
 
     @Override

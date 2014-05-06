@@ -17,19 +17,6 @@ $("#input-wrapper").on('keydown', '#text-input', function(e){
 	}
 });
 
-//$("#text-input").keypress(function(e){
-//	if(e.which == 13){ //enter
-//		var target = $(e.target);
-//		var msg = target.val().trim();
-//		target.val("");
-//		if(msg) {
-//		   send("CHAT", msg);
-//		}
-//	} else if(e.which == 9){ //tab
-//		autocomplete($e.target);
-//	}
-//});
-
 //open websocket
 if (WebSocket){
 	var domain = testing ? "localhost" : "playwolf.net";
@@ -46,6 +33,7 @@ if (WebSocket){
 			$(".login-advertise").clone().appendTo($("#chat-text"));
 		}
 		
+		switchToRoomInURL();
 		loadRoomMenu();
 	};
 	ws.onmessage = function (evt) { 
@@ -103,32 +91,62 @@ function loadRoomMenu(){
 function roomListener(e){
 	var room = $(e.target).data("room");
 	if(room == currentRoom){
-		return;
+		$('[data-toggle="dropdown"]').parent().removeClass('open');
+		return false;
 	}
-	send("SWITCH_ROOM", room);
 	setRoom(room);
+	
+	hideNewRoomDropdown();
+	return false;
 }
 
 function newRoom(){
+	hideNewRoomDropdown();
+	
      var roomName = window.prompt("Enter room name:");
      if(!roomName){
-    	 return;
+    	 return false;
      }
+     
      $.post("/rooms/" + roomName).success(function(){
-    	 send("SWITCH_ROOM", roomName);
     	 setRoom(roomName);
      });
+     
+     return false;
+}
+
+function hideNewRoomDropdown(){
+	$('[data-toggle="dropdown"]').parent().removeClass('open');
+}
+
+function switchToRoomInURL(){
+	var path = window.location.pathname;
+	
+	if(path.indexOf('/room/') != 0){
+		return;
+	}
+	
+	var roomName = path.substring(6, path.length).split('_').join(' ');
+	setRoom(roomName);
 }
 
 function setRoom(room){
 	if(currentRoom == room){
 		return;
 	}
-	console.log("Switching rooms: "+room);
 	currentRoom = room;
-	 $("#room-name").text(room + " ");
-	// $("#chat-text").empty();
-	 append("$narrator", "Joined room: "+room);
+	
+	send("SWITCH_ROOM", room);
+	
+	console.log("Switching rooms: "+room);
+	
+	$("#room-name").text(room + " ");
+	append("$narrator", "Joined room: "+room);
+	
+	if(history && history.pushState){
+		history.pushState(null, null, '/room/'+room.split(' ').join('_'));
+	}
+	//window.location = room;
 }
 
 function send(command, arg){
@@ -176,6 +194,9 @@ function receive(msg){
 		updatePlayers(msg.players, n);
 	} else if(command == "MUSIC"){
 		playSound(msg.url);
+	} else if(command == "SWITCH_ROOM"){
+		announce(msg.msg);
+		setRoom(msg.room);
 	}
 }
 
@@ -195,7 +216,7 @@ function updatePlayers(players, numNotSignedIn){
 			numPlayers++;
 			
 			if("voted" in player){
-				name += "<image class='voted' data-toggle='tooltip' title='Voted!' src='pics/checkbox.png'>";
+				name += "<image class='voted' data-toggle='tooltip' title='Voted!' src='/pics/checkbox.png'>";
 			}
 			
 			var li = $("<li class='list-group-item player-item'>").html(name);
@@ -281,7 +302,7 @@ function starize(div, player, addColon){
 		player += ":";
 	}
 	if(addStar) {
-		div.append("<img src='pics/star.png' title='Player Of The Month' class='star'>" + player)
+		div.append("<img src='/pics/star.png' title='Player Of The Month' class='star'>" + player)
 	} else{
 		div.text(player);
 	}
@@ -321,11 +342,11 @@ $("#rules-button").click(function(e){
 		
 		for(var i = 0; i < data.length; i++){
 			var rule = data[i];
-			var ahref = $("<a href='#'>").text(rule);
+			var ahref = $("<a class='pointer'>").text(rule);
 			var li = $("<li data-rule='"+rule+"'>").append(ahref);
 			list.append(li);
 			li.click(rulesListener);
-			if(i==0){
+			if(i == 0){
 				ahref.click();
 			}
 		}

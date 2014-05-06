@@ -3,15 +3,17 @@ package wolf.web;
 import java.io.IOException;
 import java.net.URL;
 
-import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
-import com.google.common.io.Resources;
 import org.webbitserver.HttpControl;
 import org.webbitserver.HttpHandler;
 import org.webbitserver.HttpRequest;
 import org.webbitserver.HttpResponse;
 import org.webbitserver.WebServers;
+
 import wolf.rankings.RankingsHandler;
+
+import com.google.common.base.Charsets;
+import com.google.common.base.Throwables;
+import com.google.common.io.Resources;
 
 public class WolfServer implements HttpHandler {
 
@@ -36,7 +38,7 @@ public class WolfServer implements HttpHandler {
       return;
     }
 
-    if (uri.equals("/")) {
+    if (uri.equals("/") || uri.startsWith("/room/")) {
       uri = "/wolf.html";
     }
 
@@ -47,6 +49,7 @@ public class WolfServer implements HttpHandler {
     try {
       URL url = WolfServer.class.getResource("rez" + uri);
       if (url == null) {
+        System.out.println("404: " + uri);
         response.status(404).end();
         return;
       }

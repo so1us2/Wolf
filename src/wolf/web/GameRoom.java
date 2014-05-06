@@ -50,7 +50,7 @@ public class GameRoom implements IBot {
   }
 
   public void onJoin(ConnectionInfo info) {
-     System.out.println(info + " joined room: " + name);
+    System.out.println(info + " joined room: " + name);
 
     connections.add(info);
     info.setRoom(this);

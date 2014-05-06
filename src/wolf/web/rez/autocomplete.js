@@ -25,7 +25,7 @@ function autocomplete(inputField){
 		if(spaceIndex != -1){
 			messageBeforeSpace = msg.substring(0, spaceIndex+1);
 		}
-		inputField.val(messageBeforeSpace+matches[0]);
+		inputField.val(messageBeforeSpace+matches[0]+" ");
 	}
 }
 

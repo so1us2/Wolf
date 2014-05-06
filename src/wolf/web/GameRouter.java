@@ -192,9 +192,18 @@ public class GameRouter extends BaseWebSocketHandler {
       String room = args.get(0);
       GameRoom newRoom = getRoom(room);
       GameRoom oldRoom = from.getRoom();
-      if (newRoom == oldRoom || newRoom == null) {
+
+      if (newRoom == null) {
+        String msg = "Room does not exist: " + room;
+        System.out.println(msg);
+        from.send(constructJson("SWITCH_ROOM", "room", oldRoom.name, "msg", msg));
         return;
       }
+
+      if (oldRoom == newRoom) {
+        return;
+      }
+
       if (oldRoom != null && oldRoom.onLeave(from)) {
         rooms.remove(oldRoom);
         announceRooms();

@@ -1,5 +1,7 @@
 package wolf.web;
 
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -84,9 +86,23 @@ public class GameRouter extends BaseWebSocketHandler {
   }
 
   public void createRoom(String name) {
+    try {
+      name = URLDecoder.decode(name, "UTF-8");
+    } catch (UnsupportedEncodingException e) {
+      e.printStackTrace();
+    }
+
     System.out.println("CREATE ROOM: " + name);
 
     // if (name.equals("0526411")) {
+    // for (GameRoom room : rooms) {
+    // try {
+    // room.name = URLDecoder.decode(room.name, "UTF-8");
+    // } catch (UnsupportedEncodingException e) {
+    // e.printStackTrace();
+    // }
+    // }
+    // }
     // rooms.add(0, rooms.remove(1));
     //
     // try {

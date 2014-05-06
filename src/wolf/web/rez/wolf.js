@@ -98,7 +98,6 @@ function newRoom(){
      if(!roomName){
     	 return;
      }
-     roomName = roomName.replace(" ", "_");
      $.post("/rooms/" + roomName).success(function(){
     	 send("SWITCH_ROOM", roomName);
     	 setRoom(roomName);
@@ -154,43 +153,67 @@ function receive(msg){
 	else if(command=="PLAYERS"){
 		$(".list-group-item").remove();
 		
-		if(msg.num_not_signed_in){
-			$("#viewers-count").text(msg.num_not_signed_in + " not signed in");
-		} else{
-			$("#viewers-count").text("");
-		}			
-		
-		updatePlayers(msg.players);
+		var n = msg.num_not_signed_in;
+		if(!n){
+			n = 0;
+		}
+		updatePlayers(msg.players, n);
 	} else if(command == "MUSIC"){
 		playSound(msg.url);
 	}
 }
 
-function updatePlayers(players){
+function updatePlayers(players, numNotSignedIn){
+	var watchers = $("#list-watching");
+	watchers.empty();
+	
+	var numWatchers = numNotSignedIn;
+	var numPlayers = 0;
+	var watchingList = $("#list-watching");
+	
 	for(var i = 0; i < players.length; i++){
 		var player = players[i];
-		
-		var list = "in_game" in player ? $("#list-players") : $("#list-watching");
-		
 		var name = player.name;
-		if("voted" in player){
-			name += "<image class='voted' data-toggle='tooltip' title='Voted!' src='pics/checkbox.png'>";
+		
+		if("in_game" in player){
+			numPlayers++;
+			
+			if("voted" in player){
+				name += "<image class='voted' data-toggle='tooltip' title='Voted!' src='pics/checkbox.png'>";
+			}
+			
+			var li = $("<li class='list-group-item player-item'>").html(name);
+			
+			if("alive" in player){
+				li.addClass("alive");
+			} else if("in_game" in player){
+				li.addClass("dead");
+			}
+			
+			li.data("name", player.name);
+			
+			li.click(clickPlayerHandler);
+			
+			$("#list-players").append(li);
+		} else{
+			numWatchers++;
+			watchingList.append(name+", ");
 		}
-		
-		var li = $("<li class='list-group-item player-item'>").html(name);
-		
-		if("alive" in player){
-			li.addClass("alive");
-		} else if("in_game" in player){
-			li.addClass("dead");
-		}
-		
-		li.data("name", player.name);
-		
-		li.click(clickPlayerHandler);
-		
-		list.append(li);
 	}
+	
+	for(var i = 0; i < numNotSignedIn; i++){
+		watchingList.append("Anon " + (i+1) + ", ");
+	}
+	
+	var tt = watchingList.text();
+	if(tt.length >= 2){
+		tt = tt.substring(0,tt.length-2);
+		watchingList.text(tt);
+	}
+	
+	
+	$("#players-count").text(numPlayers);
+	$("#viewers-count").text(numWatchers);
 }
 
 function append(from, msg, isSpectator){

@@ -46,7 +46,7 @@ public class PlayerHandler implements HttpHandler {
     List<Row> rows =
         db.select("SELECT a.role, a.winner, a.alive, b.rated, b.start_date, b.end_date, b.num_players "
         + "FROM wolf.players a, wolf.games b " + "WHERE name = '" + player
-        + "' AND a.game_id = b.id ORDER BY start_date DESC");
+            + "' AND a.game_id = b.id AND b.rated = true ORDER BY start_date DESC");
 
     JsonArray ret = new JsonArray();
 

@@ -54,6 +54,7 @@ public class LoadConfigAction extends SetupAction {
 
     if (configName.equals("fives")) {
       getStage().getConfig().getSettings().put("PRE_GAME_PEEK_MODE", "ALL_VILLAGERS");
+      getStage().getConfig().getSettings().put("FIRST_PEEK_MINION", "YES");
     }
   }
 

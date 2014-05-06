@@ -24,7 +24,7 @@ public class Settings {
     category("SEER").name("PRE_GAME_PEEK_MODE").options("REGULAR_VILLAGERS", "ALL_VILLAGERS")
         .description("Can the pre-game peek randomly choose a special-role villager?");
     category("SEER").name("FIRST_PEEK_MINION").options("YES", "NO").defaultSetting("NO")
-        .description("Can the Minion be the N0 peek?");
+        .description("Does the Minion count as a villager when determining n0 peek?");
     category("GAME").name("PRIVATE_CHAT").options("ENABLED", "DISABLED").defaultSetting("DISABLED")
         .description("Enable or disable private chats amongst players during daytime.");
     category("GAME").name("DAY_KILL_ANNOUNCE").options("FACTION", "SILENT", "ROLE")
@@ -32,8 +32,8 @@ public class Settings {
         .description("What is announced for players who are voted dead by day?");
     category("GAME").name("NIGHT_KILL_ANNOUNCE").options("NONE", "FACTION", "ROLE")
         .defaultSetting("NONE").description("What is revealed about players who die at night?");
-    category("GAME").name("SILENT_GAME").options("ENABLED", "DISABLED").defaultSetting("DISABLED")
-        .description("If enabled, there is no chatting permitted during the game.");
+    category("GAME").name("SILENT_GAME").options("YES", "NO").defaultSetting("NO")
+        .description("If yes, there is no chatting permitted during the game.");
     category("GAME").name("RATED_GAME").options("YES", "NO").defaultSetting("YES")
         .description("Does the game count towards rankings?");
     category("VOTES")

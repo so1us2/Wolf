@@ -33,11 +33,15 @@ public class ClearVoteAction extends GameAction {
   private void printVotes() {
     Map<Player, Player> votes = getStage().getVotesToDayKill();
     StringBuilder sb = new StringBuilder();
-    getBot().sendMessage("VOTES");
-    for (Player p : votes.keySet()) {
-      sb.append(p).append("-->").append(votes.get(p)).append(", ");
+    sb.append("VOTES: ");
+    if (votes.isEmpty()) {
+      sb.append("No votes.");
+    } else {
+      for (Player p : votes.keySet()) {
+        sb.append(p).append("-->").append(votes.get(p)).append(", ");
+      }
+      sb.setLength(sb.length() - 2);
     }
-    sb.setLength(sb.length() - 2);
     getBot().sendMessage(sb.toString());
   }
 

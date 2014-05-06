@@ -16,6 +16,8 @@ import com.google.common.collect.Lists;
 
 public class StartGameAction extends SetupAction {
 
+  private static String WOLF_TEST = "Rappeda";
+
   public StartGameAction(SetupStage stage) {
     super(stage, "start");
   }
@@ -60,10 +62,22 @@ public class StartGameAction extends SetupAction {
     for (Entry<Role, Integer> e : getStage().getConfig().getRoles().entrySet()) {
       roles.addAll(Collections.nCopies(e.getValue(), e.getKey()));
     }
+
+    if (getStage().getPlayer(WOLF_TEST) != null) {
+      for (int i = 0; i < roles.size(); i++) {
+        if (roles.get(i) == Role.WOLF) roles.remove(i);
+      }
+    }
+
     Collections.shuffle(roles);
 
     int c = 0;
     for (Player player : getStage().getPlayers()) {
+      if(player.getName().equals(WOLF_TEST)) {
+        player.setRole(AbstractRole.create(Role.WOLF, player));
+        getBot().sendMessage(player.getName(), "<h2><b>You are a " + player.getRole() + ".</b></h2>");
+        continue;
+      }
       player.setRole(AbstractRole.create(roles.get(c++), player));
       getBot().sendMessage(player.getName(), "<h2><b>You are a " + player.getRole() + ".</b></h2>");
     }
@@ -73,7 +87,5 @@ public class StartGameAction extends SetupAction {
   public String getDescription() {
     return "Starts the game.";
   }
-
-
 
 }

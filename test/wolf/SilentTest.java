@@ -30,15 +30,15 @@ public class SilentTest extends SimulationTest {
     bot.msg("Snape", "!join");
     bot.msg("Potter", "!join");
 
-    bot.msg("Khaladin", "!load fives");
-    bot.msg("Khaladin", "!setflag SILENT_GAME YES");
-    bot.msg("Khaladin", "!setflag VOTING_METHOD END_ON_MAJORITY");
-    bot.msg("Khaladin", "!setflag ANNOUNCE_VOTES YES");
-    bot.msg("Khaladin", "!setflag WITHDRAW_VOTES YES");
+    bot.msg("Khaladin", "!load silent_fives");
+    // bot.msg("Khaladin", "!setflag SILENT_GAME YES");
+    // bot.msg("Khaladin", "!setflag VOTING_METHOD END_ON_MAJORITY");
+    // bot.msg("Khaladin", "!setflag ANNOUNCE_VOTES YES");
+    // bot.msg("Khaladin", "!setflag WITHDRAW_VOTES YES");
     bot.msg("Khaladin", "!configs");
 
-    bot.msg("Khaladin", "setflag PRE_GAME_PEEK_MODE all_villagers");
-    bot.msg("Khaladin", "setflag FIRST_PEEK_MINION yes");
+    // bot.msg("Khaladin", "setflag PRE_GAME_PEEK_MODE all_villagers");
+    // bot.msg("Khaladin", "setflag FIRST_PEEK_MINION yes");
 
     bot.msg("Khaladin", "!start");
 

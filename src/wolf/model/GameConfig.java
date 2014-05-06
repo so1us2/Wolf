@@ -13,7 +13,10 @@ public class GameConfig {
   public GameConfig() {
     roles = Maps.newLinkedHashMap();
     settings = Maps.newLinkedHashMap();
+    resetSettings();
+  }
 
+  private void resetSettings() {
     for (Setting setting : Settings.getSettingsByCategory().values()) {
       settings.put(setting.getName(), setting.getDefault());
     }
@@ -42,6 +45,13 @@ public class GameConfig {
   public void setRoles(Map<Role, Integer> newRoles) {
     roles.clear();
     roles.putAll(newRoles);
+  }
+
+  public void applySettings(Map<String, String> newSettings) {
+    resetSettings();
+    for (String s : newSettings.keySet()) {
+      settings.put(s, newSettings.get(s));
+    }
   }
 
   public int getPlayersNeeded() {

@@ -1,10 +1,11 @@
 package wolf.action.setup;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import wolf.action.setup.host.LoadConfigAction;
+import wolf.model.ConfigType;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.stage.SetupStage;
@@ -17,11 +18,11 @@ public class ListAllConfigsAction extends SetupAction {
 
   @Override
   protected void execute(Player invoker, List<String> args) {
-    Map<String, Map<Role, Integer>> configs = LoadConfigAction.getConfigs();
-    for (String s : configs.keySet()) {
+    Set<ConfigType> configs = LoadConfigAction.getConfigs();
+    for (ConfigType type : configs) {
       StringBuilder output = new StringBuilder();
-      output.append(s).append(": ");
-      for (Entry<Role, Integer> e : configs.get(s).entrySet()) {
+      output.append(type.getName()).append(": ");
+      for (Entry<Role, Integer> e : type.getRoles().entrySet()) {
         output.append(e.getKey()).append(" (").append(e.getValue()).append("), ");
       }
       output.setLength(output.length() - 2);

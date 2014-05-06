@@ -155,7 +155,7 @@ public class GameStage extends Stage {
   }
 
   private void unmutePlayers() {
-    if (config.getSettings().get("SILENT_GAME").equals("ENABLED")) {
+    if (config.getSettings().get("SILENT_GAME").equals("YES")) {
       return;
     }
     for (Player player : getPlayers()) {

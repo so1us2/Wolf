@@ -20,7 +20,7 @@ public abstract class AbstractWolfRole extends AbstractRole {
   }
 
   public void wolfChat(Player sender, String message) {
-    if (getStage().getSetting("SILENT_GAME").equals("ENABLED")) {
+    if (getStage().getSetting("SILENT_GAME").equals("YES")) {
       getBot().sendMessage(getPlayer().getName(), "Wolf chat is disabled for this silent game.");
       return;
     }

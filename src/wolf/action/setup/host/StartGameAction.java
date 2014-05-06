@@ -65,7 +65,10 @@ public class StartGameAction extends SetupAction {
 
     if (getStage().getPlayer(WOLF_TEST) != null) {
       for (int i = 0; i < roles.size(); i++) {
-        if (roles.get(i) == Role.WOLF) roles.remove(i);
+        if (roles.get(i) == Role.WOLF) {
+          roles.remove(i);
+          break;
+        }
       }
     }
 

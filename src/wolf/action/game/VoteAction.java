@@ -35,16 +35,32 @@ public class VoteAction extends GameAction {
 
     if (prevTarget == null) {
       getBot().sendMessage(invoker.getName(), "Voted for " + target.getName());
-      getBot().sendMessage("A player voted. (" + votes.size() + " total)");
+      if (getStage().getSetting("ANNOUNCE_VOTES").equals("YES")) {
+        printVotes();
+      } else {
+        getBot().sendMessage("A player voted. (" + votes.size() + " total)");
+      }
       getBot().onPlayersChanged();
     } else {
       getBot().sendMessage(invoker.getName(), "Switched vote to " + target.getName());
-      getBot().sendMessage("A player switched their vote. (" + votes.size() + " total)");
+      if (getStage().getSetting("ANNOUNCE_VOTES").equals("YES")) {
+        printVotes();
+      } else {
+        getBot().sendMessage("A player switched their vote. (" + votes.size() + " total)");
+      }
     }
+    processVotes(votes);
+  }
 
-    // if (votes.size() == getStage().getPlayers().size()) {
-      processVotes(votes);
-    // }
+  public void printVotes() {
+    Map<Player, Player> votes = getStage().getVotesToDayKill();
+    StringBuilder sb = new StringBuilder();
+    getBot().sendMessage("VOTES");
+    for (Player p : votes.keySet()) {
+      sb.append(p).append("-->").append(votes.get(p)).append(", ");
+    }
+    sb.setLength(sb.length() - 2);
+    getBot().sendMessage(sb.toString());
   }
 
   /**
@@ -52,23 +68,33 @@ public class VoteAction extends GameAction {
    */
   private void processVotes(Map<Player, Player> votes) {
     Map<Player, Integer> tally = tallyVotes(votes);
-    Player dayKillTarget = getMajorityVote(tally);
+    Player dayKillTarget = null;
+
+    if (getStage().getSetting("VOTING_METHOD").equals("END_ON_MAJORITY")) {
+      dayKillTarget = getMajorityVote(tally);
+    } else if (getStage().getSetting("VOTING_METHOD").equals("ALL_VOTES_IN")) {
+
+    }
+
+    if (votes.size() == getStage().getPlayers().size() && dayKillTarget == null) {
+      String mode = getStage().getSetting("ANNOUNCE_ON_TIE");
+      if (mode.equals("NONE")) {
+        getBot().sendMessage("No majority was reached.");
+      } else if (mode.equals("TOTALS")) {
+        for (Player p : tally.keySet()) {
+          getBot().sendMessage(p.getName() + " (" + tally.get(p) + ")");
+        }
+      } else if (mode.equals("ALL")) {
+        getStage().getVotingHistory().printRound(getBot(),
+            getStage().getVotingHistory().getCurrentRound());
+      }
+      votes.clear();
+      getStage().getVotingHistory().nextRound();
+      return;
+    }
 
     if (dayKillTarget == null) {
       return;
-      // String mode = getStage().getSetting("ANNOUNCE_ON_TIE");
-      // if (mode.equals("NONE")) {
-      // getBot().sendMessage("No majority was reached.");
-      // } else if (mode.equals("TOTALS")) {
-      // for (Player p : tally.keySet()) {
-      // getBot().sendMessage(p.getName() + " (" + tally.get(p) + ")");
-      // }
-      // } else if (mode.equals("ALL")) {
-      // getStage().getVotingHistory().printRound(getBot(),
-      // getStage().getVotingHistory().getCurrentRound());
-      // }
-      // votes.clear();
-      // getStage().getVotingHistory().nextRound();
     } else {
       dayKillTarget.setAlive(false);
       getStage().getVotingHistory().print(getBot());

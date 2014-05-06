@@ -1,5 +1,7 @@
 package wolf.model.stage;
 
+import static com.google.common.collect.Iterables.filter;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -9,7 +11,7 @@ import org.joda.time.DateTime;
 
 import wolf.WolfException;
 import wolf.action.Action;
-import wolf.action.GetHelpAction;
+import wolf.action.game.ClearVoteAction;
 import wolf.action.game.GetRoleAction;
 import wolf.action.game.ListPlayersAction;
 import wolf.action.game.VoteAction;
@@ -19,6 +21,7 @@ import wolf.action.game.admin.ModkillPlayerAction;
 import wolf.action.game.host.AbortGameAction;
 import wolf.action.game.host.AnnounceAction;
 import wolf.action.game.host.ReminderAction;
+import wolf.action.global.GetHelpAction;
 import wolf.action.privatechats.AuthorizePlayerAction;
 import wolf.action.privatechats.ChatAction;
 import wolf.action.privatechats.JoinRoomAction;
@@ -51,8 +54,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
-
-import static com.google.common.collect.Iterables.filter;
 
 public class GameStage extends Stage {
 
@@ -102,6 +103,9 @@ public class GameStage extends Stage {
     daytimeActions.add(getHelpAction);
     daytimeActions.add(new VoteAction(this));
     daytimeActions.add(new VoteCountAction(this));
+    if (config.getSettings().get("WITHDRAW_VOTES").equals("YES")) {
+      daytimeActions.add(new ClearVoteAction(this));
+    }
     daytimeActions.add(new ListPlayersAction(this));
     daytimeActions.add(new GetRoleAction(this));
 
@@ -135,6 +139,12 @@ public class GameStage extends Stage {
   }
 
   private void beginGame() {
+    getBot().sendMessage(
+            "If this is your first game, please read the rules link up above. You can use /status to see what roles are in the game.");
+    getBot().sendMessage(
+        "Please do NOT copy/paste any text from the moderator (bold and green) as it is private.");
+    getBot().sendMessage("You can use the command /help at any time for more assistance.");
+
     for (Player player : getPlayers()) {
       player.getRole().onGameStart();
     }
@@ -145,6 +155,9 @@ public class GameStage extends Stage {
   }
 
   private void unmutePlayers() {
+    if (config.getSettings().get("SILENT_GAME").equals("ENABLED")) {
+      return;
+    }
     for (Player player : getPlayers()) {
       getBot().unmute(player.getName());
     }

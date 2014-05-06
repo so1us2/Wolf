@@ -6,10 +6,9 @@ import com.google.common.collect.Maps;
 
 public class GameConfig {
 
-  private final Map<Role, Integer> roles;
-  private final Map<String, String> settings;
-  private Player host = null;
-  private boolean rated = true;
+  protected final Map<Role, Integer> roles;
+  protected final Map<String, String> settings;
+  protected Player host = null;
 
   public GameConfig() {
     roles = Maps.newLinkedHashMap();
@@ -58,11 +57,7 @@ public class GameConfig {
   }
 
   public boolean isRated() {
-    return rated;
-  }
-
-  public void setRated(boolean rated) {
-    this.rated = rated;
+    return settings.get("RATED_GAME").equals("YES");
   }
 
 }

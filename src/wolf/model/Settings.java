@@ -32,6 +32,19 @@ public class Settings {
         .description("What is announced for players who are voted dead by day?");
     category("GAME").name("NIGHT_KILL_ANNOUNCE").options("NONE", "FACTION", "ROLE")
         .defaultSetting("NONE").description("What is revealed about players who die at night?");
+    category("GAME").name("SILENT_GAME").options("ENABLED", "DISABLED").defaultSetting("DISABLED")
+        .description("If enabled, there is no chatting permitted during the game.");
+    category("GAME").name("RATED_GAME").options("YES", "NO").defaultSetting("YES")
+        .description("Does the game count towards rankings?");
+    category("VOTES")
+        .name("VOTING_METHOD")
+        .options("END_ON_MAJORITY", "ALL_VOTES")
+        .defaultSetting("END_ON_MAJORITY")
+        .description("Does voting end as soon as 1 player has a majority or must all players vote?");
+    category("VOTES").name("ANNOUNCE_VOTES").options("YES", "NO").defaultSetting("NO")
+        .description("Announce each vote as it is cast?");
+    category("VOTES").name("WITHDRAW_VOTES").options("YES", "NO").defaultSetting("NO")
+        .description("Can you withdraw a vote and be voting for no one?");
     category("WOLF").name("TELL_WOLVES_ON_KILL").options("NONE", "FACTION", "ROLE")
         .defaultSetting("NONE")
         .description("Will wolves be told the role of the player that they kill?");

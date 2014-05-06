@@ -4,8 +4,8 @@ import java.util.List;
 import java.util.Set;
 
 import wolf.action.Action;
-import wolf.action.GetHelpAction;
 import wolf.action.game.host.AbortGameAction;
+import wolf.action.global.GetHelpAction;
 import wolf.action.setup.CurrentSetupAction;
 import wolf.action.setup.DetailsAction;
 import wolf.action.setup.JoinAction;

@@ -17,7 +17,8 @@ public class AnnounceAction extends Action {
   @Override
   protected void execute(Player invoker, List<String> args) {
     StringBuilder output = new StringBuilder();
-    output.append("ANNOUNCEMENT - ").append(Joiner.on(" ").join(args));
+    output.append("ANNOUNCEMENT - ").append("(").append(invoker.getName()).append(") ")
+        .append(Joiner.on(" ").join(args));
     getBot().sendMessage(output.toString());
   }
 

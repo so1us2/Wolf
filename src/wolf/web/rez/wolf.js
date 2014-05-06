@@ -3,16 +3,32 @@ var testing = false;
 var ws;
 var currentRoom = "Main Room";
 
-$("#text-input").keypress(function(e){
-	if(e.which==13){ //enter
+$("#input-wrapper").on('keydown', '#text-input', function(e){
+	if(e.which == 13){ //enter
 		var target = $(e.target);
 		var msg = target.val().trim();
 		target.val("");
 		if(msg) {
 		   send("CHAT", msg);
 		}
+	} else if(e.which == 9){ //tab
+		e.preventDefault();
+		autocomplete($(e.target));
 	}
 });
+
+//$("#text-input").keypress(function(e){
+//	if(e.which == 13){ //enter
+//		var target = $(e.target);
+//		var msg = target.val().trim();
+//		target.val("");
+//		if(msg) {
+//		   send("CHAT", msg);
+//		}
+//	} else if(e.which == 9){ //tab
+//		autocomplete($e.target);
+//	}
+//});
 
 //open websocket
 if (WebSocket){

@@ -77,11 +77,14 @@ public class GameRouter extends BaseWebSocketHandler {
     ConnectionInfo removed = connectionInfo.remove(connection);
 
     GameRoom room = removed.getRoom();
-    if (room != null) {
-      if (room.onLeave(removed)) {
-        rooms.remove(room);
-        announceRooms();
-      }
+    if (room == null) {
+      System.err.println(removed.getName() + " was not in a room when they DC'd!");
+      return;
+    }
+
+    if (room.onLeave(removed)) {
+      rooms.remove(room);
+      announceRooms();
     }
   }
 
@@ -93,32 +96,6 @@ public class GameRouter extends BaseWebSocketHandler {
     }
 
     System.out.println("CREATE ROOM: " + name);
-
-    // if (name.equals("0526411")) {
-    // for (GameRoom room : rooms) {
-    // try {
-    // room.name = URLDecoder.decode(room.name, "UTF-8");
-    // } catch (UnsupportedEncodingException e) {
-    // e.printStackTrace();
-    // }
-    // }
-    // }
-    // rooms.add(0, rooms.remove(1));
-    //
-    // try {
-    // Field field = GameRoom.class.getDeclaredField("name");
-    // field.setAccessible(true);
-    //
-    // Field modifiersField = Field.class.getDeclaredField("modifiers");
-    // modifiersField.setAccessible(true);
-    // modifiersField.setInt(field, field.getModifiers() & ~Modifier.FINAL);
-    //
-    // field.set(rooms.get(1), "Game2");
-    // field.set(rooms.get(0), GameRoom.MAIN_ROOM);
-    // } catch (Exception e) {
-    // e.printStackTrace();
-    // }
-    // }
 
     for (GameRoom room : rooms) {
       if (room.name.equalsIgnoreCase(name)) {
@@ -185,11 +162,6 @@ public class GameRouter extends BaseWebSocketHandler {
 
       String ip = from.getConnection().httpRequest().remoteAddress() + "";
       System.out.println(user.name + " logged in from: " + ip);
-
-      // if (ip.contains("65.130.25.203")) {
-      // Toolkit.getDefaultToolkit().beep();
-      // System.err.println("OSCAR ALERT :: " + user.name);
-      // }
 
       from.setName(user.name);
 

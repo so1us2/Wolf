@@ -1,5 +1,9 @@
 package org.webbitserver.netty;
 
+import java.util.Iterator;
+import java.util.List;
+import java.util.concurrent.Executor;
+
 import org.jboss.netty.channel.ChannelHandlerContext;
 import org.jboss.netty.channel.ExceptionEvent;
 import org.jboss.netty.channel.MessageEvent;
@@ -9,10 +13,6 @@ import org.jboss.netty.handler.codec.http.HttpRequest;
 import org.webbitserver.HttpControl;
 import org.webbitserver.HttpHandler;
 import org.webbitserver.WebbitException;
-
-import java.util.Iterator;
-import java.util.List;
-import java.util.concurrent.Executor;
 
 import static org.jboss.netty.handler.codec.http.HttpHeaders.isKeepAlive;
 import static org.jboss.netty.handler.codec.http.HttpResponseStatus.INTERNAL_SERVER_ERROR;

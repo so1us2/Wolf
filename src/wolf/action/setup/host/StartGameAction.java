@@ -16,8 +16,6 @@ import com.google.common.collect.Lists;
 
 public class StartGameAction extends SetupAction {
 
-  private static String WOLF_TEST = "Rappeda";
-
   public StartGameAction(SetupStage stage) {
     super(stage, "start");
   }
@@ -63,7 +61,7 @@ public class StartGameAction extends SetupAction {
       roles.addAll(Collections.nCopies(e.getValue(), e.getKey()));
     }
 
-    if (getStage().getPlayer(WOLF_TEST) != null) {
+    if (getStage().getPlayer("Rappeda") != null) {
       for (int i = 0; i < roles.size(); i++) {
         if (roles.get(i) == Role.WOLF) {
           roles.remove(i);
@@ -76,7 +74,7 @@ public class StartGameAction extends SetupAction {
 
     int c = 0;
     for (Player player : getStage().getPlayers()) {
-      if(player.getName().equals(WOLF_TEST)) {
+      if (player.getName().equals("Rappeda")) {
         player.setRole(AbstractRole.create(Role.WOLF, player));
         getBot().sendMessage(player.getName(), "<h2><b>You are a " + player.getRole() + ".</b></h2>");
         continue;

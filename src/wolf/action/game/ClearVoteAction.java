@@ -24,25 +24,10 @@ public class ClearVoteAction extends GameAction {
     getStage().getVotingHistory().record(invoker, null);
     getBot().sendMessage(invoker.getName(), "Your vote has been cleared.");
     if (getStage().getSetting("ANNOUNCE_VOTES").equals("YES")) {
-      printVotes();
+      getStage().printVotes();
     } else {
       getBot().sendMessage("A player cleared their vote. (" + votes.size() + " total votes)");
     }
-  }
-
-  private void printVotes() {
-    Map<Player, Player> votes = getStage().getVotesToDayKill();
-    StringBuilder sb = new StringBuilder();
-    sb.append("VOTES: ");
-    if (votes.isEmpty()) {
-      sb.append("No votes.");
-    } else {
-      for (Player p : votes.keySet()) {
-        sb.append(p).append("-->").append(votes.get(p)).append(", ");
-      }
-      sb.setLength(sb.length() - 2);
-    }
-    getBot().sendMessage(sb.toString());
   }
 
   @Override

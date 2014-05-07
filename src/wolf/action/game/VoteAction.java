@@ -36,7 +36,7 @@ public class VoteAction extends GameAction {
     if (prevTarget == null) {
       getBot().sendMessage(invoker.getName(), "Voted for " + target.getName());
       if (getStage().getSetting("ANNOUNCE_VOTES").equals("YES")) {
-        printVotes();
+        getStage().printVotes();
       } else {
         getBot().sendMessage("A player voted. (" + votes.size() + " total)");
       }
@@ -44,7 +44,7 @@ public class VoteAction extends GameAction {
     } else {
       getBot().sendMessage(invoker.getName(), "Switched vote to " + target.getName());
       if (getStage().getSetting("ANNOUNCE_VOTES").equals("YES")) {
-        printVotes();
+        getStage().printVotes();
       } else {
         getBot().sendMessage("A player switched their vote. (" + votes.size() + " total)");
       }
@@ -97,6 +97,7 @@ public class VoteAction extends GameAction {
       return;
     }
 
+    // resolve voting
     if (dayKillTarget == null) {
       return;
     } else {
@@ -125,7 +126,6 @@ public class VoteAction extends GameAction {
 
   private Map<Player, Integer> tallyVotes(Map<Player, Player> votes) {
     Map<Player, Integer> voteTally = Maps.newLinkedHashMap();
-
     for (Player target : votes.values()) {
       Integer i = voteTally.get(target);
       if (i == null) {
@@ -133,27 +133,22 @@ public class VoteAction extends GameAction {
       }
       voteTally.put(target, i + 1);
     }
-
     return voteTally;
   }
 
   private Player getMajorityVote(Map<Player, Integer> tally) {
-
     int votesNeededToWin;
     int numPlayers = getStage().getPlayers().size();
-
     if (numPlayers % 2 == 0) {
       votesNeededToWin = numPlayers / 2 + 1;
     } else {
       votesNeededToWin = (int) Math.ceil(numPlayers / 2.0);
     }
-
     for (Entry<Player, Integer> e : tally.entrySet()) {
       if (e.getValue() >= votesNeededToWin) {
         return e.getKey();
       }
     }
-
     return null;
   }
 

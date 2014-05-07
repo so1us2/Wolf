@@ -15,8 +15,8 @@ public class Settings {
   static {
     category("PRIEST").name("SELF_PROTECT").options("YES", "NO").defaultSetting("YES")
         .description("Is the priest allowed to protect themselves?");
-    category("PRIEST").name("PROTECTION_MODE").options("EVERY_OTHER_NIGHT", "ONCE_PER_GAME",
- "NO_RULES")
+    category("PRIEST").name("PROTECTION_MODE")
+        .options("EVERY_OTHER_NIGHT", "ONCE_PER_GAME", "NO_RULES")
         .defaultSetting("EVERY_OTHER_NIGHT")
         .description("How often can the priest protect a target?");
     category("SEER").name("PRE_GAME_PEEK").options("YES", "NO")

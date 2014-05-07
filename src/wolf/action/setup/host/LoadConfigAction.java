@@ -22,11 +22,8 @@ public class LoadConfigAction extends SetupAction {
   static {
     configs.put("nines",
         new ConfigType("nines").role(Role.SEER, 1).role(Role.VILLAGER, 6).role(Role.WOLF, 2));
-    configs.put(
-        "elevens",
- new ConfigType("elevens").role(Role.SEER, 1).role(Role.VILLAGER, 6)
-        .role(Role.WOLF, 3)
-            .role(Role.PRIEST, 1));
+    configs.put("elevens", new ConfigType("elevens").role(Role.SEER, 1).role(Role.VILLAGER, 6)
+        .role(Role.WOLF, 3).role(Role.PRIEST, 1));
     configs.put(
         "fives",
         new ConfigType("fives").role(Role.SEER, 1).role(Role.VILLAGER, 1).role(Role.WOLF, 1)

@@ -59,6 +59,7 @@ public class LoadConfigAction extends SetupAction {
       throw new WolfException(configName + " is an invalid configuration.");
     }
     this.getStage().getConfig().setRoles(configs.get(configName).getRoles());
+    this.getStage().getConfig().resetSettings();
     this.getStage().getConfig().applySettings(configs.get(configName).getSettings());
     StringBuilder output = new StringBuilder();
     output.append(configName + " loaded: ");

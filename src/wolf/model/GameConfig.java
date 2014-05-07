@@ -48,7 +48,6 @@ public class GameConfig {
   }
 
   public void applySettings(Map<String, String> newSettings) {
-    resetSettings();
     for (String s : newSettings.keySet()) {
       settings.put(s, newSettings.get(s));
     }

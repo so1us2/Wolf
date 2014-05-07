@@ -139,7 +139,8 @@ public class GameStage extends Stage {
   }
 
   private void beginGame() {
-    getBot().sendMessage(
+    getBot()
+        .sendMessage(
             "If this is your first game, please read the rules link up above. You can use /status to see what roles are in the game.");
     getBot().sendMessage(
         "Please do NOT copy/paste any text from the moderator (bold and green) as it is private.");

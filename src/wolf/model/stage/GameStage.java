@@ -443,6 +443,21 @@ public class GameStage extends Stage {
     return votesToDayKill;
   }
 
+
+  public void printVotes() {
+    StringBuilder sb = new StringBuilder();
+    sb.append("VOTES: ");
+    if (votesToDayKill.isEmpty()) {
+      sb.append("No votes.");
+    } else {
+      for (Player p : votesToDayKill.keySet()) {
+        sb.append(p).append("-->").append(votesToDayKill.get(p)).append(", ");
+      }
+      sb.setLength(sb.length() - 2);
+    }
+    getBot().sendMessage(sb.toString());
+  }
+
   /**
    * Gets an ALIVE player with the given name.
    */

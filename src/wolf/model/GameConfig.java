@@ -6,9 +6,9 @@ import com.google.common.collect.Maps;
 
 public class GameConfig {
 
-  protected final Map<Role, Integer> roles;
-  protected final Map<String, String> settings;
-  protected Player host = null;
+  private final Map<Role, Integer> roles;
+  private final Map<String, String> settings;
+  private Player host = null;
 
   public GameConfig() {
     roles = Maps.newLinkedHashMap();
@@ -16,7 +16,7 @@ public class GameConfig {
     resetSettings();
   }
 
-  private void resetSettings() {
+  public void resetSettings() {
     for (Setting setting : Settings.getSettingsByCategory().values()) {
       settings.put(setting.getName(), setting.getDefault());
     }

@@ -70,12 +70,16 @@ public class VoteAction extends GameAction {
     Map<Player, Integer> tally = tallyVotes(votes);
     Player dayKillTarget = null;
 
+    // figure out if someone is dying
     if (getStage().getSetting("VOTING_METHOD").equals("END_ON_MAJORITY")) {
       dayKillTarget = getMajorityVote(tally);
     } else if (getStage().getSetting("VOTING_METHOD").equals("ALL_VOTES_IN")) {
-
+      if (votes.size() == getStage().getPlayers().size()) {
+        dayKillTarget = getMajorityVote(tally);
+      }
     }
 
+    // if everyone has voted and there is no majority, clear votes.
     if (votes.size() == getStage().getPlayers().size() && dayKillTarget == null) {
       String mode = getStage().getSetting("ANNOUNCE_ON_TIE");
       if (mode.equals("NONE")) {

@@ -143,7 +143,10 @@ public class GameStage extends Stage {
         "If this is your first game, please read the rules link "
             + "up above. You can use /status to see what roles are in the game.");
     getBot().sendMessage(
-        "Please do NOT copy/paste any text from the moderator (bold and green) as it is private.");
+        "Please do NOT copy/paste any text from the moderator (bold and purple) as it is private.");
+    getBot().sendMessage(
+        "Also, please do not restate anything sent you by the moderator to prove a role. "
+            + "That compromises the game.");
     getBot().sendMessage("You can use the command /help at any time for more assistance.");
 
     for (Player player : getPlayers()) {

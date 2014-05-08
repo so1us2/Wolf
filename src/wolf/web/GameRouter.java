@@ -1,11 +1,13 @@
 package wolf.web;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
 import org.webbitserver.BaseWebSocketHandler;
 import org.webbitserver.WebSocketConnection;
 
@@ -13,9 +15,12 @@ import wolf.model.stage.GameStage;
 import wolf.web.LoginService.User;
 
 import com.beust.jcommander.internal.Sets;
+import com.google.common.base.Charsets;
+import com.google.common.base.Throwables;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.io.Resources;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -151,6 +156,42 @@ public class GameRouter extends BaseWebSocketHandler {
       }
     } else if (command.equalsIgnoreCase("login")) {
       long userID = Long.parseLong(args.get(0));
+      String accessToken = args.get(1);
+
+      String facebookURL =
+          "https://graph.facebook.com/debug_token?input_token=" + accessToken
+              + "&access_token=265390563624958|9cef6b505981506f7ca882d16cfb1b58";
+
+      JsonObject o;
+      try {
+        o = parser.parse(Resources.toString(new URL(facebookURL), Charsets.UTF_8))
+                .getAsJsonObject().getAsJsonObject("data");
+      } catch (Exception e) {
+        throw Throwables.propagate(e);
+      }
+
+      long fbUserID = o.get("user_id").getAsLong();
+      boolean isValid = o.get("is_valid").getAsBoolean();
+
+      if (!isValid) {
+        JsonObject error = o.getAsJsonObject("error");
+        String message = error.get("message").getAsString();
+        if (message.contains("has expired") || message.contains("logged out")) {
+          isValid = true;
+        }
+      }
+
+      if (userID != fbUserID) {
+        System.err.println(o);
+        throw new RuntimeException("userID doesn't match the facebook userID! " + userID + " vs "
+            + fbUserID);
+      }
+
+      if (!isValid) {
+        System.err.println(o);
+        throw new RuntimeException("Invalid facebook login.");
+      }
+
       from.setUserID(userID);
 
       User user = loginService.handleLogin(userID);
@@ -173,7 +214,7 @@ public class GameRouter extends BaseWebSocketHandler {
       long userID = from.getUserID();
       String name = args.get(0);
 
-      if (name.contains("<") || name.contains(">")) {
+      if (!StringUtils.isAlphanumeric(name)) {
         from.send(constructChatJson(GameRoom.NARRATOR, "Invalid username."));
         return;
       }
@@ -189,6 +230,12 @@ public class GameRouter extends BaseWebSocketHandler {
 
       from.getRoom().onPlayersChanged();
     } else if (command.equalsIgnoreCase("switch_room")) {
+      if (true) {
+        from.send(constructChatJson(GameRoom.NARRATOR,
+            "Switching rooms has been disabled until server downtime has completed."));
+        return;
+      }
+
       String room = args.get(0);
       GameRoom newRoom = getRoom(room);
       GameRoom oldRoom = from.getRoom();

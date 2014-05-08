@@ -5,8 +5,10 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
+import org.apache.commons.lang3.StringUtils;
 import org.webbitserver.WebSocketConnection;
 
+import wolf.WolfDB;
 import wolf.WolfException;
 import wolf.bot.IBot;
 import wolf.model.Faction;
@@ -16,6 +18,7 @@ import wolf.model.stage.InitialStage;
 import wolf.model.stage.Stage;
 import wolf.rankings.GameHistory;
 
+import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
@@ -67,7 +70,9 @@ public class GameRoom implements IBot {
    */
   public boolean onLeave(ConnectionInfo info) {
     System.out.println(info + " left room: " + name);
-    connections.remove(info);
+    if (!connections.remove(info)) {
+      System.out.println("Failed to remove: " + info);
+    }
     info.setRoom(null);
 
     onPlayersChanged();
@@ -101,6 +106,40 @@ public class GameRoom implements IBot {
     } else if (command.equals("report")) {
       System.err.println(sender + " REPORTED: " + args);
       sendMessage(sender, "Report recorded.");
+    } else if (command.equalsIgnoreCase("pm")) {
+      if (isAdmin) {
+        String target = args.get(0);
+        sendMessage(target, sender + ": " + Joiner.on(' ').join(args.subList(1, args.size())));
+        sendMessage(sender, "PM Sent.");
+      }
+    } else if (command.equalsIgnoreCase("ban")) {
+      System.out.println("ban: " + args);
+      if (isAdmin) {
+        GameRouter.banned.add(args.get(0).toLowerCase());
+        sendMessage(sender, "banlist: " + GameRouter.banned);
+      }
+    } else if (command.equalsIgnoreCase("unban")) {
+      System.out.println("unban: " + args);
+      if (isAdmin) {
+        GameRouter.banned.remove(args.get(0).toLowerCase());
+        sendMessage(sender, "banlist: " + GameRouter.banned);
+      }
+    } else if (command.equalsIgnoreCase("nick")) {
+      String oldNick = sender;
+      String newNick = args.get(0);
+
+      if (!StringUtils.isAlphanumeric(newNick)) {
+        throw new RuntimeException("Invalid name: " + name);
+      }
+
+      if (isAdmin) {
+        System.out.println("Changing nick: " + oldNick + " to " + newNick);
+        WolfDB.get().execute(
+            "UPDATE users SET name = '" + newNick + "' WHERE name = '" + oldNick + "'");
+        WolfDB.get().execute(
+            "UPDATE players SET name = '" + newNick + "' WHERE name = '" + oldNick + "'");
+        sendMessage(sender, "Your name has been switched. Refresh the page.");
+      }
     } else {
       try {
         getStage().handle(this, sender, command, args);
@@ -175,13 +214,21 @@ public class GameRoom implements IBot {
 
   @Override
   public void sendMessage(String user, String message) {
-    WebSocketConnection conn = getConnection(user);
-    if (conn == null) {
+    // todo fix this so that you can't have multiple conns per person
+    List<ConnectionInfo> conns = Lists.newArrayList();
+    for (ConnectionInfo conn : connections) {
+      if (user.equalsIgnoreCase(conn.getName())) {
+        conns.add(conn);
+      }
+    }
+    if (conns.size() == 0) {
       System.out.println("Tried to send message to offline user: " + user + " :: " + message);
       return;
     }
     String s = GameRouter.constructChatJson(NARRATOR, message);
-    conn.send(s);
+    for (ConnectionInfo conn : conns) {
+      conn.send(s);
+    }
   }
 
   @Override
@@ -260,6 +307,17 @@ public class GameRoom implements IBot {
         p.addProperty("in_game", true);
         if (player.isAlive()) {
           p.addProperty("alive", true);
+        }
+
+        ConnectionInfo conn = null;
+        for (ConnectionInfo info : connections) {
+          if (s.equals(info.getName())) {
+            conn = info;
+            break;
+          }
+        }
+        if (conn == null) {
+          p.addProperty("disconnected", true);
         }
 
         if (stage instanceof GameStage) {

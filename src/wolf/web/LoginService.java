@@ -2,13 +2,15 @@ package wolf.web;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
+
+import wolf.WolfDB;
+
 import com.google.common.collect.Iterables;
+
 import ez.DB;
 import ez.Row;
 import ez.Table;
-import org.apache.commons.lang3.StringUtils;
-import wolf.WolfDB;
-
 import static com.google.common.base.Preconditions.checkState;
 
 public class LoginService {

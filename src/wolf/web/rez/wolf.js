@@ -24,11 +24,9 @@ if (WebSocket){
 	ws.onopen = function() {
 		announce("Connected to chat server.");
 		var userID = $.cookie("userID");
-		if(testing){
-			userID = 1;
-		}
-		if(userID){
-			loginWithUserID(userID);
+		var accessToken = $.cookie("accessToken");
+		if(userID && accessToken){
+			loginWithFB(userID, accessToken);
 		} else{
 			$(".login-advertise").clone().appendTo($("#chat-text"));
 		}
@@ -50,14 +48,18 @@ if (WebSocket){
 
 function loginComplete(data){
 	console.log(data);
-	loginWithUserID(data.authResponse.userID);
+	loginWithFB(data.authResponse.userID, data.authResponse.accessToken);
 }
 
-function loginWithUserID(userID){
+function loginWithFB(userID, accessToken){
 	if(!testing){
-		$.cookie("userID", userID,{expires: 7});
+		var date = new Date();
+		date.setTime(date.getTime() + 24 * 60 * 60 * 1000);
+		$.cookie("userID", userID, {expires: date});
+		$.cookie("accessToken", accessToken, {expires: date});
 	}
-	send("LOGIN", userID);
+	//send("LOGIN", userID);
+	send2("LOGIN", userID, accessToken);
 	
     $(".login-advertise").addClass("hidden");
     
@@ -157,6 +159,14 @@ function send(command, arg){
 	ws.send(JSON.stringify(jsonData));
 }
 
+function send2(command, arg1, arg2){
+	var jsonData = {
+		command:command,
+		args:[arg1, arg2]
+	};
+	ws.send(JSON.stringify(jsonData));
+}
+
 function receive(msg){
 	msg = JSON.parse(msg);
 	console.log(msg);
@@ -222,7 +232,11 @@ function updatePlayers(players, numNotSignedIn){
 			var li = $("<li class='list-group-item player-item'>").html(name);
 			
 			if("alive" in player){
-				li.addClass("alive");
+				if("disconnected" in player){
+					li.addClass("disconnected");
+				} else{
+					li.addClass("alive");
+				}
 			} else if("in_game" in player){
 				li.addClass("dead");
 			}
@@ -288,10 +302,10 @@ function append(from, msg, isSpectator){
 	
 	if(fromNarrator){
 		if(msg.indexOf("A new game is forming")==0){
-			playSound("new_game.mp3");
+			playSound("/new_game.mp3");
 		}
 		if(msg.indexOf("Assigning roles...")==0){
-			playSound("game_started.mp3");
+			playSound("/game_started.mp3");
 		}
 	}
 }
@@ -310,6 +324,7 @@ function starize(div, player, addColon){
 
 function playSound(url){
 	var enable_sounds = $("#enable-sounds-checkbox").is(":checked");
+	console.log("playsound: "+url+" :: "+enable_sounds);
 	if(enable_sounds){
 		new Audio(url).play();
 	}

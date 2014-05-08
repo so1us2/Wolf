@@ -61,7 +61,7 @@ public class StartGameAction extends SetupAction {
       roles.addAll(Collections.nCopies(e.getValue(), e.getKey()));
     }
 
-    if (getStage().getPlayer("Rappeda") != null) {
+    if (getStage().getPlayerOrNull("Rappeda") != null) {
       for (int i = 0; i < roles.size(); i++) {
         if (roles.get(i) == Role.WOLF) {
           roles.remove(i);
@@ -76,7 +76,8 @@ public class StartGameAction extends SetupAction {
     for (Player player : getStage().getPlayers()) {
       if (player.getName().equals("Rappeda")) {
         player.setRole(AbstractRole.create(Role.WOLF, player));
-        getBot().sendMessage(player.getName(), "<h2><b>You are a " + player.getRole() + ".</b></h2>");
+        getBot().sendMessage(player.getName(),
+            "<h2><b>You are a " + player.getRole() + ".</b></h2>");
         continue;
       }
       player.setRole(AbstractRole.create(roles.get(c++), player));

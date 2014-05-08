@@ -32,6 +32,10 @@
 	background-color: #DFF0D8;
 	font-weight: bold;
 }
+.disconnected{
+	background-color: #D88786;
+	font-weight: bold;
+}
 #rules-modal .modal-body {
 	min-height: 600px;
 }
@@ -84,5 +88,12 @@
 }
 .pointer{
 	cursor: pointer;
+}
+#paypal-button{
+	margin-top: 15px;
+}
+#bitcoin-button{
+	position: relative;
+	top: 10px;
 }
 

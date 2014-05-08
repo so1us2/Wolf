@@ -1,12 +1,12 @@
 package wolf.model;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.List;
 
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public class Settings {
 
@@ -23,7 +23,7 @@ public class Settings {
         .description("Does the seer get to peek a random villager at the start of the game?");
     category("SEER").name("PRE_GAME_PEEK_MODE").options("REGULAR_VILLAGERS", "ALL_VILLAGERS")
         .description("Can the pre-game peek randomly choose a special-role villager?");
-    category("SEER").name("FIRST_PEEK_MINION").options("YES", "NO").defaultSetting("NO")
+    category("SEER").name("FIRST_PEEK_MINION").options("YES", "NO").defaultSetting("YES")
         .description("Does the Minion count as a villager when determining n0 peek?");
     category("GAME").name("PRIVATE_CHAT").options("ENABLED", "DISABLED").defaultSetting("DISABLED")
         .description("Enable or disable private chats amongst players during daytime.");

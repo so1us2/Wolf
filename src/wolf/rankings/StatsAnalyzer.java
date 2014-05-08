@@ -55,13 +55,16 @@ public class StatsAnalyzer {
       ret.put(i, ArrayListMultimap.<String, Row>create());
     }
 
-    for (String game : m.keySet()) {
-      if (m.get(game).size() <= 5) {
-        System.out.println("Skipping Fives game.");
+    outerloop: for (String game : m.keySet()) {
+      if (m.get(game).size() != 9) {
+        System.out.println("Skipping game.");
         continue;
       }
       Set<Faction> factions = EnumSet.noneOf(Faction.class);
       for (Row row : m.get(game)) {
+        if (row.get("role").equals("Priest")) {
+          continue outerloop;
+        }
         factions.add(Role.parse(row.<String>get("role")).getFaction());
       }
       Multimap<String, Row> mm = ret.get(factions.size());

@@ -24,6 +24,8 @@ public class ModkillPlayerAction extends GameAction {
           "This command may only be used by day (for now)");
     }
     Player target = getStage().getPlayer(args.get(0));
+    System.out
+        .println("MODKILLING " + target.getName() + " who is a " + target.getRole().getType());
     target.setAlive(false);
     getStage().getVotesToDayKill().remove(target);
 
@@ -33,6 +35,9 @@ public class ModkillPlayerAction extends GameAction {
     getStage().checkForWinner();
 
     getBot().onPlayersChanged();
+
+    getBot().sendMessage(invoker.getName(),
+        target.getName() + " was a " + target.getRole().getType());
   }
 
   @Override

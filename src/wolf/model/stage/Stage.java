@@ -1,5 +1,6 @@
 package wolf.model.stage;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -12,7 +13,8 @@ import com.google.common.collect.ImmutableSet;
 
 public abstract class Stage {
 
-  public static final Set<String> admins = ImmutableSet.of("satnam", "TomM", "Lauren", "LeeSharpe");
+  public static final Set<String> admins = new HashSet<String>(ImmutableSet.of("satnam", "TomM",
+      "Lauren", "LeeSharpe"));
 
   private final IBot bot;
 

@@ -1,14 +1,25 @@
 package wolf.model.stage;
 
-import static com.google.common.collect.Iterables.filter;
-
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.UUID;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import org.joda.time.DateTime;
-
 import wolf.WolfException;
 import wolf.action.Action;
 import wolf.action.game.ClearVoteAction;
@@ -42,18 +53,9 @@ import wolf.model.role.Corrupter;
 import wolf.model.role.Demon;
 import wolf.model.role.Priest;
 import wolf.model.role.Vigilante;
+import wolf.web.GameRoom;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
+import static com.google.common.collect.Iterables.filter;
 
 public class GameStage extends Stage {
 
@@ -77,12 +79,15 @@ public class GameStage extends Stage {
   private final List<Multimap<Player, Player>> killHistory = Lists.newArrayList();
   private ChatServer server;
 
+  private boolean gameRunning = true;
+
   /**
    * The set of all players (even dead ones).
    */
   private final Set<Player> players;
 
   private boolean daytime = true;
+  private boolean announcedTime = false;
 
   private final GameConfig config;
 
@@ -90,6 +95,13 @@ public class GameStage extends Stage {
    * This is stored as part of the GameHistory.
    */
   private final DateTime startDate = new DateTime();
+
+  /**
+   * This is the time that the day started.
+   */
+  private long roundStartTime = System.currentTimeMillis();
+
+  private final ScheduledExecutorService executorService;
 
 
   public GameStage(IBot bot, GameConfig config, Set<Player> players) {
@@ -128,6 +140,9 @@ public class GameStage extends Stage {
       player.getRole().setStage(this);
     }
 
+    executorService = Executors.newSingleThreadScheduledExecutor();
+    executorService.scheduleAtFixedRate(checkTimer, 0, 1, TimeUnit.SECONDS);
+
     try {
       beginGame();
     } catch (Exception e) {
@@ -137,6 +152,33 @@ public class GameStage extends Stage {
       return;
     }
   }
+  
+  private Runnable checkTimer = new Runnable() {
+    @Override
+    public void run() {
+      if (!daytime || !gameRunning) {
+        return;
+      }
+
+      long ONE_MINUTE = 1000 * 60;
+      long TEN_MINUTES = ONE_MINUTE * 10;
+
+      long now = System.currentTimeMillis();
+      
+      if (!announcedTime && (now >= roundStartTime + (TEN_MINUTES - ONE_MINUTE))) {
+        announcedTime = true;
+        getBot().sendToAll(GameRoom.NARRATOR,
+            "The day is almost at an end! You have 60 seconds left to vote.");
+      }
+
+      if (now >= roundStartTime + TEN_MINUTES) {
+        synchronized (GameStage.this) {
+          getBot().sendToAll(GameRoom.NARRATOR, "The day has come to an end.");
+          VoteAction.processVotes(getBot(), GameStage.this, getVotesToDayKill(), true);
+        }
+      }
+    }
+  };
 
   private void beginGame() {
     getBot().sendMessage(
@@ -158,21 +200,28 @@ public class GameStage extends Stage {
     getBot().sendMessage("Day 1 dawns on the village.");
   }
 
+  @Override
+  public synchronized void handle(IBot bot, String sender, String command, List<String> args) {
+    super.handle(bot, sender, command, args);
+
+    if (isNight()) {
+      checkForEndOfNight();
+    }
+  }
+
+  @Override
+  public synchronized void handleChat(IBot bot, String sender, String message) {
+    Player player = getPlayer(sender);
+
+    player.getRole().handleChat(player, message);
+  }
+
   private void unmutePlayers() {
     if (config.getSettings().get("SILENT_GAME").equals("YES")) {
       return;
     }
     for (Player player : getPlayers()) {
       getBot().unmute(player.getName());
-    }
-  }
-
-  @Override
-  public void handle(IBot bot, String sender, String command, List<String> args) {
-    super.handle(bot, sender, command, args);
-
-    if (isNight()) {
-      checkForEndOfNight();
     }
   }
 
@@ -336,6 +385,8 @@ public class GameStage extends Stage {
     getBot().sendMessage("NEW DAY");
     getBot().sendMessage("*********************");
     getBot().sendMessage("");
+    roundStartTime = System.currentTimeMillis();
+    announcedTime = false;
     unmutePlayers();
   }
 
@@ -385,6 +436,7 @@ public class GameStage extends Stage {
     getBot().muteAll();
     server.clearAllRooms();
     getBot().sendMessage("Night falls on the village.");
+    roundStartTime = System.currentTimeMillis();
 
     for (Player player : getPlayers()) {
       player.getRole().onNightBegins();
@@ -418,6 +470,13 @@ public class GameStage extends Stage {
     }
 
     if (winner != null) {
+      gameRunning = false;
+      try {
+        executorService.shutdownNow();
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
+
       getBot().sendMessage("<h2>The " + winner.getPluralForm() + " have won the game!</h2>");
       GameSummary.printGameLog(getBot(), players, winner, killHistory);
       getBot().setStage(new InitialStage(getBot()));
@@ -575,13 +634,6 @@ public class GameStage extends Stage {
   @Override
   public List<Action> getAdminActions() {
     return ImmutableList.copyOf(Iterables.concat(hostActions, adminActions));
-  }
-
-  @Override
-  public void handleChat(IBot bot, String sender, String message) {
-    Player player = getPlayer(sender);
-
-    player.getRole().handleChat(player, message);
   }
 
   public String getSetting(String settingName) {

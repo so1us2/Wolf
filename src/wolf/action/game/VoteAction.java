@@ -4,12 +4,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import wolf.WolfException;
+import wolf.bot.IBot;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Maps;
+import static com.google.common.collect.Iterables.getOnlyElement;
 
 public class VoteAction extends GameAction {
 
@@ -49,7 +52,7 @@ public class VoteAction extends GameAction {
         getBot().sendMessage("A player switched their vote. (" + votes.size() + " total)");
       }
     }
-    processVotes(votes);
+    processVotes(getBot(), getStage(), votes, false);
   }
 
   public void printVotes() {
@@ -65,35 +68,38 @@ public class VoteAction extends GameAction {
 
   /**
    * Checks for a majority -- and if there is one, performs a villager kill.
+   * 
+   * @param forceKill Used by the Timer System to force a kill even with no majority.
    */
-  private void processVotes(Map<Player, Player> votes) {
+  public static void processVotes(IBot bot, GameStage stage, Map<Player, Player> votes,
+      boolean forceKill) {
     Map<Player, Integer> tally = tallyVotes(votes);
     Player dayKillTarget = null;
 
     // figure out if someone is dying
-    if (getStage().getSetting("VOTING_METHOD").equals("END_ON_MAJORITY")) {
-      dayKillTarget = getMajorityVote(tally);
-    } else if (getStage().getSetting("VOTING_METHOD").equals("ALL_VOTES_IN")) {
-      if (votes.size() == getStage().getPlayers().size()) {
-        dayKillTarget = getMajorityVote(tally);
+    if (stage.getSetting("VOTING_METHOD").equals("END_ON_MAJORITY")) {
+      dayKillTarget = getMajorityVote(tally, forceKill, stage);
+    } else if (stage.getSetting("VOTING_METHOD").equals("ALL_VOTES_IN")) {
+      if (votes.size() == stage.getPlayers().size()) {
+        dayKillTarget = getMajorityVote(tally, forceKill, stage);
       }
     }
 
     // if everyone has voted and there is no majority, clear votes.
-    if (votes.size() == getStage().getPlayers().size() && dayKillTarget == null) {
-      String mode = getStage().getSetting("ANNOUNCE_ON_TIE");
+    if (votes.size() == stage.getPlayers().size() && dayKillTarget == null) {
+      String mode = stage.getSetting("ANNOUNCE_ON_TIE");
       if (mode.equals("NONE")) {
-        getBot().sendMessage("No majority was reached.");
+        bot.sendMessage("No majority was reached.");
       } else if (mode.equals("TOTALS")) {
         for (Player p : tally.keySet()) {
-          getBot().sendMessage(p.getName() + " (" + tally.get(p) + ")");
+          bot.sendMessage(p.getName() + " (" + tally.get(p) + ")");
         }
       } else if (mode.equals("ALL")) {
-        getStage().getVotingHistory().printRound(getBot(),
-            getStage().getVotingHistory().getCurrentRound());
+        stage.getVotingHistory().printRound(bot,
+            stage.getVotingHistory().getCurrentRound());
       }
       votes.clear();
-      getStage().getVotingHistory().nextRound();
+      stage.getVotingHistory().nextRound();
       return;
     }
 
@@ -102,29 +108,29 @@ public class VoteAction extends GameAction {
       return;
     } else {
       dayKillTarget.setAlive(false);
-      getStage().getVotingHistory().print(getBot());
-      getStage().getVotingHistory().reset();
-      getStage().getVotesToDayKill().clear();
-      getBot().sendMessage("A verdict was reached and " + dayKillTarget.getName() + " was killed.");
-      String mode = getStage().getSetting("DAY_KILL_ANNOUNCE");
+      stage.getVotingHistory().print(bot);
+      stage.getVotingHistory().reset();
+      stage.getVotesToDayKill().clear();
+      bot.sendMessage("A verdict was reached and " + dayKillTarget.getName() + " was killed.");
+      String mode = stage.getSetting("DAY_KILL_ANNOUNCE");
       if (mode.equals("FACTION")) {
-        getBot().sendMessage(
+        bot.sendMessage(
             dayKillTarget.getName() + " was a "
                 + dayKillTarget.getRole().getFaction().getSingularForm());
       } else if (mode.equals("ROLE")) {
-        getBot().sendMessage(
+        bot.sendMessage(
             dayKillTarget.getName() + " was a " + dayKillTarget.getRole().getType());
       } else if (mode.equals("SILENT")) {}
-      getBot().onPlayersChanged();
-      if (getStage().checkForWinner() != null) {
+      bot.onPlayersChanged();
+      if (stage.checkForWinner() != null) {
         // game is over, don't need to do any more logic here.
         return;
       }
-      getStage().moveToNight();
+      stage.moveToNight();
     }
   }
 
-  private Map<Player, Integer> tallyVotes(Map<Player, Player> votes) {
+  private static Map<Player, Integer> tallyVotes(Map<Player, Player> votes) {
     Map<Player, Integer> voteTally = Maps.newLinkedHashMap();
     for (Player target : votes.values()) {
       Integer i = voteTally.get(target);
@@ -136,9 +142,14 @@ public class VoteAction extends GameAction {
     return voteTally;
   }
 
-  private Player getMajorityVote(Map<Player, Integer> tally) {
+  /**
+   * If 'forcekill' is true, this method will never return null.
+   */
+  private static Player getMajorityVote(Map<Player, Integer> tally, boolean forceKill,
+      GameStage stage) {
+    int numPlayers = stage.getPlayers().size();
+
     int votesNeededToWin;
-    int numPlayers = getStage().getPlayers().size();
     if (numPlayers % 2 == 0) {
       votesNeededToWin = numPlayers / 2 + 1;
     } else {
@@ -149,7 +160,43 @@ public class VoteAction extends GameAction {
         return e.getKey();
       }
     }
+
+    if (forceKill) {
+      return getForceKill(tally, stage);
+    }
+
     return null;
+  }
+
+  private static Player getForceKill(Map<Player, Integer> tally,
+      GameStage stage) {
+    int maxTally = 0;
+    for (Entry<Player, Integer> e : tally.entrySet()) {
+      maxTally = Math.max(maxTally, e.getValue());
+    }
+
+    List<Player> possibleTargets = Lists.newArrayList();
+    if (maxTally == 0) {
+      // return a random player because no-one has voted.
+      possibleTargets.addAll(stage.getPlayers());
+    } else {
+      for (Entry<Player, Integer> e : tally.entrySet()) {
+        if (e.getValue() == maxTally) {
+          possibleTargets.add(e.getKey());
+        }
+      }
+    }
+
+    if (possibleTargets.isEmpty()) {
+      // this should never happen
+      System.err.println("Tried to force kill but no players left alive??");
+      return null;
+    } else if (possibleTargets.size() == 1) {
+      return getOnlyElement(possibleTargets);
+    } else {
+      // Multiple people are tied. Choose one randomly.
+      return possibleTargets.get((int) (Math.random() * possibleTargets.size()));
+    }
   }
 
   @Override

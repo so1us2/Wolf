@@ -28,13 +28,13 @@ public class LoadConfigAction extends SetupAction {
         "fives",
         new ConfigType("fives").role(Role.SEER, 1).role(Role.VILLAGER, 1).role(Role.WOLF, 1)
             .role(Role.MINION, 1).role(Role.HUNTER, 1).setting("VOTING_METHOD", "ALL_VOTES")
-            .setting("PRE_GAME_PEEK_MODE", "all_villagers").setting("FIRST_PEEK_MINION", "yes"));
+            .setting("PRE_GAME_PEEK_MODE", "ALL_VILLAGERS").setting("FIRST_PEEK_MINION", "YES"));
     configs.put(
         "silent_fives",
         new ConfigType("silent_fives").role(Role.SEER, 1).role(Role.VILLAGER, 1).role(Role.WOLF, 1)
             .role(Role.MINION, 1).role(Role.HUNTER, 1).setting("VOTING_METHOD", "ALL_VOTES")
-            .setting("PRE_GAME_PEEK_MODE", "all_villagers").setting("FIRST_PEEK_MINION", "yes")
-            .setting("VOTING_METHOD", "ALL_VOTES").setting("ANNOUNCE_VOTES", "YES")
+            .setting("PRE_GAME_PEEK_MODE", "ALL_VILLAGERS").setting("FIRST_PEEK_MINION", "YES")
+            .setting("VOTING_METHOD", "END_ON_MAJORITY").setting("ANNOUNCE_VOTES", "YES")
             .setting("WITHDRAW_VOTES", "YES").setting("RATED_GAME", "NO")
             .setting("SILENT_GAME", "YES"));
   }

@@ -100,6 +100,10 @@ public class GameRouter extends BaseWebSocketHandler {
       e.printStackTrace();
     }
 
+    if (!StringUtils.isAlphanumeric(name.replace(" ", ""))) {
+      throw new RuntimeException("Invalid room name: " + name);
+    }
+
     System.out.println("CREATE ROOM: " + name);
 
     for (GameRoom room : rooms) {
@@ -230,11 +234,11 @@ public class GameRouter extends BaseWebSocketHandler {
 
       from.getRoom().onPlayersChanged();
     } else if (command.equalsIgnoreCase("switch_room")) {
-      if (true) {
-        from.send(constructChatJson(GameRoom.NARRATOR,
-            "Switching rooms has been disabled until server downtime has completed."));
-        return;
-      }
+      // if (true) {
+      // from.send(constructChatJson(GameRoom.NARRATOR,
+      // "Switching rooms has been disabled until server downtime has completed."));
+      // return;
+      // }
 
       String room = args.get(0);
       GameRoom newRoom = getRoom(room);

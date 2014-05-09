@@ -207,6 +207,10 @@ function receive(msg){
 	} else if(command == "SWITCH_ROOM"){
 		announce(msg.msg);
 		setRoom(msg.room);
+	} else if(command == "START_TIMER"){
+		startTimer();
+	} else if(command == "STOP_TIMER"){
+		stopTimer();
 	}
 }
 

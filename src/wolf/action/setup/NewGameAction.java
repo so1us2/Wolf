@@ -19,6 +19,14 @@ public class NewGameAction extends Action {
 
   @Override
   protected void execute(Player invoker, List<String> args) {
+    boolean downtime = false;
+
+    if (downtime) {
+      getBot().sendMessage(invoker.getName(),
+          "You can't start a game because of impending server downtime.");
+      return;
+    }
+
     getBot().sendMessage("A new game is forming -- type /join");
 
     SetupStage setup = new SetupStage(stage.getBot());

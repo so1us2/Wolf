@@ -4,13 +4,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import wolf.WolfException;
 import wolf.bot.IBot;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
+
+import com.google.common.base.Objects;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import static com.google.common.collect.Iterables.getOnlyElement;
 
@@ -79,7 +80,7 @@ public class VoteAction extends GameAction {
     // figure out if someone is dying
     if (stage.getSetting("VOTING_METHOD").equals("END_ON_MAJORITY")) {
       dayKillTarget = getMajorityVote(tally, forceKill, stage);
-    } else if (stage.getSetting("VOTING_METHOD").equals("ALL_VOTES_IN")) {
+    } else if (stage.getSetting("VOTING_METHOD").equals("ALL_VOTES")) {
       if (votes.size() == stage.getPlayers().size()) {
         dayKillTarget = getMajorityVote(tally, forceKill, stage);
       }

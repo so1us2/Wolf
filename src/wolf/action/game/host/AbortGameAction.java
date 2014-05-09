@@ -15,6 +15,7 @@ public class AbortGameAction extends Action {
 
   @Override
   protected void execute(Player invoker, List<String> args) {
+    getBot().getStage().onAbort();
     getBot().sendMessage("Game aborted by " + invoker.getName());
     getBot().setStage(new InitialStage(getBot()));
     getBot().onPlayersChanged();

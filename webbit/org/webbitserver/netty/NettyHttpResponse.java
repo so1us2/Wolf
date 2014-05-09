@@ -189,7 +189,7 @@ public class NettyHttpResponse implements org.webbitserver.HttpResponse {
   public NettyHttpResponse error(Throwable error) {
     if (error != null && error.getMessage() != null
         && error.getMessage().equals("cannot send more responses than requests")) {
-      System.out.println("Stopped exception.");
+      // System.out.println("Stopped exception.");
       return this;
     }
     if (error instanceof TooLongFrameException) {
@@ -203,7 +203,7 @@ public class NettyHttpResponse implements org.webbitserver.HttpResponse {
     flushResponse();
 
     if (error instanceof IOException || error instanceof WebbitException) {
-      System.err.println("NettyHttpResponse: " + error);
+      // System.err.println("NettyHttpResponse: " + error);
     } else {
       exceptionHandler.uncaughtException(Thread.currentThread(),
           WebbitException.fromException(error, ctx.getChannel()));

@@ -78,7 +78,7 @@ public class VoteAction extends GameAction {
     Player dayKillTarget = null;
 
     // figure out if someone is dying
-    if (stage.getSetting("VOTING_METHOD").equals("END_ON_MAJORITY")) {
+    if (stage.getSetting("VOTING_METHOD").equals("END_ON_MAJORITY") || forceKill) {
       dayKillTarget = getMajorityVote(tally, forceKill, stage);
     } else if (stage.getSetting("VOTING_METHOD").equals("ALL_VOTES")) {
       if (votes.size() == stage.getPlayers().size()) {
@@ -91,6 +91,7 @@ public class VoteAction extends GameAction {
       String mode = stage.getSetting("ANNOUNCE_ON_TIE");
       if (mode.equals("NONE")) {
         bot.sendMessage("No majority was reached.");
+        return;
       } else if (mode.equals("TOTALS")) {
         for (Player p : tally.keySet()) {
           bot.sendMessage(p.getName() + " (" + tally.get(p) + ")");

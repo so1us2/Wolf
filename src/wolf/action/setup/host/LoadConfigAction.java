@@ -74,7 +74,9 @@ public class LoadConfigAction extends SetupAction {
     for (String s : settings.keySet()) {
       output.append(s).append(" = ").append(settings.get(s)).append(", ");
     }
-    output.setLength(output.length() - 2);
+    if (output.length() >= 2) {
+      output.setLength(output.length() - 2);
+    }
     getBot().sendMessage(output.toString());
   }
 

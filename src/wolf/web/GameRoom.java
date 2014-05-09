@@ -337,6 +337,11 @@ public class GameRoom implements IBot {
     return o.toString();
   }
 
+  @Override
+  public void sendToAll(String command) {
+    sendRemote(GameRouter.constructJson(command));
+  }
+
   private void sendRemote(String s) {
     for (ConnectionInfo conn : connections) {
       conn.send(s);

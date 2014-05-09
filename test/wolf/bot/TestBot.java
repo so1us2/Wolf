@@ -22,6 +22,9 @@ public class TestBot implements IBot {
   }
 
   @Override
+  public void sendToAll(String command) {}
+
+  @Override
   public void sendMessage(String user, String message) {
     System.out.println("To " + user + ": " + message);
 

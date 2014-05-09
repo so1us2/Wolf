@@ -163,7 +163,7 @@ public class GameStage extends Stage {
       }
 
       long ONE_MINUTE = 1000 * 60;
-      long TEN_MINUTES = ONE_MINUTE * 10;
+      long TEN_MINUTES = ONE_MINUTE * 15;
 
       long now = System.currentTimeMillis();
       
@@ -200,6 +200,7 @@ public class GameStage extends Stage {
     unmutePlayers();
 
     getBot().sendMessage("Day 1 dawns on the village.");
+    getBot().sendToAll("START_TIMER");
   }
 
   @Override
@@ -381,13 +382,14 @@ public class GameStage extends Stage {
       return;
     }
 
+    getBot().sendToAll("START_TIMER");
+    roundStartTime = System.currentTimeMillis();
     daytime = true;
     getBot().sendMessage("");
     getBot().sendMessage("*********************");
     getBot().sendMessage("NEW DAY");
     getBot().sendMessage("*********************");
     getBot().sendMessage("");
-    roundStartTime = System.currentTimeMillis();
     announcedTime = false;
     unmutePlayers();
   }
@@ -438,6 +440,7 @@ public class GameStage extends Stage {
     getBot().muteAll();
     server.clearAllRooms();
     getBot().sendMessage("Night falls on the village.");
+    getBot().sendToAll("STOP_TIMER");
     roundStartTime = System.currentTimeMillis();
 
     for (Player player : getPlayers()) {
@@ -472,6 +475,7 @@ public class GameStage extends Stage {
     }
 
     if (winner != null) {
+      getBot().sendToAll("STOP_TIMER");
       gameRunning = false;
       try {
         executorService.shutdownNow();
@@ -672,6 +676,12 @@ public class GameStage extends Stage {
 
   public UUID getId() {
     return id;
+  }
+
+  @Override
+  public void onAbort() {
+    gameRunning = false;
+    executorService.shutdownNow();
   }
 
   private static final Predicate<Player> alive = new Predicate<Player>() {

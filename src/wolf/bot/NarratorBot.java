@@ -27,6 +27,9 @@ public class NarratorBot extends WolfBot implements IBot {
   }
 
   @Override
+  public void sendToAll(String command) {}
+
+  @Override
   public void onMessage(String sender, String message) {
     handle(this, sender, message);
   }

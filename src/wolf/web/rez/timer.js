@@ -19,6 +19,7 @@ function stopTimer(){
 function updateTime(){
 	var now = new Date().getTime();
 	var s = Math.floor((now - startTime) / 1000);
+	s = (60 * 15) - s;
 	
 	var minutes = Math.floor(s / 60);
 	var seconds = s % 60;

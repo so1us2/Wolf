@@ -25,6 +25,7 @@ if (WebSocket){
 		announce("Connected to chat server.");
 		var userID = $.cookie("userID");
 		var accessToken = $.cookie("accessToken");
+//		console.log("COOKIE: "+userID+" "+accessToken);
 		if(userID && accessToken){
 			loginWithFB(userID, accessToken);
 		} else{

@@ -91,4 +91,6 @@ public abstract class Stage {
     return bot;
   }
 
+  public void onAbort() {}
+
 }

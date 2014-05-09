@@ -23,7 +23,7 @@ public class NewGameAction extends Action {
 
     if (downtime) {
       getBot().sendMessage(invoker.getName(),
-          "You can't start a game because of impending server downtime.");
+          "You can't start a game because server downtime has not completed.");
       return;
     }
 

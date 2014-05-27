@@ -34,6 +34,8 @@ public class GameRouter extends BaseWebSocketHandler {
     banned.add("tony");
     banned.add("ray56");
     banned.add("pbigelow");
+    banned.add("livermush");// /174.130.134.155:59992
+    // banned.add("todd");
 
     // TODO pbigelow logged in from: /65.130.25.203:49733
     // TODO oscar logged in from /71.219.0.137:57998
@@ -149,7 +151,7 @@ public class GameRouter extends BaseWebSocketHandler {
       }
 
       if (banned.contains(sender.toLowerCase())) {
-        System.out.println("BANNED!");
+        System.out.println(banned + " is BANNED");
         from.send(constructChatJson(GameRoom.NARRATOR, "You are banned."));
         return;
       }
@@ -180,7 +182,8 @@ public class GameRouter extends BaseWebSocketHandler {
       if (!isValid) {
         JsonObject error = o.getAsJsonObject("error");
         String message = error.get("message").getAsString();
-        if (message.contains("has expired") || message.contains("logged out")) {
+        if (message.contains("has expired") || message.contains("logged out")
+            || message.contains("Invalid facebook login")) {
           isValid = true;
         }
       }

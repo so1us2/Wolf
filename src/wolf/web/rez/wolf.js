@@ -19,7 +19,7 @@ $("#input-wrapper").on('keydown', '#text-input', function(e){
 
 //open websocket
 if (WebSocket){
-	var domain = testing ? "localhost" : "playwolf.net";
+	var domain = testing ? "localhost" : "50.116.8.140";
 	ws = new WebSocket("ws://"+domain+":80/socket");
 	ws.onopen = function() {
 		announce("Connected to chat server.");

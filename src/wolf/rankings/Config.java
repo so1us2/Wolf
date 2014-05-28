@@ -9,6 +9,7 @@ import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
 import com.google.common.collect.Maps;
 import com.google.common.io.Files;
+import wolf.OS;
 
 public class Config {
 
@@ -42,20 +43,9 @@ public class Config {
   }
 
   public static Config load(String app) {
-    File f = new File(getAppFolder(), app);
+    File f = new File(OS.getLocalAppFolder(app));
     f = new File(f, "config.txt");
     return new Config(f);
   }
-  
-  private static String getAppFolder(){
-    String ret = System.getenv("LOCALAPPDATA");
-    if (ret == null) {
-      ret =
-          System.getProperty("user.home") + File.separatorChar + "Local Settings"
-              + File.separatorChar + "Application Data";
-    }
-    return ret;
-  }
-
 
 }

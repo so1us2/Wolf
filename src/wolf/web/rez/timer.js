@@ -23,7 +23,7 @@ function updateTime(){
 	var seconds = s % 60;
 	
 	if(seconds < 10){
-		seconds = "0"+seconds;
+		seconds = "0" + seconds;
 	}
 	
 	$("#clock-time").text(minutes + ":" + seconds);

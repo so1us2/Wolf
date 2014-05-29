@@ -470,8 +470,8 @@ public class GameStage extends Stage {
     }
 
     if (winner != null) {
-      getBot().sendToAll("STOP_TIMER");
       gameRunning = false;
+      sendTimeToAll();
       try {
         executorService.shutdownNow();
       } catch (Exception e) {
@@ -680,8 +680,11 @@ public class GameStage extends Stage {
   }
 
   private void sendTimeToAll() {
-    long e = daytime ? roundEndTime.getMillis() : -1;
-    getBot().sendToAll("TIMER", "end", e);
+    getBot().sendToAll("TIMER", "end", getEndTime());
+  }
+
+  public long getEndTime() {
+    return daytime && gameRunning ? roundEndTime.getMillis() : -1;
   }
 
   private static final Predicate<Player> alive = new Predicate<Player>() {

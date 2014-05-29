@@ -1,4 +1,5 @@
 var testing = false;
+var loggedIn = false;
 
 var ws;
 var currentRoom = "Main Room";
@@ -58,12 +59,13 @@ function loginWithFB(userID, accessToken){
 		$.cookie("userID", userID, {expires: date});
 		$.cookie("accessToken", accessToken, {expires: date});
 	}
-	//send("LOGIN", userID);
 	send2("LOGIN", userID, accessToken);
 	
     $(".login-advertise").addClass("hidden");
     
     $("#text-input").removeClass("hidden");
+    
+    loggedIn = true;
 }
 
 function loginSuccess(msg){
@@ -148,7 +150,6 @@ function setRoom(room){
 	if(history && history.pushState){
 		history.pushState(null, null, '/room/'+room.split(' ').join('_'));
 	}
-	//window.location = room;
 }
 
 function send(command, arg){
@@ -177,7 +178,9 @@ function receive(msg){
 		append(msg.from, msg.msg, false);
 	}
 	else if(command == "S_CHAT"){
-		append(msg.from, msg.msg, true);
+	  if(loggedIn){
+		 append(msg.from, msg.msg, true);
+	  }
 	}
 	else if(command=="LOAD_ROOMS"){
 		loadRoomMenu();

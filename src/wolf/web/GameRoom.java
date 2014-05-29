@@ -62,6 +62,10 @@ public class GameRoom implements IBot {
 
     onPlayersChanged();
 
+    if (stage instanceof GameStage) {
+      GameStage gs = (GameStage) stage;
+      sendRemote(GameRouter.constructJson("TIMER", "end", gs.getEndTime()));
+    }
   }
 
   /**

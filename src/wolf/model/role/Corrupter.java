@@ -2,15 +2,14 @@ package wolf.model.role;
 
 import java.util.List;
 
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
 import wolf.WolfException;
 import wolf.action.Action;
 import wolf.model.Faction;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
-
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
 
 public class Corrupter extends AbstractWolfRole {
 
@@ -56,6 +55,9 @@ public class Corrupter extends AbstractWolfRole {
   }
 
   private boolean canCorruptSomeone() {
+    if (getStage() == null) {
+      return true; // for the help text
+    }
     if (getStage().getSetting("CORRUPTION_MODE").equals("ONCE_PER_GAME")) {
       for (Player p : getStage().getPlayers()) {
         if (!corruptHistory.contains(p)) {

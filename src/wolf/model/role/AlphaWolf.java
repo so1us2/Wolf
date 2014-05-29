@@ -3,16 +3,14 @@ package wolf.model.role;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
 import org.testng.collections.Maps;
-
 import wolf.WolfException;
 import wolf.action.Action;
 import wolf.model.Faction;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.stage.GameStage;
-
-import com.google.common.collect.Lists;
 
 public class AlphaWolf extends AbstractWolfRole {
   private Player sniffTarget;
@@ -60,7 +58,7 @@ public class AlphaWolf extends AbstractWolfRole {
 
   @Override
   public boolean isFinishedWithNightAction() {
-    return sniffTarget != null;
+    return super.isFinishedWithNightAction() && sniffTarget != null;
   }
 
   @Override

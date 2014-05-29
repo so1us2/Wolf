@@ -676,6 +676,7 @@ public class GameStage extends Stage {
   @Override
   public void onAbort() {
     gameRunning = false;
+    sendTimeToAll();
     executorService.shutdownNow();
   }
 

@@ -8,8 +8,18 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import org.joda.time.DateTime;
-
 import wolf.WolfException;
 import wolf.action.Action;
 import wolf.action.game.ClearVoteAction;
@@ -45,19 +55,8 @@ import wolf.model.role.Priest;
 import wolf.model.role.Vigilante;
 import wolf.web.GameRoom;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
-
 import static com.google.common.collect.Iterables.filter;
+import static java.lang.Integer.parseInt;
 
 public class GameStage extends Stage {
 
@@ -98,19 +97,18 @@ public class GameStage extends Stage {
    */
   private final DateTime startDate = new DateTime();
 
-  /**
-   * This is the time that the day started.
-   */
-  private long roundStartTime = System.currentTimeMillis();
+  private int minutesPerRound;
+  private DateTime roundEndTime;
 
   private final ScheduledExecutorService executorService;
-
 
   public GameStage(IBot bot, GameConfig config, Set<Player> players) {
     super(bot);
 
     this.config = config;
     this.players = ImmutableSortedSet.copyOf(players);
+    this.minutesPerRound = parseInt(config.getSettings().get("TIME_LIMIT"));
+    this.roundEndTime = new DateTime().plusMinutes(minutesPerRound);
 
     server = new ChatServer(bot);
 
@@ -163,17 +161,15 @@ public class GameStage extends Stage {
       }
 
       long ONE_MINUTE = 1000 * 60;
-      long TEN_MINUTES = ONE_MINUTE * 15;
-
       long now = System.currentTimeMillis();
-      
-      if (!announcedTime && (now >= roundStartTime + (TEN_MINUTES - ONE_MINUTE))) {
+
+      if (!announcedTime && now + ONE_MINUTE >= roundEndTime.getMillis()) {
         announcedTime = true;
         getBot().sendToAll(GameRoom.NARRATOR,
             "The day is almost at an end! You have 60 seconds left to vote.");
       }
 
-      if (now >= roundStartTime + TEN_MINUTES) {
+      if (now >= roundEndTime.getMillis()) {
         synchronized (GameStage.this) {
           getBot().sendToAll(GameRoom.NARRATOR, "The day has come to an end.");
           VoteAction.processVotes(getBot(), GameStage.this, getVotesToDayKill(), true);
@@ -200,7 +196,7 @@ public class GameStage extends Stage {
     unmutePlayers();
 
     getBot().sendMessage("Day 1 dawns on the village.");
-    getBot().sendToAll("START_TIMER");
+    sendTimeToAll();
   }
 
   @Override
@@ -382,8 +378,8 @@ public class GameStage extends Stage {
       return;
     }
 
-    getBot().sendToAll("START_TIMER");
-    roundStartTime = System.currentTimeMillis();
+    sendTimeToAll();
+    roundEndTime = new DateTime().plusMinutes(minutesPerRound);
     daytime = true;
     getBot().sendMessage("");
     getBot().sendMessage("*********************");
@@ -440,8 +436,7 @@ public class GameStage extends Stage {
     getBot().muteAll();
     server.clearAllRooms();
     getBot().sendMessage("Night falls on the village.");
-    getBot().sendToAll("STOP_TIMER");
-    roundStartTime = System.currentTimeMillis();
+    sendTimeToAll();
 
     for (Player player : getPlayers()) {
       player.getRole().onNightBegins();
@@ -682,6 +677,11 @@ public class GameStage extends Stage {
   public void onAbort() {
     gameRunning = false;
     executorService.shutdownNow();
+  }
+
+  private void sendTimeToAll() {
+    long e = daytime ? roundEndTime.getMillis() : -1;
+    getBot().sendToAll("TIMER", "end", e);
   }
 
   private static final Predicate<Player> alive = new Predicate<Player>() {

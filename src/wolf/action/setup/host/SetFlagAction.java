@@ -26,7 +26,13 @@ public class SetFlagAction extends SetupAction {
     if (!getStage().getConfig().getSettings().containsKey(settingName)) {
       throw new WolfException(settingName + " is not a valid setting.");
     }
-    if (!Settings.get(settingName).getOptions().contains(option)) {
+    if (settingName.equals("TIME_LIMIT")) {
+      try {
+        Integer.parseInt(option);
+      } catch (Exception e) {
+        throw new WolfException(option + " is not a valid option for " + settingName);
+      }
+    } else if (!Settings.get(settingName).getOptions().contains(option)) {
       throw new WolfException(option + " is not a valid option for " + settingName);
     }
     getStage().getConfig().getSettings().put(settingName, option);

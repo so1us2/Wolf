@@ -30,7 +30,7 @@ public interface IBot {
 
   public void recordGameResults(GameStage stage);
 
-  public void sendToAll(String command);
+  public void sendToAll(String command, Object... params);
 
   // public void unmutePlayers(List<String> players);
 

@@ -1,25 +1,23 @@
-var startTime;
+var endTime;
 
 $(function(){
 	setInterval(updateTime, 1000);
 });
 
-function startTimer(){
-	startTime = new Date().getTime();
-	
-	updateTime();
-	
-	$("#clock").removeClass("hidden");
-}
 
-function stopTimer(){
-	$("#clock").addClass("hidden");
+function setTimer(end){
+	endTime = end;
+	if(end == -1){
+		$("#clock").addClass("hidden");
+	} else{
+		$("#clock").removeClass("hidden");
+	}
+	updateTime();
 }
 
 function updateTime(){
 	var now = new Date().getTime();
-	var s = Math.floor((now - startTime) / 1000);
-	s = (60 * 15) - s;
+	var s = Math.floor((endTime - now) / 1000);
 	
 	var minutes = Math.floor(s / 60);
 	var seconds = s % 60;

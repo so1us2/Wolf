@@ -36,6 +36,8 @@ public class Settings {
         .description("If yes, there is no chatting permitted during the game.");
     category("GAME").name("RATED_GAME").options("YES", "NO").defaultSetting("YES")
         .description("Does the game count towards rankings?");
+    category("GAME").name("TIME_LIMIT").defaultSetting("15")
+        .description("The maximum number of minutes a round can last.");
     category("VOTES")
         .name("VOTING_METHOD")
         .options("END_ON_MAJORITY", "ALL_VOTES")

@@ -19,13 +19,12 @@ $("#input-wrapper").on('keydown', '#text-input', function(e){
 
 //open websocket
 if (WebSocket){
-	var domain = testing ? "localhost" : "50.116.8.140";
+	var domain = testing ? "localhost" : "playwolf.net";
 	ws = new WebSocket("ws://"+domain+":80/socket");
 	ws.onopen = function() {
 		announce("Connected to chat server.");
 		var userID = $.cookie("userID");
 		var accessToken = $.cookie("accessToken");
-//		console.log("COOKIE: "+userID+" "+accessToken);
 		if(userID && accessToken){
 			loginWithFB(userID, accessToken);
 		} else{
@@ -208,7 +207,10 @@ function receive(msg){
 	} else if(command == "SWITCH_ROOM"){
 		announce(msg.msg);
 		setRoom(msg.room);
-	} else if(command == "START_TIMER"){
+	} else if(command == "TIMER"){
+	   setTimer(msg.end);
+	}
+	else if(command == "START_TIMER"){
 		startTimer();
 	} else if(command == "STOP_TIMER"){
 		stopTimer();

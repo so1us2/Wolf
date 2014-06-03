@@ -3,17 +3,15 @@ package wolf.web;
 import java.util.List;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
-
-import wolf.WolfDB;
-
 import com.beust.jcommander.internal.Sets;
 import com.google.common.collect.Iterables;
-
 import ez.DB;
 import ez.Row;
 import ez.Table;
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import wolf.WolfDB;
+
 import static com.google.common.base.Preconditions.checkState;
 
 public class LoginService {
@@ -66,7 +64,10 @@ public class LoginService {
       throw new RuntimeException("Invalid name: " + name);
     }
 
-    int n = db.select("SELECT * FROM users WHERE name = '" + name + "'").size();
+    int n = db.select("SELECT * FROM users WHERE id = " + userID).size();
+    checkState(n == 0, "This facebook account already has a userID.");
+
+    n = db.select("SELECT * FROM users WHERE name = '" + name + "'").size();
     checkState(n == 0, "Duplicate username: " + name);
 
     db.update("UPDATE users SET name = ? WHERE id = ?", name, userID);

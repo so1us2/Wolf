@@ -5,14 +5,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
+
 import wolf.WolfDB;
 import wolf.WolfException;
 import wolf.bot.IBot;
@@ -22,6 +16,14 @@ import wolf.model.stage.GameStage;
 import wolf.model.stage.InitialStage;
 import wolf.model.stage.Stage;
 import wolf.rankings.GameHistory;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 
 public class GameRoom implements IBot {
 
@@ -102,9 +104,6 @@ public class GameRoom implements IBot {
       if (isAdmin) {
         sendRemote(GameRouter.constructJson("MUSIC", "url", args.get(0)));
       }
-    } else if (command.equals("report")) {
-      System.err.println(sender + " REPORTED: " + args);
-      sendMessage(sender, "Report recorded.");
     } else if (command.equalsIgnoreCase("pm")) {
       if (isAdmin) {
         String target = args.get(0);

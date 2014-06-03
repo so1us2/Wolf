@@ -3,13 +3,8 @@ package wolf.model.stage;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
 import wolf.action.Action;
 import wolf.action.game.host.AbortGameAction;
-import wolf.action.global.GetHelpAction;
 import wolf.action.setup.CurrentSetupAction;
 import wolf.action.setup.DetailsAction;
 import wolf.action.setup.JoinAction;
@@ -28,6 +23,11 @@ import wolf.action.setup.host.StartGameAction;
 import wolf.bot.IBot;
 import wolf.model.GameConfig;
 import wolf.model.Player;
+
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 
 public class SetupStage extends Stage {
 
@@ -48,7 +48,6 @@ public class SetupStage extends Stage {
     hostActions.add(new AbortGameAction(this));
 
     actions.add(new JoinAction(this));
-    actions.add(new GetHelpAction(this));
     actions.add(new LeaveAction(this));
     actions.add(new ListAllConfigsAction(this));
     actions.add(new ListPlayersAction(this));
@@ -57,7 +56,6 @@ public class SetupStage extends Stage {
     actions.add(new ListAllRolesAction(this));
     actions.add(new ListSettingsAction(this));
     actions.add(new SetPlayersAction(this));
-
   }
 
   @Override
@@ -122,7 +120,7 @@ public class SetupStage extends Stage {
   }
 
   @Override
-  public List<Action> getAvailableActions(Player player) {
+  public List<Action> getStageActions(Player player) {
     List<Action> playerActions = Lists.newArrayList();
     if (player.equals(config.getHost()) || player.isAdmin()) {
       playerActions.addAll(hostActions);

@@ -218,10 +218,6 @@ function receive(msg){
 		setRoom(msg.room);
 	} else if(command == "TIMER"){
 	   setTimer(msg.end);
-	} else if(command == "START_TIMER"){
-		startTimer();
-	} else if(command == "STOP_TIMER"){
-		stopTimer();
 	} else if(command == "STAGE"){
 		setStage(msg.stage);
 	}

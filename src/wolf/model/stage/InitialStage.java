@@ -2,17 +2,16 @@ package wolf.model.stage;
 
 import java.util.List;
 
-import com.google.common.collect.ImmutableList;
 import wolf.action.Action;
-import wolf.action.global.GetHelpAction;
 import wolf.action.setup.NewGameAction;
 import wolf.bot.IBot;
 import wolf.model.Player;
 
+import com.google.common.collect.ImmutableList;
+
 public class InitialStage extends Stage {
 
-  private final List<Action> actions = ImmutableList.<Action>of(new NewGameAction(this),
-      new GetHelpAction(this));
+  private final List<Action> actions = ImmutableList.<Action>of(new NewGameAction(this));
 
   public InitialStage(IBot bot) {
     super(bot);
@@ -22,7 +21,7 @@ public class InitialStage extends Stage {
   }
   
   @Override
-  public List<Action> getAvailableActions(Player player) {
+  public List<Action> getStageActions(Player player) {
     return actions;
   }
 

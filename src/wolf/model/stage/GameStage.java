@@ -8,18 +8,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
 import org.joda.time.DateTime;
+
 import wolf.WolfException;
 import wolf.action.Action;
 import wolf.action.game.ClearVoteAction;
@@ -32,7 +22,6 @@ import wolf.action.game.admin.ModkillPlayerAction;
 import wolf.action.game.host.AbortGameAction;
 import wolf.action.game.host.AnnounceAction;
 import wolf.action.game.host.ReminderAction;
-import wolf.action.global.GetHelpAction;
 import wolf.action.privatechats.AuthorizePlayerAction;
 import wolf.action.privatechats.ChatAction;
 import wolf.action.privatechats.JoinRoomAction;
@@ -55,6 +44,18 @@ import wolf.model.role.Priest;
 import wolf.model.role.Vigilante;
 import wolf.web.GameRoom;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
+
 import static com.google.common.collect.Iterables.filter;
 import static java.lang.Integer.parseInt;
 
@@ -64,8 +65,6 @@ public class GameStage extends Stage {
       "The sun dawns and the village finds that no one has died in the night.";
 
   private final UUID id = UUID.randomUUID();
-
-  private final GetHelpAction getHelpAction = new GetHelpAction(this);
 
   private final List<Action> daytimeActions = Lists.newArrayList();
 
@@ -112,7 +111,6 @@ public class GameStage extends Stage {
 
     server = new ChatServer(bot);
 
-    daytimeActions.add(getHelpAction);
     daytimeActions.add(new VoteAction(this));
     daytimeActions.add(new VoteCountAction(this));
     if (config.getSettings().get("WITHDRAW_VOTES").equals("YES")) {
@@ -378,15 +376,15 @@ public class GameStage extends Stage {
       return;
     }
 
-    sendTimeToAll();
-    roundEndTime = new DateTime().plusMinutes(minutesPerRound);
     daytime = true;
+    announcedTime = false;
+    roundEndTime = new DateTime().plusMinutes(minutesPerRound);
+    sendTimeToAll();
     getBot().sendMessage("");
     getBot().sendMessage("*********************");
     getBot().sendMessage("NEW DAY");
     getBot().sendMessage("*********************");
     getBot().sendMessage("");
-    announcedTime = false;
     unmutePlayers();
   }
 
@@ -609,7 +607,7 @@ public class GameStage extends Stage {
   }
 
   @Override
-  public List<Action> getAvailableActions(Player player) {
+  public List<Action> getStageActions(Player player) {
     List<Action> actions = Lists.newArrayList();
 
     if (player.isAdmin()) {
@@ -625,7 +623,6 @@ public class GameStage extends Stage {
       actions.addAll(daytimeActions);
     } else {
       List<Action> ret = Lists.newArrayList();
-      ret.add(getHelpAction);
       ret.addAll(player.getRole().getNightActions());
       actions.addAll(ret);
     }

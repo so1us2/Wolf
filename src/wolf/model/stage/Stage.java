@@ -4,11 +4,16 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
+import org.testng.collections.Lists;
+
 import wolf.action.Action;
+import wolf.action.global.GetHelpAction;
+import wolf.action.global.ReportAction;
 import wolf.bot.IBot;
 import wolf.model.Player;
+
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 public abstract class Stage {
 
@@ -80,7 +85,15 @@ public abstract class Stage {
     return null;
   }
 
-  public abstract List<Action> getAvailableActions(Player player);
+  public final List<Action> getAvailableActions(Player player) {
+    List<Action> ret = Lists.newArrayList();
+    ret.add(new GetHelpAction(this));
+    ret.add(new ReportAction(this));
+    ret.addAll(getStageActions(player));
+    return ret;
+  }
+
+  protected abstract List<Action> getStageActions(Player player);
 
   public List<Action> getAdminActions() {
     return ImmutableList.of();

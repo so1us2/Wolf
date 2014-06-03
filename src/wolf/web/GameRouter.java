@@ -25,6 +25,8 @@ import wolf.web.LoginService.User;
 
 public class GameRouter extends BaseWebSocketHandler {
 
+  private static final boolean TESTING_ALLOWED = false;
+
   public static final Set<String> banned = Sets.newHashSet();
   static {
     // banned.add("oscar");
@@ -162,7 +164,7 @@ public class GameRouter extends BaseWebSocketHandler {
       long userID = Long.parseLong(args.get(0));
       String accessToken = args.get(1);
 
-      if (accessToken.equals("TESTING")) {
+      if (TESTING_ALLOWED && accessToken.equals("TESTING")) {
         System.out.println("TESTING account logged in.");
         from.setName("TESTING");
         from.setUserID(-1);

@@ -56,7 +56,7 @@ public class GameHistory {
               .with("start_date", start.getMillis())
               .with("end_date", end.getMillis())
               .with("num_players", players.size())
-              .with("season", 2));
+              .with("season", 3));
     
 
     db.insert("players", players);

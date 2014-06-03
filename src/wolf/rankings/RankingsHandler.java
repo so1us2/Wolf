@@ -47,8 +47,7 @@ public class RankingsHandler implements HttpHandler {
     }
 
     Set<String> ratedGames = Sets.newLinkedHashSet();
-    for (Row game : db
-        .select("SELECT id FROM games WHERE rated = TRUE AND season=2 ORDER BY start_date ASC")) {
+    for (Row game : db.select("SELECT id FROM games WHERE rated = TRUE AND season=3 AND num_players > 6 ORDER BY start_date ASC")) {
       ratedGames.add(game.<String>get("id"));
     }
 

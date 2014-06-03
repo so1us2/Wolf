@@ -328,7 +328,7 @@ function append(from, msg, isSpectator){
 }
 
 function starize(div, player, addColon){
-	var addStar = player.toUpperCase() === "AMATOMATO";
+	var addStar = player.toUpperCase() === "JT";
 	if(addColon){
 		player += ":";
 	}

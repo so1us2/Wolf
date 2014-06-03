@@ -7,6 +7,7 @@ import java.util.TreeSet;
 
 import org.apache.commons.lang3.StringUtils;
 
+import wolf.ChatLogger;
 import wolf.WolfDB;
 import wolf.WolfException;
 import wolf.bot.IBot;
@@ -42,6 +43,8 @@ public class GameRoom implements IBot {
   private List<ConnectionInfo> connections = Lists.newCopyOnWriteArrayList();
 
   private Stage stage = new InitialStage(this);
+
+  private ChatLogger logger;
 
   public GameRoom() {
     this(MAIN_ROOM);
@@ -211,11 +214,19 @@ public class GameRoom implements IBot {
 
   @Override
   public void sendMessage(String message) {
+    if (logger != null) {
+      logger.narrator(message);
+    }
+
     sendToAll(NARRATOR, message);
   }
 
   @Override
   public void sendMessage(String user, String message) {
+    if (logger != null) {
+      logger.pm(user, message);
+    }
+
     // todo fix this so that you can't have multiple conns per person
     List<ConnectionInfo> conns = Lists.newArrayList();
     for (ConnectionInfo conn : connections) {
@@ -361,6 +372,11 @@ public class GameRoom implements IBot {
   public void sendToAll(String from, String message) {
     String s = GameRouter.constructChatJson(from, message);
     sendRemote(s);
+  }
+
+  @Override
+  public void setLogger(ChatLogger logger) {
+    this.logger = logger;
   }
 
 }

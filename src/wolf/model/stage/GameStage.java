@@ -10,6 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.joda.time.DateTime;
 
+import wolf.ChatLogger;
 import wolf.WolfException;
 import wolf.action.Action;
 import wolf.action.game.ClearVoteAction;
@@ -101,6 +102,8 @@ public class GameStage extends Stage {
 
   private final ScheduledExecutorService executorService;
 
+  private final ChatLogger logger;
+
   public GameStage(IBot bot, GameConfig config, Set<Player> players) {
     super(bot);
 
@@ -110,6 +113,9 @@ public class GameStage extends Stage {
     this.roundEndTime = new DateTime().plusMinutes(minutesPerRound);
 
     server = new ChatServer(bot);
+
+    logger = new ChatLogger(id, config, this.players);
+    bot.setLogger(logger);
 
     daytimeActions.add(new VoteAction(this));
     daytimeActions.add(new VoteCountAction(this));
@@ -163,8 +169,7 @@ public class GameStage extends Stage {
 
       if (!announcedTime && now + ONE_MINUTE >= roundEndTime.getMillis()) {
         announcedTime = true;
-        getBot().sendToAll(GameRoom.NARRATOR,
-            "The day is almost at an end! You have 60 seconds left to vote.");
+        getBot().sendMessage("The day is almost at an end! You have 60 seconds left to vote.");
       }
 
       if (now >= roundEndTime.getMillis()) {
@@ -199,6 +204,8 @@ public class GameStage extends Stage {
 
   @Override
   public synchronized void handle(IBot bot, String sender, String command, List<String> args) {
+    logger.command(sender, command, args);
+
     super.handle(bot, sender, command, args);
 
     if (isNight()) {
@@ -208,12 +215,18 @@ public class GameStage extends Stage {
 
   @Override
   public synchronized void handleChat(IBot bot, String sender, String message) {
-    if ("YES".equals(getSetting("SILENT_GAME"))) {
+    if (isSilentGame()) {
       return;
     }
 
+    logger.chat(sender, message);
+
     Player player = getPlayer(sender);
     player.getRole().handleChat(player, message);
+  }
+
+  private boolean isSilentGame() {
+    return "YES".equals(getSetting("SILENT_GAME"));
   }
 
   private void unmutePlayers() {
@@ -481,6 +494,7 @@ public class GameStage extends Stage {
       getBot().setStage(new InitialStage(getBot()));
       getBot().unmuteAll();
       getBot().recordGameResults(this);
+      logger.close();
     }
 
     return winner;
@@ -675,6 +689,7 @@ public class GameStage extends Stage {
     gameRunning = false;
     sendTimeToAll();
     executorService.shutdownNow();
+    logger.close();
   }
 
   private void sendTimeToAll() {

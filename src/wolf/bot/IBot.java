@@ -1,5 +1,6 @@
 package wolf.bot;
 
+import wolf.ChatLogger;
 import wolf.model.stage.GameStage;
 import wolf.model.stage.Stage;
 
@@ -33,6 +34,8 @@ public interface IBot {
   public void sendToAll(String command, Object... params);
 
   public boolean isAdmin(String user);
+
+  public void setLogger(ChatLogger logger);
 
   // public void unmutePlayers(List<String> players);
 

@@ -15,8 +15,7 @@ public abstract class AbstractWolfRole extends AbstractRole {
 
   @Override
   public void onGameStart() {
-    getBot().sendMessage(getPlayer().getName(),
-        "The wolves are: " + getStage().getPlayers(Faction.WOLVES));
+    getBot().sendMessage(getPlayer().getName(), "The wolves are: " + getStage().getPlayers(Faction.WOLVES));
   }
 
   public void wolfChat(Player sender, String message) {
@@ -28,8 +27,7 @@ public abstract class AbstractWolfRole extends AbstractRole {
   @Override
   public void onNightBegins() {
     killTarget = null;
-    getBot().sendMessage(getPlayer().getName(),
-        "Who do you want to kill?  Message me /kill <target>");
+    getBot().sendMessage(getPlayer().getName(), "Who do you want to kill?  Message me /kill <target>");
   }
 
   @Override
@@ -55,7 +53,6 @@ public abstract class AbstractWolfRole extends AbstractRole {
   @Override
   public void handleChat(Player sender, String message) {
     if (getStage().isNight()) {
-      // wolf-chat
       wolfChat(sender, message);
     } else {
       super.handleChat(sender, message);
@@ -72,8 +69,7 @@ public abstract class AbstractWolfRole extends AbstractRole {
 
       wolfChat(invoker, invoker + " votes to kill " + killTarget);
 
-      stage.getBot().sendMessage(invoker.getName(),
-          "Your wish to kill " + killTarget + " has been received.");
+      stage.getBot().sendMessage(invoker.getName(), "Your wish to kill " + killTarget + " has been received.");
     }
 
     @Override

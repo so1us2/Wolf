@@ -50,4 +50,9 @@ public class ReportAction extends Action {
     return "Report a player for violating a rule or making the game miserable";
   }
 
+  @Override
+  protected boolean argSizeMatters() {
+    return false;
+  }
+
 }

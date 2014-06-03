@@ -2,6 +2,7 @@ package wolf.bot;
 
 import java.util.List;
 
+import wolf.ChatLogger;
 import wolf.WolfException;
 import wolf.model.stage.GameStage;
 import wolf.model.stage.InitialStage;
@@ -82,5 +83,8 @@ public class NarratorBot extends WolfBot implements IBot {
   public boolean isAdmin(String user) {
     return false;
   }
+
+  @Override
+  public void setLogger(ChatLogger logger) {}
 
 }

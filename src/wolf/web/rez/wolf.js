@@ -462,6 +462,8 @@ function newGameHandler(){
 	if(silent){
 		send("CHAT", "/setflag SILENT_GAME YES");
 		send("CHAT", "/setflag ANNOUNCE_VOTES YES");
+		send("CHAT", "/setflag WITHDRAW_VOTES YES");
+		send("CHAT", "/setflag VOTING_METHOD END_ON_MAJORITY");
 	}
 }
 

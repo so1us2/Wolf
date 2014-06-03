@@ -51,6 +51,11 @@ public class GameRoom implements IBot {
     this.name = name;
   }
 
+  @Override
+  public boolean isAdmin(String user) {
+    return loginService.isAdmin(user);
+  }
+
   public void onJoin(ConnectionInfo info) {
     System.out.println(info + " joined room: " + name);
 
@@ -95,7 +100,7 @@ public class GameRoom implements IBot {
     String command = m.get(0).substring(1);
     List<String> args = m.subList(1, m.size());
 
-    boolean isAdmin = Stage.admins.contains(sender);
+    boolean isAdmin = isAdmin(sender);
 
     if (command.equals("enable-sounds")) {
       boolean enableSounds = Boolean.valueOf(args.get(0));
@@ -109,6 +114,16 @@ public class GameRoom implements IBot {
         String target = args.get(0);
         sendMessage(target, sender + ": " + Joiner.on(' ').join(args.subList(1, args.size())));
         sendMessage(sender, "PM Sent.");
+      }
+    } else if (command.equals("promote")) {
+      if (isAdmin) {
+        loginService.setAdmin(args.get(0), true);
+        sendMessage(sender, args.get(0) + " is now an admin.");
+      }
+    } else if (command.equals("demote")) {
+      if (isAdmin && !args.get(0).equalsIgnoreCase("satnam")) {
+        loginService.setAdmin(args.get(0), false);
+        sendMessage(sender, args.get(0) + " is demoted.");
       }
     } else if (command.equalsIgnoreCase("ban")) {
       System.out.println("ban: " + args);
@@ -132,10 +147,8 @@ public class GameRoom implements IBot {
 
       if (isAdmin) {
         System.out.println("Changing nick: " + oldNick + " to " + newNick);
-        WolfDB.get().execute(
-            "UPDATE users SET name = '" + newNick + "' WHERE name = '" + oldNick + "'");
-        WolfDB.get().execute(
-            "UPDATE players SET name = '" + newNick + "' WHERE name = '" + oldNick + "'");
+        WolfDB.get().execute("UPDATE users SET name = '" + newNick + "' WHERE name = '" + oldNick + "'");
+        WolfDB.get().execute("UPDATE players SET name = '" + newNick + "' WHERE name = '" + oldNick + "'");
         sendMessage(sender, "Your name has been switched. Refresh the page.");
       }
     } else {
@@ -289,7 +302,7 @@ public class GameRoom implements IBot {
 
       p.addProperty("name", s);
 
-      if (Stage.admins.contains(s)) {
+      if (isAdmin(s)) {
         p.addProperty("admin", true);
       }
 

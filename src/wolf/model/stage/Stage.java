@@ -1,8 +1,6 @@
 package wolf.model.stage;
 
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.testng.collections.Lists;
 
@@ -13,12 +11,8 @@ import wolf.bot.IBot;
 import wolf.model.Player;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 
 public abstract class Stage {
-
-  public static final Set<String> admins = new HashSet<String>(ImmutableSet.of("satnam", "TomM",
-      "Lauren", "LeeSharpe"));
 
   private final IBot bot;
 
@@ -37,7 +31,7 @@ public abstract class Stage {
   }
 
   public void handle(IBot bot, String sender, String command, List<String> args) {
-    if (admins.contains(sender)) {
+    if (bot.isAdmin(sender)) {
       Action adminAction = getAdminAction(command);
       if (adminAction != null) {
         adminAction.apply(new Player(sender, true), args);
@@ -60,7 +54,7 @@ public abstract class Stage {
   public abstract Iterable<Player> getAllPlayers();
 
   public Player getPlayer(String name) {
-    return new Player(name, admins.contains(name));
+    return new Player(name, getBot().isAdmin(name));
   }
 
   public Player getPlayerOrNull(String name) {

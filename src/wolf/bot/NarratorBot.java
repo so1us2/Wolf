@@ -2,13 +2,14 @@ package wolf.bot;
 
 import java.util.List;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Splitter;
-import com.google.common.collect.ImmutableList;
 import wolf.WolfException;
 import wolf.model.stage.GameStage;
 import wolf.model.stage.InitialStage;
 import wolf.model.stage.Stage;
+
+import com.google.common.annotations.VisibleForTesting;
+import com.google.common.base.Splitter;
+import com.google.common.collect.ImmutableList;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -76,5 +77,10 @@ public class NarratorBot extends WolfBot implements IBot {
 
   @Override
   public void recordGameResults(GameStage stage) {}
+
+  @Override
+  public boolean isAdmin(String user) {
+    return false;
+  }
 
 }

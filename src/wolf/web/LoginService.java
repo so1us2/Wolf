@@ -1,11 +1,14 @@
 package wolf.web;
 
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
 
 import wolf.WolfDB;
 
+import com.beust.jcommander.internal.Sets;
 import com.google.common.collect.Iterables;
 
 import ez.DB;
@@ -17,18 +20,36 @@ public class LoginService {
 
   private DB db = WolfDB.get();
 
+  private final Set<String> admins = Sets.newHashSet();
+
   public LoginService() {
-    if (db != null && !db.hasTable("users")) {
-      db.addTable(new Table("users").primary("id", Long.class).column("name", String.class)
-          .column("enable_sounds", Boolean.class));
+    if (db == null) {
+      return;
+    }
+    if (!db.hasTable("users")) {
+      db.addTable(new Table("users").primary("id", Long.class).column("name", String.class).column("enable_sounds", Boolean.class)
+          .column("real_name", String.class).column("whitelist", Boolean.class).column("banned_until", DateTime.class)
+          .column("admin", Boolean.class));
+    }
+
+    List<Row> rows = db.select("SELECT name FROM users WHERE admin = true");
+    for (Row row : rows) {
+      admins.add(row.<String>get("name"));
     }
   }
 
-  public User handleLogin(long userID) {
-    // if (userID == 1) {
-    // return new User("Test Account", true);
-    // }
+  public boolean isAdmin(String user) {
+    return admins.contains(user);
+  }
 
+  public void setAdmin(String user, boolean admin) {
+    if (!StringUtils.isAlphanumeric(user)) {
+      throw new RuntimeException("Invalid name: " + user);
+    }
+    db.execute("UPDATE users SET admin = " + admin + " WHERE user = " + user);
+  }
+
+  public User handleLogin(long userID) {
     List<Row> rows = db.select("SELECT name, enable_sounds FROM users WHERE id = " + userID);
     if (rows.isEmpty()) {
       db.insert("users", new Row().with("id", userID));

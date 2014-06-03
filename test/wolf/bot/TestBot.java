@@ -2,10 +2,11 @@ package wolf.bot;
 
 import java.util.List;
 
-import com.google.common.collect.Lists;
 import wolf.model.stage.GameStage;
 import wolf.model.stage.InitialStage;
 import wolf.model.stage.Stage;
+
+import com.google.common.collect.Lists;
 
 public class TestBot implements IBot {
 
@@ -96,5 +97,10 @@ public class TestBot implements IBot {
 
   @Override
   public void recordGameResults(GameStage stage) {}
+
+  @Override
+  public boolean isAdmin(String user) {
+    return false;
+  }
 
 }

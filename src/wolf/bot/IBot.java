@@ -32,6 +32,8 @@ public interface IBot {
 
   public void sendToAll(String command, Object... params);
 
+  public boolean isAdmin(String user);
+
   // public void unmutePlayers(List<String> players);
 
 }

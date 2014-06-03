@@ -7,13 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.lang3.StringUtils;
-import org.webbitserver.BaseWebSocketHandler;
-import org.webbitserver.WebSocketConnection;
-
-import wolf.model.stage.GameStage;
-import wolf.web.LoginService.User;
-
 import com.beust.jcommander.internal.Sets;
 import com.google.common.base.Charsets;
 import com.google.common.base.Throwables;
@@ -24,6 +17,11 @@ import com.google.common.io.Resources;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import org.apache.commons.lang3.StringUtils;
+import org.webbitserver.BaseWebSocketHandler;
+import org.webbitserver.WebSocketConnection;
+import wolf.model.stage.GameStage;
+import wolf.web.LoginService.User;
 
 public class GameRouter extends BaseWebSocketHandler {
 
@@ -163,6 +161,16 @@ public class GameRouter extends BaseWebSocketHandler {
     } else if (command.equalsIgnoreCase("login")) {
       long userID = Long.parseLong(args.get(0));
       String accessToken = args.get(1);
+
+      if (accessToken.equals("TESTING")) {
+        System.out.println("TESTING account logged in.");
+        from.setName("TESTING");
+        from.setUserID(-1);
+        from.send(constructJson("LOGIN_SUCCESS", "username", "TESTING", "enable_sounds",
+            false));
+        from.getRoom().onPlayersChanged();
+        return;
+      }
 
       String facebookURL =
           "https://graph.facebook.com/debug_token?input_token=" + accessToken

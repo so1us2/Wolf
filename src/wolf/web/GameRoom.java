@@ -13,7 +13,6 @@ import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import org.apache.commons.lang3.StringUtils;
-import org.webbitserver.WebSocketConnection;
 import wolf.WolfDB;
 import wolf.WolfException;
 import wolf.bot.IBot;
@@ -56,16 +55,13 @@ public class GameRoom implements IBot {
     connections.add(info);
     info.setRoom(this);
 
-    // if (name != MAIN_ROOM && info.getName() != null) {
-      // sendMessage(info.getName() + " joined the room.");
-    // }
-
     onPlayersChanged();
 
     if (stage instanceof GameStage) {
       GameStage gs = (GameStage) stage;
-      sendRemote(GameRouter.constructJson("TIMER", "end", gs.getEndTime()));
+      info.getConnection().send(GameRouter.constructJson("TIMER", "end", gs.getEndTime()));
     }
+    info.getConnection().send(GameRouter.constructJson("STAGE", "stage", stage.getStageIndex()));
   }
 
   /**
@@ -206,15 +202,6 @@ public class GameRoom implements IBot {
     sendToAll(NARRATOR, message);
   }
 
-  private WebSocketConnection getConnection(String user) {
-    for (ConnectionInfo conn : connections) {
-      if (user.equalsIgnoreCase(conn.getName())) {
-        return conn.getConnection();
-      }
-    }
-    return null;
-  }
-
   @Override
   public void sendMessage(String user, String message) {
     // todo fix this so that you can't have multiple conns per person
@@ -238,6 +225,8 @@ public class GameRoom implements IBot {
   public void setStage(Stage stage) {
     System.out.println("Setting stage to: " + stage + " in room: " + name);
     this.stage = stage;
+
+    sendToAll("STAGE", "stage", stage.getStageIndex());
   }
 
   @Override

@@ -688,6 +688,11 @@ public class GameStage extends Stage {
     return daytime && gameRunning ? roundEndTime.getMillis() : -1;
   }
 
+  @Override
+  public int getStageIndex() {
+    return 2;
+  }
+
   private static final Predicate<Player> alive = new Predicate<Player>() {
     @Override
     public boolean apply(Player player) {

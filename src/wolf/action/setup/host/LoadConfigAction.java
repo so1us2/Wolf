@@ -5,15 +5,15 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Maps;
 import wolf.WolfException;
 import wolf.action.setup.SetupAction;
 import wolf.model.ConfigType;
+import wolf.model.GameConfig;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.stage.SetupStage;
-
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Maps;
 
 public class LoadConfigAction extends SetupAction {
 
@@ -58,9 +58,9 @@ public class LoadConfigAction extends SetupAction {
     if (!configs.containsKey(configName)) {
       throw new WolfException(configName + " is an invalid configuration.");
     }
-    this.getStage().getConfig().setRoles(configs.get(configName).getRoles());
-    this.getStage().getConfig().resetSettings();
-    this.getStage().getConfig().applySettings(configs.get(configName).getSettings());
+
+    loadConfig(getStage().getConfig(), configName);
+
     StringBuilder output = new StringBuilder();
     output.append(configName + " loaded: ");
     Map<Role, Integer> roles = getStage().getConfig().getRoles();
@@ -78,6 +78,12 @@ public class LoadConfigAction extends SetupAction {
       output.setLength(output.length() - 2);
     }
     getBot().sendMessage(output.toString());
+  }
+
+  public static void loadConfig(GameConfig config, String configName) {
+    config.setRoles(configs.get(configName).getRoles());
+    config.resetSettings();
+    config.applySettings(configs.get(configName).getSettings());
   }
 
   @Override

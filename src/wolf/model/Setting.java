@@ -10,7 +10,7 @@ public class Setting {
   private String name;
   private String description;
   private String defaultSetting = null;
-  private List<String> options;
+  private List<String> options = ImmutableList.of();
 
   public Setting(String category) {
     this.category = category;

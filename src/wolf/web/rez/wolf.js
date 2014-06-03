@@ -26,6 +26,10 @@ if (WebSocket){
 		announce("Connected to chat server.");
 		var userID = $.cookie("userID");
 		var accessToken = $.cookie("accessToken");
+		if(testing){
+			userID = -1;
+			accessToken = "TESTING";
+		}
 		if(userID && accessToken){
 			loginWithFB(userID, accessToken);
 		} else{
@@ -64,6 +68,8 @@ function loginWithFB(userID, accessToken){
     $(".login-advertise").addClass("hidden");
     
     $("#text-input").removeClass("hidden");
+    
+    $("#create-game-button").click(newGameHandler);
     
     loggedIn = true;
 }
@@ -212,11 +218,12 @@ function receive(msg){
 		setRoom(msg.room);
 	} else if(command == "TIMER"){
 	   setTimer(msg.end);
-	}
-	else if(command == "START_TIMER"){
+	} else if(command == "START_TIMER"){
 		startTimer();
 	} else if(command == "STOP_TIMER"){
 		stopTimer();
+	} else if(command == "STAGE"){
+		setStage(msg.stage);
 	}
 }
 
@@ -437,4 +444,31 @@ function filter(clicked){
 	}
 	
 	scrollToBottom(true);
+}
+
+function newGameHandler(){
+	$("#new-game-modal").modal("hide");
+	
+	var numPlayers = $("#num-players-chooser").val();
+	var timeLimit = $("#time-limit-chooser").val();
+	var rated = $("#rated-checkbox").is(":checked") ? "YES" : "NO";
+	var silent = $("#silent-checkbox").is(":checked");
+	
+	send("CHAT", "/newgame");
+	send("CHAT", "/setplayers " + numPlayers);
+	send("CHAT", "/setflag TIME_LIMIT " + timeLimit);
+	send("CHAT", "/setflag RATED_GAME " + rated);
+	
+	if(silent){
+		send("CHAT", "/setflag SILENT_GAME YES");
+		send("CHAT", "/setflag ANNOUNCE_VOTES YES");
+	}
+}
+
+function setStage(stage){
+	if(stage == 0){
+		$("#new-game-button").show();
+	} else{
+		$("#new-game-button").hide();
+	}
 }

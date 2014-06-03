@@ -82,4 +82,60 @@
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
- 
+
+
+<div class="modal fade bs-modal-lg" id="new-game-modal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <h4 class="modal-title">Game Setup</h4>
+      </div>
+      <div class="modal-body">
+        
+        <form class="form-horizontal" role="form">
+        
+        <div class="form-row">
+          <b>How many players?</b>
+          <input id="num-players-chooser" type="number" name="num_players" min="3" max="30" value="7">
+        </div>
+        
+        <div>
+           <b>Time Limit:</b>
+           <input id="time-limit-chooser" type="number" style="width: 40px" name="time_limit" min="1" max="120" value="10">
+           minutes
+        </div>
+
+        <div class="checkbox">
+          <label for="rated-checkbox"><b>Rated</b></label>
+            <label>
+              <input id="rated-checkbox" name="rated" type="checkbox" checked="checked"> -- Rated games count towards the <i>rankings</i>
+            </label>
+          </div>
+
+        <div class="checkbox">
+          <label for="silent-checkbox"><b>Silent</b></label>
+            <label>
+              <input id="silent-checkbox" name="silent" type="checkbox"> -- Players can't talk, but you see peoples' votes as they make them
+            </label>
+         </div>
+         
+         <!-- 
+         <div class="checkbox">
+          <label for="private-checkbox"><b>Private</b> -- Anyone can watch, but you must be invited to join</label>
+          <label>
+            <input id="private-checkbox" name="private" type="checkbox">
+          </label>
+         </div>
+          -->
+         
+         <br>
+        
+         <button type="button" id="create-game-button" class="btn btn-primary">Create Game</button>
+        </form>
+        
+      </div>
+    </div>
+  </div>
+</div>
+

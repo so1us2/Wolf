@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
+import wolf.bot.IBot;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.stage.SetupStage;
@@ -16,11 +17,14 @@ public class CurrentSetupAction extends SetupAction {
 
   @Override
   protected void execute(Player invoker, List<String> args) {
+    getBot().sendMessage(invoker.getName(), printRoles(getStage(), getBot()));
+  }
 
-    Map<Role, Integer> roles = getStage().getConfig().getRoles();
+  public static String printRoles(SetupStage stage, IBot bot) {
+    Map<Role, Integer> roles = stage.getConfig().getRoles();
 
     if (roles.isEmpty()) {
-      getBot().sendMessage(invoker.getName(), "No roles have been added yet.");
+      return "No roles have been added yet.";
     } else {
       StringBuilder output = new StringBuilder();
       output.append("Current roles: ");
@@ -28,7 +32,7 @@ public class CurrentSetupAction extends SetupAction {
         output.append(e.getKey()).append(" (").append(e.getValue()).append("), ");
       }
       output.setLength(output.length() - 2);
-      getBot().sendMessage(invoker.getName(), output.toString());
+      return output.toString();
     }
   }
 

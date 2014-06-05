@@ -10,15 +10,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import org.webbitserver.HttpControl;
-import org.webbitserver.HttpHandler;
-import org.webbitserver.HttpRequest;
-import org.webbitserver.HttpResponse;
-
-import wolf.WolfDB;
-import wolf.model.Faction;
-import wolf.model.Role;
-
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Lists;
@@ -27,9 +18,15 @@ import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 import ez.DB;
 import ez.Row;
+import org.webbitserver.HttpControl;
+import org.webbitserver.HttpHandler;
+import org.webbitserver.HttpRequest;
+import org.webbitserver.HttpResponse;
+import wolf.WolfDB;
+import wolf.model.Faction;
+import wolf.model.Role;
 
 public class RankingsHandler implements HttpHandler {
 
@@ -45,9 +42,29 @@ public class RankingsHandler implements HttpHandler {
       response.content("[]").end();
       return;
     }
+    
+    String season = request.queryParam("season");
+    String mode = request.queryParam("mode");
+    String role = request.queryParam("role");
+
+    Role roleFilter = null;
+    if (!role.equals("ALL")) {
+      roleFilter = Role.parse(role);
+    }
+
+    String seasonFilter = "";
+    if (!season.equals("ALL")) {
+      seasonFilter = "AND season = " + Integer.parseInt(season);
+    }
+
+    String numPlayersFilter = "AND num_players > 6";
+    if (mode.equals("FIVES")) {
+      numPlayersFilter = "AND num_players = 5";
+    }
 
     Set<String> ratedGames = Sets.newLinkedHashSet();
-    for (Row game : db.select("SELECT id FROM games WHERE rated = TRUE AND season=3 AND num_players > 6 ORDER BY start_date ASC")) {
+    for (Row game : db.select("SELECT id FROM games WHERE rated = TRUE " + seasonFilter
+        + " " + numPlayersFilter + " ORDER BY start_date ASC")) {
       ratedGames.add(game.<String>get("id"));
     }
 
@@ -62,7 +79,7 @@ public class RankingsHandler implements HttpHandler {
 
     final Multimap<String, Integer> scores = LinkedListMultimap.create();
     for (String game : gameRows.keySet()) {
-      for (Entry<String, Integer> score : getScores(gameRows.get(game)).entrySet()) {
+      for (Entry<String, Integer> score : getScores(gameRows.get(game), roleFilter).entrySet()) {
         scores.put(score.getKey(), score.getValue());
       }
     }
@@ -85,23 +102,8 @@ public class RankingsHandler implements HttpHandler {
       }
     });
 
-    // if (rankings.size() > 10) {
-    // int worstScore = total(scores.get(rankings.get(9)));
-    // while (true) {
-    // int lastScore = total(scores.get(Iterables.getLast(rankings)));
-    // if (lastScore < worstScore) {
-    // rankings.remove(rankings.size() - 1);
-    // } else {
-    // break;
-    // }
-    // }
-    // }
-
     JsonArray ret = new JsonArray();
     for (String player : rankings) {
-      // if (player.equalsIgnoreCase("wwkaye") || player.equalsIgnoreCase("pbigelow")) {
-      // continue;
-      // }
       JsonObject o = new JsonObject();
       o.addProperty("name", player);
       o.addProperty("wins", getWins(scores.get(player)));
@@ -154,7 +156,7 @@ public class RankingsHandler implements HttpHandler {
     return ret;
   }
 
-  private Map<String, Integer> getScores(Collection<Row> rows) {
+  private Map<String, Integer> getScores(Collection<Row> rows, Role filter) {
     Set<Faction> factions = EnumSet.noneOf(Faction.class);
     for (Row row : rows) {
       Role role = Role.parse(row.<String>get("role"));
@@ -166,8 +168,11 @@ public class RankingsHandler implements HttpHandler {
 
     Map<String, Integer> ret = Maps.newHashMap();
     for (Row row : rows) {
-      boolean winner = row.get("winner");
-      ret.put(row.<String>get("name"), winner ? pointsForWinner : pointsForLoser);
+      Role role = Role.parse(row.<String>get("role"));
+      if (filter == null || role == filter) {
+        boolean winner = row.get("winner");
+        ret.put(row.<String>get("name"), winner ? pointsForWinner : pointsForLoser);
+      }
     }
     return ret;
   }

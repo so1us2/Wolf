@@ -7,18 +7,32 @@
       </div>
       <div class="modal-body">
        <p>At the end of Season 3 -- June 30th, the #1 player will receive the Player of the Month golden star next to their name.</p>
-       <p><a href='http://tinyurl.com/me84s7v'>Last Season's Top 10</a></p>
-       <!-- <p>You must play at least 3 games to show up in this list.</p> -->
-         <table class="table table-striped table-hover">
-          <thead><tr>
-            <th>Rank</th>
-            <th>Player</th>
-            <th>Wins</th>
-            <th>Losses</th>
-            <th>Win %</th>
-          </tr></thead>
-          <tbody></tbody>
-         </table>
+       <form id="rankings-options" class="form-horizontal" role="form">
+          <select id="season-chooser">
+              <option value="ALL">All Seasons</option>
+              <option value="1">Season 1</option>
+              <option value="2">Season 2</option>
+              <option value="3">Season 3</option>
+          </select>
+          <select id="mode-chooser">
+              <option value="NORMAL">Normal</option>
+              <option value="FIVES">Fives</option>
+          </select>
+          <select id="role-chooser">
+              <option value="ALL">All Roles</option>
+              $ROLES
+          </select>
+       </form>
+       <table class="table table-striped table-hover">
+        <thead><tr>
+          <th>Rank</th>
+          <th>Player</th>
+          <th>Wins</th>
+          <th>Losses</th>
+          <th>Win %</th>
+        </tr></thead>
+        <tbody></tbody>
+       </table>
       </div>
     </div><!-- /.modal-content -->
   </div><!-- /.modal-dialog -->
@@ -128,7 +142,6 @@
             <input id="private-checkbox" name="private" type="checkbox">
           </label>
          </div>
-         
          
          <br>
         

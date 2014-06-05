@@ -1,10 +1,28 @@
+$(function(){
+	$("#rankings-options select").change(loadRankings);
+});
+
 $("#rankings-button").click(function(e){
-	var container = $("#rankings-modal tbody");
+	$("#season-chooser").val("3");
+	$("#mode-chooser").val("NORMAL");
+	$("#role-chooser").val("ALL");
+	
+	loadRankings();
+});
+
+function loadRankings(){
+    var container = $("#rankings-modal tbody");
 	
 	container.empty();
 	container.text("Loading...");
 	
-	$.getJSON("/rankings", function(data){
+	var options={
+	    "season": $("#season-chooser").val(),
+	    "mode": $("#mode-chooser").val(),
+	    "role": $("#role-chooser").val()
+	};
+	
+	$.getJSON("/rankings", options, function(data){
 		container.empty();
 		for(var i = 0; i < data.length; i++){
 			var player = data[i];
@@ -15,8 +33,6 @@ $("#rankings-button").click(function(e){
 			starize(playerTD, player.name);
 			tr.append(playerTD);
 			
-//			tr.append($("<td>").text(player.name));
-			
 			tr.append($("<td>").text(player.wins));
 			tr.append($("<td>").text(player.losses));
 			tr.append($("<td>").text(player.win_percentage));
@@ -26,7 +42,7 @@ $("#rankings-button").click(function(e){
 			tr.click(rankingsListener);
 		}
 	});
-});
+}
 
 function rankingsListener(e){
 	var player = $(e.target).parent().data("player");

@@ -3,24 +3,42 @@ package wolf.web;
 import java.io.IOException;
 import java.net.URL;
 
+import com.google.common.base.Charsets;
+import com.google.common.base.Throwables;
+import com.google.common.io.Resources;
 import org.webbitserver.HttpControl;
 import org.webbitserver.HttpHandler;
 import org.webbitserver.HttpRequest;
 import org.webbitserver.HttpResponse;
 import org.webbitserver.WebServers;
-
+import wolf.model.Role;
 import wolf.rankings.RankingsHandler;
-
-import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
-import com.google.common.io.Resources;
 
 public class WolfServer implements HttpHandler {
 
+  public static final boolean TEST_MODE = false;
+
+  private String modalHTML = null;
+
   private String getModalHTML() {
+    if (modalHTML != null) {
+      return modalHTML;
+    }
+
     URL url = WolfServer.class.getResource("rez/modals.html");
     try {
-      return Resources.toString(url, Charsets.UTF_8);
+      String ret = Resources.toString(url, Charsets.UTF_8);
+
+      StringBuilder sb = new StringBuilder();
+      for (Role role : Role.values()) {
+        sb.append("<option value='").append(role.name()).append("'>").append(role.toString())
+            .append("</option>");
+      }
+      ret = ret.replace("$ROLES", sb.toString());
+
+      modalHTML = ret;
+
+      return ret;
     } catch (IOException e) {
       throw Throwables.propagate(e);
     }
@@ -53,7 +71,13 @@ public class WolfServer implements HttpHandler {
         response.status(404).end();
         return;
       }
-      data = Resources.toByteArray(url);
+      if (uri.endsWith("wolf.js")) {
+        String s = Resources.toString(url, Charsets.UTF_8);
+        s = s.replace("$TESTING", TEST_MODE + "");
+        data = s.getBytes(Charsets.UTF_8);
+      } else {
+        data = Resources.toByteArray(url);
+      }
     } catch (IOException e) {
       throw Throwables.propagate(e);
     }

@@ -1,4 +1,4 @@
-var testing = false;
+var testing = $TESTING;
 var loggedIn = false;
 
 var ws;

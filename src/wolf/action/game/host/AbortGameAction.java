@@ -7,6 +7,8 @@ import wolf.model.Player;
 import wolf.model.stage.InitialStage;
 import wolf.model.stage.Stage;
 
+import static com.google.common.collect.Iterables.isEmpty;
+
 public class AbortGameAction extends Action {
 
   public AbortGameAction(Stage stage) {
@@ -28,7 +30,7 @@ public class AbortGameAction extends Action {
 
   @Override
   public boolean requiresHost() {
-    return true;
+    return !isEmpty(getStage().getAllPlayers());
   }
 
   @Override

@@ -3,16 +3,22 @@ package wolf.model.stage;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.ImmutableSet;
+import com.google.common.collect.Iterables;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Sets;
 import wolf.action.Action;
 import wolf.action.game.host.AbortGameAction;
 import wolf.action.setup.CurrentSetupAction;
 import wolf.action.setup.DetailsAction;
+import wolf.action.setup.InviteAction;
 import wolf.action.setup.JoinAction;
 import wolf.action.setup.LeaveAction;
 import wolf.action.setup.ListAllConfigsAction;
 import wolf.action.setup.ListAllRolesAction;
 import wolf.action.setup.ListPlayersAction;
 import wolf.action.setup.ListSettingsAction;
+import wolf.action.setup.PrivateAction;
 import wolf.action.setup.host.AppointHostAction;
 import wolf.action.setup.host.KickPlayerAction;
 import wolf.action.setup.host.LoadConfigAction;
@@ -24,17 +30,15 @@ import wolf.bot.IBot;
 import wolf.model.GameConfig;
 import wolf.model.Player;
 
-import com.google.common.collect.ImmutableSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Sets;
-
 public class SetupStage extends Stage {
 
   private final Set<Action> actions = Sets.newTreeSet();
   private final Set<Player> players = Sets.newLinkedHashSet();
   private final Set<Action> hostActions = Sets.newTreeSet();
   private final GameConfig config = new GameConfig();
+  private final Set<String> inviteList = Sets.newCopyOnWriteArraySet();
+
+  private boolean privateGame = false;
 
   public SetupStage(IBot bot) {
     super(bot);
@@ -56,6 +60,8 @@ public class SetupStage extends Stage {
     actions.add(new ListAllRolesAction(this));
     actions.add(new ListSettingsAction(this));
     actions.add(new SetPlayersAction(this));
+    actions.add(new PrivateAction(this));
+    actions.add(new InviteAction(this));
   }
 
   @Override
@@ -98,6 +104,7 @@ public class SetupStage extends Stage {
     getBot().sendMessage(p.getName() + " left the game (" + getPlayers().size() + " players)");
     if (players.isEmpty()) {
       setHost(null);
+      getBot().onPlayersChanged();
       return true;
     } else if (p.equals(config.getHost())) {
       Set<Player> players = getPlayers();
@@ -137,6 +144,18 @@ public class SetupStage extends Stage {
   @Override
   public int getStageIndex() {
     return 1;
+  }
+
+  public void setPrivate(boolean b) {
+    this.privateGame = b;
+  }
+
+  public boolean isPrivateGame() {
+    return privateGame;
+  }
+
+  public Set<String> getInviteList() {
+    return inviteList;
   }
 
 }

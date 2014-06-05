@@ -21,6 +21,15 @@ public class JoinAction extends SetupAction {
       return;
     }
 
+    if (getStage().isPrivateGame()) {
+      boolean invited = getStage().getInviteList().contains(invoker.getName().toLowerCase());
+      if (!invited) {
+        getBot().sendMessage(invoker.getName(),
+            "The host has made this game private; you must be invited to join.");
+        return;
+      }
+    }
+
     boolean added = getStage().addPlayer(invoker);
     if (!added) {
       throw new WolfException(invoker.getName() + " already joined!");

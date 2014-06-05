@@ -448,9 +448,13 @@ function newGameHandler(){
 	var numPlayers = $("#num-players-chooser").val();
 	var timeLimit = $("#time-limit-chooser").val();
 	var rated = $("#rated-checkbox").is(":checked") ? "YES" : "NO";
+	var priv = $("#private-checkbox").is(":checked");
 	var silent = $("#silent-checkbox").is(":checked");
 	
 	send("CHAT", "/newgame");
+	if(priv){
+		send("CHAT", "/private");
+	}
 	send("CHAT", "/setplayers " + numPlayers);
 	send("CHAT", "/setflag TIME_LIMIT " + timeLimit);
 	send("CHAT", "/setflag RATED_GAME " + rated);

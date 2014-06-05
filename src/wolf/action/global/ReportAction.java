@@ -3,16 +3,14 @@ package wolf.action.global;
 import java.util.List;
 import java.util.UUID;
 
+import com.google.common.base.Joiner;
+import ez.DB;
+import ez.Row;
+import ez.Table;
 import wolf.WolfDB;
 import wolf.action.Action;
 import wolf.model.Player;
 import wolf.model.stage.Stage;
-
-import com.google.common.base.Joiner;
-
-import ez.DB;
-import ez.Row;
-import ez.Table;
 
 public class ReportAction extends Action {
 
@@ -52,6 +50,11 @@ public class ReportAction extends Action {
 
   @Override
   protected boolean argSizeMatters() {
+    return false;
+  }
+
+  @Override
+  protected boolean onlyIfAlive() {
     return false;
   }
 

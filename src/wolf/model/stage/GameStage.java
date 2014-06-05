@@ -8,8 +8,17 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 import org.joda.time.DateTime;
-
 import wolf.ChatLogger;
 import wolf.WolfException;
 import wolf.action.Action;
@@ -44,18 +53,6 @@ import wolf.model.role.Demon;
 import wolf.model.role.Priest;
 import wolf.model.role.Vigilante;
 import wolf.web.GameRoom;
-
-import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
 
 import static com.google.common.collect.Iterables.filter;
 import static java.lang.Integer.parseInt;
@@ -630,22 +627,19 @@ public class GameStage extends Stage {
     } else if (player.equals(config.getHost())) {
       actions.addAll(hostActions);
     }
-    if (isDay()) {
-      if (config.getSettings().get("PRIVATE_CHAT").equals("ENABLED")) {
-        actions.addAll(chatActions);
+    if (player.isAlive()) {
+      if (isDay()) {
+        if (config.getSettings().get("PRIVATE_CHAT").equals("ENABLED")) {
+          actions.addAll(chatActions);
+        }
+        actions.addAll(daytimeActions);
+      } else {
+        List<Action> ret = Lists.newArrayList();
+        ret.addAll(player.getRole().getNightActions());
+        actions.addAll(ret);
       }
-      actions.addAll(daytimeActions);
-    } else {
-      List<Action> ret = Lists.newArrayList();
-      ret.addAll(player.getRole().getNightActions());
-      actions.addAll(ret);
     }
     return actions;
-  }
-
-  @Override
-  public List<Action> getAdminActions() {
-    return ImmutableList.copyOf(Iterables.concat(hostActions, adminActions));
   }
 
   public String getSetting(String settingName) {

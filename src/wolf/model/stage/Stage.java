@@ -3,14 +3,11 @@ package wolf.model.stage;
 import java.util.List;
 
 import org.testng.collections.Lists;
-
 import wolf.action.Action;
 import wolf.action.global.GetHelpAction;
 import wolf.action.global.ReportAction;
 import wolf.bot.IBot;
 import wolf.model.Player;
-
-import com.google.common.collect.ImmutableList;
 
 public abstract class Stage {
 
@@ -31,15 +28,12 @@ public abstract class Stage {
   }
 
   public void handle(IBot bot, String sender, String command, List<String> args) {
-    if (bot.isAdmin(sender)) {
-      Action adminAction = getAdminAction(command);
-      if (adminAction != null) {
-        adminAction.apply(new Player(sender, true), args);
-        return;
-      }
+    Player player = getPlayerOrNull(sender);
+    if (player == null) {
+      player = new Player(sender, bot.isAdmin(sender));
+      player.setAlive(!(this instanceof GameStage));
     }
-  
-    Player player = getPlayer(sender);
+
     Action action = getActionForCommand(command, player);
 
     if (action == null) {
@@ -70,15 +64,6 @@ public abstract class Stage {
     return null;
   }
 
-  private Action getAdminAction(String command) {
-    for (Action a : getAdminActions()) {
-      if (a.getName().equalsIgnoreCase(command)) {
-        return a;
-      }
-    }
-    return null;
-  }
-
   public final List<Action> getAvailableActions(Player player) {
     List<Action> ret = Lists.newArrayList();
     ret.add(new GetHelpAction(this));
@@ -88,10 +73,6 @@ public abstract class Stage {
   }
 
   protected abstract List<Action> getStageActions(Player player);
-
-  public List<Action> getAdminActions() {
-    return ImmutableList.of();
-  }
 
   public IBot getBot() {
     return bot;

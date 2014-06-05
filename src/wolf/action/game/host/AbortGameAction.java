@@ -31,4 +31,9 @@ public class AbortGameAction extends Action {
     return true;
   }
 
+  @Override
+  protected boolean onlyIfAlive() {
+    return false;
+  }
+
 }

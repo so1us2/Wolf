@@ -3,11 +3,10 @@ package wolf.action.game.host;
 import java.util.List;
 import java.util.Set;
 
+import com.google.common.collect.Sets;
 import wolf.action.game.GameAction;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
-
-import com.google.common.collect.Sets;
 
 
 public class ReminderAction extends GameAction {
@@ -43,6 +42,11 @@ public class ReminderAction extends GameAction {
   @Override
   public boolean requiresHost() {
     return true;
+  }
+
+  @Override
+  protected boolean onlyIfAlive() {
+    return false;
   }
 
 }

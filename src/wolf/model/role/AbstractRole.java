@@ -1,7 +1,5 @@
 package wolf.model.role;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import java.util.List;
 
 import wolf.action.Action;
@@ -15,6 +13,8 @@ import com.google.common.base.Throwables;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
+
+import static com.google.common.base.Preconditions.checkNotNull;
 
 public abstract class AbstractRole implements Comparable<AbstractRole> {
 
@@ -30,6 +30,7 @@ public abstract class AbstractRole implements Comparable<AbstractRole> {
     roleMap.put(Role.HUNTER, Hunter.class);
     roleMap.put(Role.MINION, Minion.class);
     roleMap.put(Role.DEMON, Demon.class);
+    roleMap.put(Role.SUICIDE_VILLAGER, SuicideVillager.class);
     roleMap.put(Role.MASON, Mason.class);
     // roleMap.put(Role.WITCH, Witch.class);
     roleMap.put(Role.CORRUPTER, Corrupter.class);

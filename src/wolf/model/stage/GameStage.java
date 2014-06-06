@@ -8,17 +8,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import com.google.common.base.Joiner;
-import com.google.common.base.Objects;
-import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
-import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSortedSet;
-import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
-import com.google.common.collect.Multimap;
-import com.google.common.collect.TreeMultimap;
 import org.joda.time.DateTime;
+
 import wolf.ChatLogger;
 import wolf.WolfException;
 import wolf.action.Action;
@@ -53,6 +44,17 @@ import wolf.model.role.Demon;
 import wolf.model.role.Priest;
 import wolf.model.role.Vigilante;
 import wolf.web.GameRoom;
+
+import com.google.common.base.Joiner;
+import com.google.common.base.Objects;
+import com.google.common.base.Predicate;
+import com.google.common.base.Predicates;
+import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSortedSet;
+import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import com.google.common.collect.Multimap;
+import com.google.common.collect.TreeMultimap;
 
 import static com.google.common.collect.Iterables.filter;
 import static java.lang.Integer.parseInt;
@@ -100,6 +102,8 @@ public class GameStage extends Stage {
   private final ScheduledExecutorService executorService;
 
   private final ChatLogger logger;
+
+  private int day = 1;
 
   public GameStage(IBot bot, GameConfig config, Set<Player> players) {
     super(bot);
@@ -387,6 +391,7 @@ public class GameStage extends Stage {
     }
 
     daytime = true;
+    day++;
     announcedTime = false;
     roundEndTime = new DateTime().plusMinutes(minutesPerRound);
     sendTimeToAll();
@@ -455,25 +460,37 @@ public class GameStage extends Stage {
    * @return The winning faction.
    */
   public Faction checkForWinner() {
-    Map<Faction, Integer> factionCount = getFactionCounts();
-
-    int numAlive = getPlayers().size();
-
     Faction winner = null;
 
-    if (factionCount.get(Faction.VILLAGERS) == numAlive) {
-      winner = Faction.VILLAGERS;
-    } else if (factionCount.get(Faction.DEMONS) == 0) {
-      if (factionCount.get(Faction.WOLVES) >= factionCount.get(Faction.VILLAGERS)) {
-        if (getPlayers(Role.HUNTER).isEmpty()) {
-          winner = Faction.WOLVES;
-        } else {
-          winner = Faction.VILLAGERS;
+    if (daytime && day == 1) {
+      // check for suicide villager win
+      if (getDeadPlayers().size() == 1) {
+        Player p = getDeadPlayers().iterator().next();
+        if (p.getRole().getType() == Role.SUICIDE_VILLAGER) {
+          winner = Faction.SUICIDE;
         }
       }
-    } else {
-      if (factionCount.get(Faction.DEMONS) >= Math.ceil(((double) numAlive) / 2)) {
-        winner = Faction.DEMONS;
+    }
+
+    if (winner == null) {
+      Map<Faction, Integer> factionCount = getFactionCounts();
+
+      int numAlive = getPlayers().size();
+
+      if (factionCount.get(Faction.VILLAGERS) == numAlive) {
+        winner = Faction.VILLAGERS;
+      } else if (factionCount.get(Faction.DEMONS) == 0) {
+        if (factionCount.get(Faction.WOLVES) >= factionCount.get(Faction.VILLAGERS)) {
+          if (getPlayers(Role.HUNTER).isEmpty()) {
+            winner = Faction.WOLVES;
+          } else {
+            winner = Faction.VILLAGERS;
+          }
+        }
+      } else {
+        if (factionCount.get(Faction.DEMONS) >= Math.ceil(((double) numAlive) / 2)) {
+          winner = Faction.DEMONS;
+        }
       }
     }
 

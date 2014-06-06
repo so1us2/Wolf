@@ -18,6 +18,9 @@ public class GameSummary {
 
     for (Player player : players) {
       Faction faction = player.getRole().getVictoryTeamFaction();
+      if (winner == Faction.SUICIDE && player.getRole().getType() == Role.SUICIDE_VILLAGER) {
+        faction = Faction.SUICIDE;
+      }
       if (winner == faction) {
         winners.add(player);
         player.markWinner();

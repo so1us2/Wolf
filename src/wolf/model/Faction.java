@@ -2,7 +2,7 @@ package wolf.model;
 
 public enum Faction {
 
-  VILLAGERS("Villager", "Villagers"), WOLVES("Wolf", "Wolves"), DEMONS("Demon", "Demons");
+  VILLAGERS("Villager", "Villagers"), WOLVES("Wolf", "Wolves"), DEMONS("Demon", "Demons"), SUICIDE("Suicide Villager", "Suicide Villagers");
 
   private final String singularForm, pluralForm;
 

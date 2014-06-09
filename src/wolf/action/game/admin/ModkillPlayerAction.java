@@ -18,11 +18,16 @@ public class ModkillPlayerAction extends GameAction {
   }
 
   @Override
+  protected boolean onlyIfAlive() {
+    return false;
+  }
+
+  @Override
   protected void execute(Player invoker, List<String> args) {
-    if (getStage().isNight()) {
-      getStage().getBot().sendMessage(invoker.getName(),
-          "This command may only be used by day (for now)");
-    }
+    // if (getStage().isNight()) {
+    // getStage().getBot().sendMessage(invoker.getName(),
+    // "This command may only be used by day (for now)");
+    // }
     Player target = getStage().getPlayer(args.get(0));
     System.out
         .println("MODKILLING " + target.getName() + " who is a " + target.getRole().getType());

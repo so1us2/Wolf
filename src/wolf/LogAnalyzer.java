@@ -32,7 +32,8 @@ public class LogAnalyzer {
       "and", "of", "it", "he", "i", "you", "u", "be", "but", "on", "not", "so", "was", "have",
       "i'm", "im", "me", "if", "do", "as", "just", "who", "what", "would", "ok");
 
-  private static final int PRINT_COUNT = 100;
+  private static final String PLAYER_FILTER = null;
+  private static final int PRINT_COUNT = 200;
 
   private Iterator<String> iter;
   private String[] buf = new String[2];
@@ -79,7 +80,9 @@ public class LogAnalyzer {
     for (String word : getWordsSorted(Role.VILLAGER).subList(0, PRINT_COUNT)) {
       double vp = getCount(Role.VILLAGER, word) / vTotal * 100;
       double wp = getCount(Role.WOLF, word) / wTotal * 100;
-      System.out.println(String.format("%12s %10.2f %10.2f", word, vp, wp));
+      if (Math.abs(vp - wp) / vp > .2) {
+        System.out.println(String.format("%12s %10.2f %10.2f", word, vp, wp));
+      }
     }
   }
 
@@ -154,9 +157,9 @@ public class LogAnalyzer {
         continue;
       }
 
-      // if (!name.equals("lauren")) {
-      // continue;
-      // }
+      if (PLAYER_FILTER != null && !name.equals(PLAYER_FILTER)) {
+        continue;
+      }
 
       Role role = players.get(name);
 

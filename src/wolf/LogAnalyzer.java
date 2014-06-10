@@ -33,7 +33,7 @@ public class LogAnalyzer {
       "i'm", "im", "me", "if", "do", "as", "just", "who", "what", "would", "ok");
 
   private static final String PLAYER_FILTER = null;
-  private static final int PRINT_COUNT = 200;
+  private static final int PRINT_COUNT = 50;
 
   private Iterator<String> iter;
   private String[] buf = new String[2];
@@ -178,12 +178,16 @@ public class LogAnalyzer {
   private void process(Role role, String text) {
     Map<String, Integer> m = counts.get(role);
     for (String s : Splitter.on(matcher).omitEmptyStrings().split(text)) {
-      Integer i = m.get(s);
-      if (i == null) {
-        i = 0;
-      }
-      m.put(s, i + 1);
+      inc(m, s);
     }
+  }
+
+  private void inc(Map<String, Integer> m, String s) {
+    Integer i = m.get(s);
+    if (i == null) {
+      i = 0;
+    }
+    m.put(s, i + 1);
   }
 
   private String[] next() {

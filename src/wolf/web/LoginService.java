@@ -3,15 +3,17 @@ package wolf.web;
 import java.util.List;
 import java.util.Set;
 
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+
+import wolf.WolfDB;
+
 import com.beust.jcommander.internal.Sets;
 import com.google.common.collect.Iterables;
+
 import ez.DB;
 import ez.Row;
 import ez.Table;
-import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
-import wolf.WolfDB;
-
 import static com.google.common.base.Preconditions.checkState;
 
 public class LoginService {
@@ -32,7 +34,7 @@ public class LoginService {
 
     List<Row> rows = db.select("SELECT name FROM users WHERE admin = true");
     for (Row row : rows) {
-      admins.add(row.<String>get("name"));
+      admins.add(row.<String>get("name").toLowerCase());
     }
   }
 
@@ -44,7 +46,12 @@ public class LoginService {
     if (!StringUtils.isAlphanumeric(user)) {
       throw new RuntimeException("Invalid name: " + user);
     }
-    db.execute("UPDATE users SET admin = " + admin + " WHERE user = " + user);
+    db.execute("UPDATE users SET admin = " + admin + " WHERE name = " + user);
+    if (admin) {
+      admins.add(user.toLowerCase());
+    } else {
+      admins.remove(user.toLowerCase());
+    }
   }
 
   public User handleLogin(long userID) {

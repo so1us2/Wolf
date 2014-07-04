@@ -165,6 +165,8 @@ public class RankingsHandler implements HttpHandler {
 
     int pointsForWinner = (int) (12 * (1 - 1.0 / factions.size()));
     int pointsForLoser = (int) (-12 * (1.0 / factions.size()));
+    
+    pointsForLoser--; //helps to bias towards having a high win percentage.
 
     Map<String, Integer> ret = Maps.newHashMap();
     for (Row row : rows) {

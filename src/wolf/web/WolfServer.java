@@ -17,6 +17,7 @@ import wolf.rankings.RankingsHandler;
 public class WolfServer implements HttpHandler {
 
   public static final boolean TEST_MODE = false;
+  public static final int SEASON = 4;
 
   private String modalHTML = null;
 

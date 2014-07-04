@@ -46,7 +46,7 @@ public class LoginService {
     if (!StringUtils.isAlphanumeric(user)) {
       throw new RuntimeException("Invalid name: " + user);
     }
-    db.execute("UPDATE users SET admin = " + admin + " WHERE name = " + user);
+    db.execute("UPDATE users SET admin = " + admin + " WHERE name = '" + user+"'");
     if (admin) {
       admins.add(user.toLowerCase());
     } else {
@@ -71,7 +71,7 @@ public class LoginService {
       throw new RuntimeException("Invalid name: " + name);
     }
 
-    int n = db.select("SELECT * FROM users WHERE id = " + userID).size();
+    int n = db.select("SELECT * FROM users WHERE id = " + userID+" AND name IS NOT NULL").size();
     checkState(n == 0, "This facebook account already has a userID.");
 
     n = db.select("SELECT * FROM users WHERE name = '" + name + "'").size();

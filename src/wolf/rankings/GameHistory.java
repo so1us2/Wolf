@@ -8,6 +8,7 @@ import org.joda.time.DateTime;
 import wolf.WolfDB;
 import wolf.model.Player;
 import wolf.model.stage.GameStage;
+import wolf.web.WolfServer;
 
 import com.google.common.collect.Lists;
 
@@ -56,7 +57,7 @@ public class GameHistory {
               .with("start_date", start.getMillis())
               .with("end_date", end.getMillis())
               .with("num_players", players.size())
-              .with("season", 3));
+              .with("season", WolfServer.SEASON));
     
 
     db.insert("players", players);

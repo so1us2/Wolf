@@ -3,7 +3,7 @@ $(function(){
 });
 
 $("#rankings-button").click(function(e){
-	$("#season-chooser").val("3");
+	$("#season-chooser").val("4");
 	$("#mode-chooser").val("NORMAL");
 	$("#role-chooser").val("ALL");
 	

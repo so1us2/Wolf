@@ -28,6 +28,7 @@ public class GameRouter extends BaseWebSocketHandler {
   public static final Set<String> banned = Sets.newHashSet();
   static {
     // banned.add("oscar");
+    banned.add("jgusher");
     banned.add("wwkaye");
     banned.add("tony");
     banned.add("ray56");

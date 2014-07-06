@@ -39,7 +39,7 @@ public class LoginService {
   }
 
   public boolean isAdmin(String user) {
-    return admins.contains(user);
+    return admins.contains(user.toLowerCase());
   }
 
   public void setAdmin(String user, boolean admin) {

@@ -3,9 +3,11 @@ package wolf.model.stage;
 import java.util.List;
 
 import org.testng.collections.Lists;
+
 import wolf.action.Action;
 import wolf.action.global.GetHelpAction;
 import wolf.action.global.ReportAction;
+import wolf.action.global.RollAction;
 import wolf.bot.IBot;
 import wolf.model.Player;
 
@@ -68,6 +70,7 @@ public abstract class Stage {
     List<Action> ret = Lists.newArrayList();
     ret.add(new GetHelpAction(this));
     ret.add(new ReportAction(this));
+    ret.add(new RollAction(this));
     ret.addAll(getStageActions(player));
     return ret;
   }

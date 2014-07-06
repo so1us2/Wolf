@@ -18,14 +18,14 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.io.Files;
-import wolf.model.Role;
 
+import wolf.model.Role;
 import static java.lang.Integer.parseInt;
 
 public class LogAnalyzer {
 
   private static final CharMatcher matcher =
-      CharMatcher.inRange('a', 'z').or(CharMatcher.is('\''))
+      CharMatcher.inRange('a', 'z').or(CharMatcher.is('\'')).or(CharMatcher.inRange('0', '9'))
           .negate().precomputed();
 
   private static final Set<String> fillerWords = Sets.newHashSet("the", "to", "a", "is", "for",
@@ -34,6 +34,7 @@ public class LogAnalyzer {
 
   private static final String PLAYER_FILTER = null;
   private static final int PRINT_COUNT = 50;
+  private static final double THRESHOLD = .2;
 
   private Iterator<String> iter;
   private String[] buf = new String[2];
@@ -46,7 +47,7 @@ public class LogAnalyzer {
   }
 
   private void run() throws IOException {
-    File dir = new File("C:/shit/logs");
+    File dir = new File("/users/Jason/Desktop/logs/");
     for (File f : dir.listFiles()) {
       List<String> lines = Files.readLines(f, Charsets.UTF_8);
       iter = lines.iterator();
@@ -59,7 +60,21 @@ public class LogAnalyzer {
       }
     }
 
+//    print();
     findWeirdThings();
+//    lookup("v4l");
+    
+  }
+  
+  private void lookup(String word){
+      System.out.println("Looking up word: "+word);
+      for(Role role : Role.values()){
+          Map<String, Integer> m = counts.get(role);
+          int count = get(word.toLowerCase(), m);
+          count += get(word.toUpperCase(), m);
+          
+          System.out.println(role+": "+count);
+      }
   }
 
   private void findWeirdThings() {
@@ -80,7 +95,7 @@ public class LogAnalyzer {
     for (String word : getWordsSorted(Role.VILLAGER).subList(0, PRINT_COUNT)) {
       double vp = getCount(Role.VILLAGER, word) / vTotal * 100;
       double wp = getCount(Role.WOLF, word) / wTotal * 100;
-      if (Math.abs(vp - wp) / vp > .2) {
+      if (Math.abs(vp - wp) / vp > THRESHOLD) {
         System.out.println(String.format("%12s %10.2f %10.2f", word, vp, wp));
       }
     }
@@ -157,7 +172,7 @@ public class LogAnalyzer {
         continue;
       }
 
-      if (PLAYER_FILTER != null && !name.equals(PLAYER_FILTER)) {
+      if (PLAYER_FILTER != null && !name.equalsIgnoreCase(PLAYER_FILTER)) {
         continue;
       }
 
@@ -170,7 +185,7 @@ public class LogAnalyzer {
       if (text.startsWith("/")) {
         continue;
       }
-
+      
       process(role, text);
     }
   }
@@ -188,6 +203,13 @@ public class LogAnalyzer {
       i = 0;
     }
     m.put(s, i + 1);
+  }
+  
+  private int get(String s, Map<String,Integer> m){
+      if(m.containsKey(s)){
+          return m.get(s);
+      }
+      return 0;
   }
 
   private String[] next() {

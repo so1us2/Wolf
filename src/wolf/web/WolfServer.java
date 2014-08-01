@@ -2,10 +2,6 @@ package wolf.web;
 
 import java.io.IOException;
 import java.net.URL;
-
-import com.google.common.base.Charsets;
-import com.google.common.base.Throwables;
-import com.google.common.io.Resources;
 import org.webbitserver.HttpControl;
 import org.webbitserver.HttpHandler;
 import org.webbitserver.HttpRequest;
@@ -13,11 +9,14 @@ import org.webbitserver.HttpResponse;
 import org.webbitserver.WebServers;
 import wolf.model.Role;
 import wolf.rankings.RankingsHandler;
+import com.google.common.base.Charsets;
+import com.google.common.base.Throwables;
+import com.google.common.io.Resources;
 
 public class WolfServer implements HttpHandler {
 
   public static final boolean TEST_MODE = false;
-  public static final int SEASON = 4;
+  public static final int SEASON = 5; // also change rankings.js and wolf.js.starize()
 
   private String modalHTML = null;
 

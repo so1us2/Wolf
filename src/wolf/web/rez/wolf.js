@@ -324,7 +324,7 @@ function append(from, msg, isSpectator){
 }
 
 function starize(div, player, addColon){
-	var addStar = player.toUpperCase() === "TANKUS";
+	var addStar = player.toUpperCase() === "OSCAR";
 	if(addColon){
 		player += ":";
 	}

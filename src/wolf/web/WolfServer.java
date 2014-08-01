@@ -16,7 +16,7 @@ import com.google.common.io.Resources;
 public class WolfServer implements HttpHandler {
 
   public static final boolean TEST_MODE = false;
-  public static final int SEASON = 5; // also change rankings.js and wolf.js.starize()
+  public static final int SEASON = 5; // also change rankings.js and wolf.js.starize() and modals.html
 
   private String modalHTML = null;
 

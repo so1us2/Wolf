@@ -2,15 +2,12 @@ package wolf.action.setup;
 
 import java.util.Collection;
 import java.util.List;
-
-import org.testng.collections.Lists;
-
 import wolf.model.Player;
 import wolf.model.Setting;
 import wolf.model.Settings;
 import wolf.model.stage.SetupStage;
-
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 
 // Later we will add this into menus but for now just list them all.

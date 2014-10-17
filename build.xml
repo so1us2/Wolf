@@ -22,7 +22,6 @@
             <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jason/workspace/Wolf/lib/ez/slf4j-api-1.7.2.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jason/workspace/Wolf/lib/ez/slf4j-simple-1.7.2.jar"/>
             <zipfileset excludes="META-INF/*.SF" src="C:/Users/Jason/workspace/Wolf/lib/guava-17.0.jar"/>
-            <zipfileset excludes="META-INF/*.SF" src="C:/eclipse_latest/plugins/org.testng.eclipse_6.8.0.20121120_1820/lib/testng.jar"/>
         </jar>
     </target>
 </project>

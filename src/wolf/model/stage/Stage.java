@@ -1,15 +1,13 @@
 package wolf.model.stage;
 
 import java.util.List;
-
-import org.testng.collections.Lists;
-
 import wolf.action.Action;
 import wolf.action.global.GetHelpAction;
 import wolf.action.global.ReportAction;
 import wolf.action.global.RollAction;
 import wolf.bot.IBot;
 import wolf.model.Player;
+import com.google.common.collect.Lists;
 
 public abstract class Stage {
 

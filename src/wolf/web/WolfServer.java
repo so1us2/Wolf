@@ -57,10 +57,9 @@ public class WolfServer implements HttpHandler {
     }
 
     if (uri.equals("/") || uri.startsWith("/room/")) {
+      // uri = "/down.html";
       uri = "/wolf.html";
     }
-
-    // System.out.println("uri: " + uri);
 
     byte[] data;
 

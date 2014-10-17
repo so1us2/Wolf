@@ -2,14 +2,12 @@ package wolf.action.setup;
 
 import java.util.Collections;
 import java.util.List;
-
-import org.testng.collections.Lists;
-
 import wolf.model.Faction;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.role.AbstractRole;
 import wolf.model.stage.SetupStage;
+import com.google.common.collect.Lists;
 
 public class ListAllRolesAction extends SetupAction {
 

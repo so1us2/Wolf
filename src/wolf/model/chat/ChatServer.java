@@ -1,13 +1,10 @@
 package wolf.model.chat;
 
 import java.util.List;
-
-import org.testng.collections.Lists;
-
 import wolf.WolfException;
 import wolf.bot.IBot;
-
 import com.google.common.base.Joiner;
+import com.google.common.collect.Lists;
 
 /**
  * Private chat server that announces who is talking with whom to the public chat so people know.

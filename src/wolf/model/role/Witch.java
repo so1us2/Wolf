@@ -2,17 +2,14 @@ package wolf.model.role;
 
 import java.util.List;
 import java.util.Map;
-
-import org.testng.collections.Maps;
-
 import wolf.WolfException;
 import wolf.action.Action;
 import wolf.model.Faction;
 import wolf.model.Player;
 import wolf.model.Role;
 import wolf.model.stage.GameStage;
-
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Maps;
 
 public class Witch extends AbstractRole {
 

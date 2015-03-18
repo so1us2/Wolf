@@ -1,5 +1,9 @@
 package wolf.model.stage;
 
+import static com.google.common.collect.Iterables.filter;
+import static java.lang.Integer.parseInt;
+import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -7,9 +11,6 @@ import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-
-import org.joda.time.DateTime;
-
 import wolf.ChatLogger;
 import wolf.WolfException;
 import wolf.action.Action;
@@ -44,7 +45,6 @@ import wolf.model.role.Demon;
 import wolf.model.role.Priest;
 import wolf.model.role.Vigilante;
 import wolf.web.GameRoom;
-
 import com.google.common.base.Joiner;
 import com.google.common.base.Objects;
 import com.google.common.base.Predicate;
@@ -55,9 +55,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.TreeMultimap;
-
-import static com.google.common.collect.Iterables.filter;
-import static java.lang.Integer.parseInt;
 
 public class GameStage extends Stage {
 
@@ -94,10 +91,10 @@ public class GameStage extends Stage {
   /**
    * This is stored as part of the GameHistory.
    */
-  private final DateTime startDate = new DateTime();
+  private final LocalDateTime startDate = LocalDateTime.now();
 
   private int minutesPerRound;
-  private DateTime roundEndTime;
+  private LocalDateTime roundEndTime;
 
   private final ScheduledExecutorService executorService;
 
@@ -111,7 +108,7 @@ public class GameStage extends Stage {
     this.config = config;
     this.players = ImmutableSortedSet.copyOf(players);
     this.minutesPerRound = parseInt(config.getSettings().get("TIME_LIMIT"));
-    this.roundEndTime = new DateTime().plusMinutes(minutesPerRound);
+    this.roundEndTime = LocalDateTime.now().plusMinutes(minutesPerRound);
 
     server = new ChatServer(bot);
 
@@ -165,15 +162,12 @@ public class GameStage extends Stage {
         return;
       }
 
-      long ONE_MINUTE = 1000 * 60;
-      long now = System.currentTimeMillis();
-
-      if (!announcedTime && now + ONE_MINUTE >= roundEndTime.getMillis()) {
+      if (!announcedTime && LocalDateTime.now().plusMinutes(1).isAfter(roundEndTime)) {
         announcedTime = true;
         getBot().sendMessage("The day is almost at an end! You have 60 seconds left to vote.");
       }
 
-      if (now >= roundEndTime.getMillis()) {
+      if (LocalDateTime.now().isAfter(roundEndTime)) {
         synchronized (GameStage.this) {
           getBot().sendToAll(GameRoom.NARRATOR, "The day has come to an end.");
           VoteAction.processVotes(getBot(), GameStage.this, getVotesToDayKill(), true);
@@ -393,7 +387,7 @@ public class GameStage extends Stage {
     daytime = true;
     day++;
     announcedTime = false;
-    roundEndTime = new DateTime().plusMinutes(minutesPerRound);
+    roundEndTime = LocalDateTime.now().plusMinutes(minutesPerRound);
     sendTimeToAll();
     getBot().sendMessage("");
     getBot().sendMessage("*********************");
@@ -668,7 +662,7 @@ public class GameStage extends Stage {
     return ImmutableList.copyOf(this.players);
   }
 
-  public DateTime getStartDate() {
+  public LocalDateTime getStartDate() {
     return startDate;
   }
 
@@ -708,7 +702,8 @@ public class GameStage extends Stage {
   }
 
   public long getEndTime() {
-    return daytime && gameRunning ? roundEndTime.getMillis() : -1;
+    // this might be broken now
+    return daytime && gameRunning ? roundEndTime.atZone(ZoneOffset.UTC).toEpochSecond() * 1000 : -1;
   }
 
   @Override

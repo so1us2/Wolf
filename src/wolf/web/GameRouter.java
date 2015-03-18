@@ -1,12 +1,12 @@
 package wolf.web;
 
+import static jasonlib.util.Utils.isAlphaNumeric;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.apache.commons.lang3.StringUtils;
 import org.webbitserver.BaseWebSocketHandler;
 import org.webbitserver.WebSocketConnection;
 import wolf.model.stage.GameStage;
@@ -100,7 +100,7 @@ public class GameRouter extends BaseWebSocketHandler {
       e.printStackTrace();
     }
 
-    if (!StringUtils.isAlphanumeric(name.replace(" ", ""))) {
+    if (!isAlphaNumeric(name.replace(" ", ""))) {
       throw new RuntimeException("Invalid room name: " + name);
     }
 
@@ -229,7 +229,7 @@ public class GameRouter extends BaseWebSocketHandler {
       long userID = from.getUserID();
       String name = args.get(0);
 
-      if (!StringUtils.isAlphanumeric(name)) {
+      if (!isAlphaNumeric(name)) {
         from.send(constructChatJson(GameRoom.NARRATOR, "Invalid username."));
         return;
       }

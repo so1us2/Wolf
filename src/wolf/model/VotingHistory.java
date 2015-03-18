@@ -1,19 +1,15 @@
 package wolf.model;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
-
 import wolf.bot.IBot;
-
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 public class VotingHistory {
 
-  private static final DateTimeFormatter format = DateTimeFormat.forPattern("hh:mm ss");
+  private static final DateTimeFormatter format = DateTimeFormatter.ofPattern("hh:mm ss");
 
   private final List<List<Vote>> history = Lists.newArrayList();
 
@@ -46,7 +42,7 @@ public class VotingHistory {
     List<Vote> round = history.get(roundNumber - 1);
     bot.sendMessage("Round " + roundNumber);
     for (Vote vote : round) {
-      bot.sendMessage(format.print(vote.getTimestamp()) + ": " + vote.getPlayer().getName()
+      bot.sendMessage(format.format(vote.getTimestamp()) + ": " + vote.getPlayer().getName()
           + " -> " + vote.getTarget());
     }
   }
@@ -57,7 +53,7 @@ public class VotingHistory {
   }
 
   private static class Vote {
-    private final DateTime timestamp = new DateTime();
+    private final LocalDateTime timestamp = LocalDateTime.now();
     private final Player player;
     private final Player target;
 
@@ -66,7 +62,7 @@ public class VotingHistory {
       this.target = target;
     }
 
-    public DateTime getTimestamp() {
+    public LocalDateTime getTimestamp() {
       return timestamp;
     }
 

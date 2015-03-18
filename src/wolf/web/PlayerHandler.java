@@ -1,29 +1,24 @@
 package wolf.web;
 
+import static com.google.common.base.Preconditions.checkState;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-
-import org.joda.time.DateTime;
-import org.joda.time.format.DateTimeFormat;
-import org.joda.time.format.DateTimeFormatter;
 import org.webbitserver.HttpControl;
 import org.webbitserver.HttpHandler;
 import org.webbitserver.HttpRequest;
 import org.webbitserver.HttpResponse;
-
 import wolf.WolfDB;
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-
 import ez.DB;
 import ez.Row;
-import static com.google.common.base.Preconditions.checkState;
 
 public class PlayerHandler implements HttpHandler {
 
-  private static final DateTimeFormatter format = DateTimeFormat.forPattern("M/d/yyyy h:mm aa");
+  private static final DateTimeFormatter format = DateTimeFormatter.ofPattern("M/d/yyyy h:mm a");
 
   private final DB db = WolfDB.get();
 
@@ -52,22 +47,21 @@ public class PlayerHandler implements HttpHandler {
 
     for (Row row : rows) {
       JsonObject o = new JsonObject();
-      o.addProperty("role", row.<String>get("role"));
-      o.addProperty("winner", row.<Boolean>get("winner"));
-      o.addProperty("alive", row.<Boolean>get("alive"));
-      o.addProperty("rated", row.<Boolean>get("rated"));
-      o.addProperty("num_players", row.<Integer>get("num_players"));
-      o.addProperty("start_date", format(row.<Long>get("start_date")));
-      o.addProperty("end_date", format(row.<Long>get("end_date")));
+      o.addProperty("role", row.get("role"));
+      o.addProperty("winner", row.getBoolean("winner"));
+      o.addProperty("alive", row.getBoolean("alive"));
+      o.addProperty("rated", row.getBoolean("rated"));
+      o.addProperty("num_players", row.getInt("num_players"));
+      o.addProperty("start_date", format(row.getDateTime("start_date")));
+      o.addProperty("end_date", format(row.getDateTime("end_date")));
       ret.add(o);
     }
 
     response.content(ret.toString()).end();
   }
 
-  private String format(long millis) {
-    DateTime dt = new DateTime(millis);
-    return dt.toString(format);
+  private String format(LocalDateTime time) {
+    return time.format(format);
   }
 
 }

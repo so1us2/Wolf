@@ -1,12 +1,10 @@
 package wolf.web;
 
+import static jasonlib.util.Utils.isAlphaNumeric;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
-
-import org.apache.commons.lang3.StringUtils;
-
 import wolf.ChatLogger;
 import wolf.WolfDB;
 import wolf.WolfException;
@@ -17,7 +15,6 @@ import wolf.model.stage.GameStage;
 import wolf.model.stage.InitialStage;
 import wolf.model.stage.Stage;
 import wolf.rankings.GameHistory;
-
 import com.google.common.base.Joiner;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
@@ -144,7 +141,7 @@ public class GameRoom implements IBot {
       String oldNick = sender;
       String newNick = args.get(0);
 
-      if (!StringUtils.isAlphanumeric(newNick)) {
+      if (!isAlphaNumeric(newNick)) {
         throw new RuntimeException("Invalid name: " + name);
       }
 

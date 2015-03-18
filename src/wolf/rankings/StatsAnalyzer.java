@@ -27,7 +27,7 @@ public class StatsAnalyzer {
       for (String role : mm.keySet()) {
         int wins = 0, losses = 0;
         for (Row row : mm.get(role)) {
-          boolean winner = row.get("winner");
+          boolean winner = row.getBoolean("winner");
           if (winner) {
             wins++;
           } else {
@@ -43,7 +43,7 @@ public class StatsAnalyzer {
   private Map<Integer, Multimap<String, Row>> computeDataStructure() {
     Multimap<String, Row> m = ArrayListMultimap.create();
     for (Row row : db.select("SELECT * FROM players")) {
-      m.put(row.<String>get("game_id"), row);
+      m.put(row.get("game_id"), row);
     }
 
     Map<Integer, Multimap<String, Row>> ret = Maps.newHashMap();
@@ -61,11 +61,11 @@ public class StatsAnalyzer {
         if (row.get("role").equals("Priest")) {
           continue outerloop;
         }
-        factions.add(Role.parse(row.<String>get("role")).getFaction());
+        factions.add(Role.parse(row.get("role")).getFaction());
       }
       Multimap<String, Row> mm = ret.get(factions.size());
       for(Row row : m.get(game)){
-        mm.put(row.<String>get("role"), row);
+        mm.put(row.get("role"), row);
       }
     }
 

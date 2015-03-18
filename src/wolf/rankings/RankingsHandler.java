@@ -9,7 +9,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
-
+import org.webbitserver.HttpControl;
+import org.webbitserver.HttpHandler;
+import org.webbitserver.HttpRequest;
+import org.webbitserver.HttpResponse;
+import wolf.WolfDB;
+import wolf.model.Faction;
+import wolf.model.Role;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.LinkedListMultimap;
 import com.google.common.collect.Lists;
@@ -20,13 +26,6 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import ez.DB;
 import ez.Row;
-import org.webbitserver.HttpControl;
-import org.webbitserver.HttpHandler;
-import org.webbitserver.HttpRequest;
-import org.webbitserver.HttpResponse;
-import wolf.WolfDB;
-import wolf.model.Faction;
-import wolf.model.Role;
 
 public class RankingsHandler implements HttpHandler {
 
@@ -65,7 +64,7 @@ public class RankingsHandler implements HttpHandler {
     Set<String> ratedGames = Sets.newLinkedHashSet();
     for (Row game : db.select("SELECT id FROM games WHERE rated = TRUE " + seasonFilter
         + " " + numPlayersFilter + " ORDER BY start_date ASC")) {
-      ratedGames.add(game.<String>get("id"));
+      ratedGames.add(game.get("id"));
     }
 
     Multimap<String, Row> gameRows = LinkedListMultimap.create();
@@ -159,7 +158,7 @@ public class RankingsHandler implements HttpHandler {
   private Map<String, Integer> getScores(Collection<Row> rows, Role filter) {
     Set<Faction> factions = EnumSet.noneOf(Faction.class);
     for (Row row : rows) {
-      Role role = Role.parse(row.<String>get("role"));
+      Role role = Role.parse(row.get("role"));
       factions.add(role.getFaction());
     }
 
@@ -170,10 +169,10 @@ public class RankingsHandler implements HttpHandler {
 
     Map<String, Integer> ret = Maps.newHashMap();
     for (Row row : rows) {
-      Role role = Role.parse(row.<String>get("role"));
+      Role role = Role.parse(row.get("role"));
       if (filter == null || role == filter) {
-        boolean winner = row.get("winner");
-        ret.put(row.<String>get("name"), winner ? pointsForWinner : pointsForLoser);
+        boolean winner = row.getBoolean("winner");
+        ret.put(row.get("name"), winner ? pointsForWinner : pointsForLoser);
       }
     }
     return ret;

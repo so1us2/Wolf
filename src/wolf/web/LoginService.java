@@ -1,16 +1,16 @@
 package wolf.web;
 
+import static com.google.common.base.Preconditions.checkState;
+import static jasonlib.util.Utils.isAlphaNumeric;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Set;
-import org.apache.commons.lang3.StringUtils;
-import org.joda.time.DateTime;
 import wolf.WolfDB;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Sets;
 import ez.DB;
 import ez.Row;
 import ez.Table;
-import static com.google.common.base.Preconditions.checkState;
 
 public class LoginService {
 
@@ -23,14 +23,19 @@ public class LoginService {
       return;
     }
     if (!db.hasTable("users")) {
-      db.addTable(new Table("users").primary("id", Long.class).column("name", String.class).column("enable_sounds", Boolean.class)
-          .column("real_name", String.class).column("whitelist", Boolean.class).column("banned_until", DateTime.class)
+      db.addTable(new Table("users")
+          .primary("id", Long.class)
+          .column("name", String.class)
+          .column("enable_sounds", Boolean.class)
+          .column("real_name", String.class)
+          .column("whitelist", Boolean.class)
+          .column("banned_until", LocalDateTime.class)
           .column("admin", Boolean.class));
     }
 
     List<Row> rows = db.select("SELECT name FROM users WHERE admin = true");
     for (Row row : rows) {
-      admins.add(row.<String>get("name").toLowerCase());
+      admins.add(row.get("name").toLowerCase());
     }
   }
 
@@ -39,7 +44,7 @@ public class LoginService {
   }
 
   public void setAdmin(String user, boolean admin) {
-    if (!StringUtils.isAlphanumeric(user)) {
+    if (!isAlphaNumeric(user)) {
       throw new RuntimeException("Invalid name: " + user);
     }
     db.execute("UPDATE users SET admin = " + admin + " WHERE name = '" + user+"'");
@@ -59,11 +64,11 @@ public class LoginService {
 
     Row row = Iterables.getOnlyElement(rows);
 
-    return new User(row.<String>get("name"), row.<Boolean>get("enable_sounds"));
+    return new User(row.get("name"), row.getBoolean("enable_sounds"));
   }
 
   public void createAccount(long userID, String name) {
-    if (!StringUtils.isAlphanumeric(name)) {
+    if (!isAlphaNumeric(name)) {
       throw new RuntimeException("Invalid name: " + name);
     }
 

@@ -1,5 +1,6 @@
 package wolf.web;
 
+import jasonlib.Config;
 import java.io.IOException;
 import java.net.URL;
 import org.webbitserver.HttpControl;
@@ -15,8 +16,8 @@ import com.google.common.io.Resources;
 
 public class WolfServer implements HttpHandler {
 
-  public static final boolean TEST_MODE = false;
-  public static final int SEASON = 5; // also change rankings.js and wolf.js.starize() and modals.html
+  public static boolean TEST_MODE;
+  public static final int SEASON = 1; // also change rankings.js and wolf.js.starize() and modals.html
 
   private String modalHTML = null;
 
@@ -91,10 +92,14 @@ public class WolfServer implements HttpHandler {
   }
 
   public static void main(String[] args) throws Exception {
+    Config config = Config.load("wolf");
+
+    TEST_MODE = config.getBoolean("dev_mode", false);
+
     GameRouter bot = new GameRouter();
     WolfServer server = new WolfServer();
     
-    WebServers.createWebServer(80).add("/socket", bot)
+    WebServers.createWebServer(TEST_MODE ? 8080 : 80).add("/socket", bot)
     .add(".*js", server)
     .add("/rankings.*", new RankingsHandler())
     .add("/player.*", new PlayerHandler())

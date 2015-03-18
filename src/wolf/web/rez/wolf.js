@@ -20,8 +20,8 @@ $("#input-wrapper").on('keydown', '#text-input', function(e){
 
 //open websocket
 if (WebSocket){
-	var domain = testing ? "localhost" : "playwolf.net";
-	ws = new WebSocket("ws://"+domain+":80/socket");
+	var domain = testing ? "localhost:8080" : "playwolf.net";
+	ws = new WebSocket("ws://"+domain+"/socket");
 	ws.onopen = function() {
 		announce("Connected to chat server.");
 		var userID = $.cookie("userID");

@@ -3,20 +3,14 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
 	<classpathentry kind="src" path="webbit"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.6"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="lib/pircbot.jar"/>
 	<classpathentry kind="lib" path="lib/web/simple-5.1.5.jar"/>
 	<classpathentry kind="lib" path="lib/gson-2.2.4.jar"/>
 	<classpathentry kind="lib" path="lib/web/netty-3.6.5.Final.jar"/>
-	<classpathentry kind="lib" path="lib/ez/bonecp-0.7.1.RELEASE.jar"/>
-	<classpathentry kind="lib" path="lib/ez/commons-lang3-3.1.jar"/>
-	<classpathentry kind="lib" path="lib/ez/ezdb.jar"/>
-	<classpathentry kind="lib" path="lib/ez/joda-time-2.2.jar"/>
-	<classpathentry kind="lib" path="lib/ez/log4j-1.2.17.jar"/>
-	<classpathentry kind="lib" path="lib/ez/mysql-connector-java-5.1.23-bin.jar"/>
-	<classpathentry kind="lib" path="lib/ez/slf4j-api-1.7.2.jar"/>
-	<classpathentry kind="lib" path="lib/ez/slf4j-simple-1.7.2.jar"/>
 	<classpathentry kind="lib" path="lib/guava-17.0.jar" sourcepath="open_src/guava-17.0-sources.jar"/>
 	<classpathentry kind="con" path="org.testng.TESTNG_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/JasonLib"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/EZDB"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

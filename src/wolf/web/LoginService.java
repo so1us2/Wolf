@@ -58,7 +58,7 @@ public class LoginService {
   public User handleLogin(long userID) {
     List<Row> rows = db.select("SELECT name, enable_sounds FROM users WHERE id = " + userID);
     if (rows.isEmpty()) {
-      db.insert("users", new Row().with("id", userID));
+      db.insert("users", new Row().with("id", userID).with("enable_sounds", true).with("admin", false));
       return null;
     }
 

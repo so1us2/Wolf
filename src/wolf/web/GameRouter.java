@@ -1,6 +1,7 @@
 package wolf.web;
 
 import static jasonlib.util.Utils.isAlphaNumeric;
+import jasonlib.Json;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -18,9 +19,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import com.google.common.io.Resources;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
 public class GameRouter extends BaseWebSocketHandler {
 
@@ -40,8 +38,6 @@ public class GameRouter extends BaseWebSocketHandler {
   }
 
   private final Map<WebSocketConnection, ConnectionInfo> connectionInfo = Maps.newConcurrentMap();
-
-  private final JsonParser parser = new JsonParser();
 
   private final LoginService loginService = new LoginService();
 
@@ -129,13 +125,10 @@ public class GameRouter extends BaseWebSocketHandler {
 
     System.out.println(info + ": " + message);
 
-    JsonObject o = parser.parse(message).getAsJsonObject();
+    Json o = new Json(message);
 
-    String command = o.get("command").getAsString();
-    List<String> args = Lists.newArrayList();
-    for(JsonElement e : o.get("args").getAsJsonArray()){
-      args.add(e.getAsString());
-    }
+    String command = o.get("command");
+    List<String> args = o.getJson("args").asStringArray();
 
     handle(info, command, args);
   }
@@ -176,20 +169,19 @@ public class GameRouter extends BaseWebSocketHandler {
           "https://graph.facebook.com/debug_token?input_token=" + accessToken
               + "&access_token=265390563624958|9cef6b505981506f7ca882d16cfb1b58";
 
-      JsonObject o;
+      Json o;
       try {
-        o = parser.parse(Resources.toString(new URL(facebookURL), Charsets.UTF_8))
-                .getAsJsonObject().getAsJsonObject("data");
+        o = new Json(Resources.toString(new URL(facebookURL), Charsets.UTF_8)).getJson("data");
       } catch (Exception e) {
         throw Throwables.propagate(e);
       }
 
-      long fbUserID = o.get("user_id").getAsLong();
-      boolean isValid = o.get("is_valid").getAsBoolean();
+      long fbUserID = o.getLong("user_id");
+      boolean isValid = o.getBoolean("is_valid");
 
       if (!isValid) {
-        JsonObject error = o.getAsJsonObject("error");
-        String message = error.get("message").getAsString();
+        Json error = o.getJson("error");
+        String message = error.get("message");
         if (message.contains("has expired") || message.contains("logged out")
             || message.contains("Invalid facebook login")) {
           isValid = true;
@@ -279,19 +271,19 @@ public class GameRouter extends BaseWebSocketHandler {
   }
 
   public static String constructJson(String command, Object... params) {
-    JsonObject o = new JsonObject();
+    Json o = Json.object();
 
-    o.addProperty("command", command);
+    o.with("command", command);
 
     for (int i = 0; i < params.length; i += 2) {
       String key = params[i].toString();
       Object val = params[i + 1];
       if (val instanceof Boolean) {
-        o.addProperty(key, (Boolean) val);
-      } else if (val instanceof JsonElement) {
-        o.add(key, (JsonElement) val);
+        o.with(key, (Boolean) val);
+      } else if (val instanceof Json) {
+        o.with(key, (Json) val);
       } else {
-        o.addProperty(key, val.toString());
+        o.with(key, val.toString());
       }
     }
 

@@ -1,18 +1,15 @@
 package wolf.web;
 
+import jasonlib.Json;
 import java.net.URL;
 import java.util.List;
-
 import org.webbitserver.HttpControl;
 import org.webbitserver.HttpHandler;
 import org.webbitserver.HttpRequest;
 import org.webbitserver.HttpResponse;
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.io.Resources;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonPrimitive;
 
 public class RulesHandler implements HttpHandler {
 
@@ -27,19 +24,8 @@ public class RulesHandler implements HttpHandler {
         ImmutableList.copyOf(Splitter.on("/").trimResults().omitEmptyStrings().split(uri));
 
     if (m.size() == 1) {
-      JsonArray ret = new JsonArray();
-
-      ret.add(new JsonPrimitive("Objectives"));
-      ret.add(new JsonPrimitive("Villager"));
-      ret.add(new JsonPrimitive("Wolf"));
-      ret.add(new JsonPrimitive("Seer"));
-      ret.add(new JsonPrimitive("Hunter"));
-      ret.add(new JsonPrimitive("Minion"));
-      ret.add(new JsonPrimitive("Priest"));
-      ret.add(new JsonPrimitive("Bartender"));
-      ret.add(new JsonPrimitive("Vigilante"));
-      ret.add(new JsonPrimitive("Demon"));
-      ret.add(new JsonPrimitive("Misconduct"));
+      Json ret = Json.array("Objectives", "Villager", "Wolf", "Seer", "Hunter", "Minion", "Priest", "Bartender",
+          "Vigilante", "Demon", "Misconduct");
 
       response.content(ret.toString()).end();
     } else {

@@ -53,7 +53,7 @@ public class WolfServer implements HttpHandler {
     String host = request.header("Host");
     if (host != null && host.startsWith("www")) {
       System.out.println("Redirecting from WWW");
-      response.header("Location", "http://playwolf.net").status(302).end();
+      response.header("Location", "http://playwolf.us").status(302).end();
       return;
     }
 
@@ -94,18 +94,20 @@ public class WolfServer implements HttpHandler {
   public static void main(String[] args) throws Exception {
     Config config = Config.load("wolf");
 
-    TEST_MODE = config.getBoolean("dev_mode", false);
+    boolean devMode = config.getBoolean("dev_mode", false);
+    TEST_MODE = devMode;
 
     GameRouter bot = new GameRouter();
     WolfServer server = new WolfServer();
-    
-    WebServers.createWebServer(TEST_MODE ? 8080 : 80).add("/socket", bot)
-    .add(".*js", server)
-    .add("/rankings.*", new RankingsHandler())
-    .add("/player.*", new PlayerHandler())
-    .add("/rules.*", new RulesHandler())
-    .add("/rooms.*", new RoomHandler(bot))
-    .add(server).start().get();
+
+    WebServers.createWebServer(devMode ? 8080 : 80)
+        .add("/socket", bot)
+        .add(".*js", server)
+        .add("/rankings.*", new RankingsHandler())
+        .add("/player.*", new PlayerHandler())
+        .add("/rules.*", new RulesHandler())
+        .add("/rooms.*", new RoomHandler(bot))
+        .add(server).start().get();
     System.out.println("Server Started.");
   }
 

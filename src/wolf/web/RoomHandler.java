@@ -1,16 +1,13 @@
 package wolf.web;
 
+import jasonlib.Json;
 import java.util.List;
-
 import org.webbitserver.HttpControl;
 import org.webbitserver.HttpHandler;
 import org.webbitserver.HttpRequest;
 import org.webbitserver.HttpResponse;
-
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonPrimitive;
 
 public class RoomHandler implements HttpHandler {
 
@@ -47,10 +44,10 @@ public class RoomHandler implements HttpHandler {
     }
   }
 
-  private static JsonArray createRoomInfo(List<GameRoom> rooms) {
-    JsonArray ret = new JsonArray();
+  private static Json createRoomInfo(List<GameRoom> rooms) {
+    Json ret = Json.array();
     for (GameRoom room : rooms) {
-      ret.add(new JsonPrimitive(room.name));
+      ret.add(room.name);
     }
     return ret;
   }

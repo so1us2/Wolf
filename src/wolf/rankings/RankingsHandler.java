@@ -1,5 +1,6 @@
 package wolf.rankings;
 
+import jasonlib.Json;
 import java.text.DecimalFormat;
 import java.util.Collection;
 import java.util.Collections;
@@ -22,8 +23,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Multimap;
 import com.google.common.collect.Sets;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import ez.DB;
 import ez.Row;
 
@@ -101,14 +100,14 @@ public class RankingsHandler implements HttpHandler {
       }
     });
 
-    JsonArray ret = new JsonArray();
+    Json ret = Json.array();
     for (String player : rankings) {
-      JsonObject o = new JsonObject();
-      o.addProperty("name", player);
-      o.addProperty("wins", getWins(scores.get(player)));
-      o.addProperty("losses", getLosses(scores.get(player)));
-      o.addProperty("win_percentage", getWinPercentage(scores.get(player)));
-      o.addProperty("score", total(scores.get(player)));
+      Json o = Json.object();
+      o.with("name", player);
+      o.with("wins", getWins(scores.get(player)));
+      o.with("losses", getLosses(scores.get(player)));
+      o.with("win_percentage", getWinPercentage(scores.get(player)));
+      o.with("score", total(scores.get(player)));
       ret.add(o);
     }
 

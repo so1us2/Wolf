@@ -1,6 +1,7 @@
 package wolf.web;
 
 import static jasonlib.util.Utils.isAlphaNumeric;
+import jasonlib.Json;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -20,8 +21,6 @@ import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 
 public class GameRoom implements IBot {
 
@@ -284,11 +283,11 @@ public class GameRoom implements IBot {
   }
 
   private String createPlayersObject() {
-    JsonObject o = new JsonObject();
+    Json o = Json.object();
 
-    o.addProperty("command", "PLAYERS");
+    o.with("command", "PLAYERS");
 
-    JsonArray players = new JsonArray();
+    Json players = Json.array();
 
     TreeSet<String> set = Sets.newTreeSet(String.CASE_INSENSITIVE_ORDER);
 
@@ -306,19 +305,19 @@ public class GameRoom implements IBot {
     }
 
     for (String s : set) {
-      JsonObject p = new JsonObject();
+      Json p = Json.object();
 
-      p.addProperty("name", s);
+      p.with("name", s);
 
       if (isAdmin(s)) {
-        p.addProperty("admin", true);
+        p.with("admin", true);
       }
 
       Player player = stage.getPlayerOrNull(s);
       if (player != null) {
-        p.addProperty("in_game", true);
+        p.with("in_game", true);
         if (player.isAlive()) {
-          p.addProperty("alive", true);
+          p.with("alive", true);
         }
 
         ConnectionInfo conn = null;
@@ -329,13 +328,13 @@ public class GameRoom implements IBot {
           }
         }
         if (conn == null) {
-          p.addProperty("disconnected", true);
+          p.with("disconnected", true);
         }
 
         if (stage instanceof GameStage) {
           Map<Player, Player> votes = ((GameStage) stage).getVotesToDayKill();
           if (votes.containsKey(player)) {
-            p.addProperty("voted", true);
+            p.with("voted", true);
           }
         }
       }
@@ -343,8 +342,8 @@ public class GameRoom implements IBot {
       players.add(p);
     }
 
-    o.addProperty("num_not_signed_in", notSignedIn);
-    o.add("players", players);
+    o.with("num_not_signed_in", notSignedIn);
+    o.with("players", players);
 
     return o.toString();
   }

@@ -1,6 +1,7 @@
 package wolf.web;
 
 import static com.google.common.base.Preconditions.checkState;
+import jasonlib.Json;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -11,8 +12,6 @@ import org.webbitserver.HttpResponse;
 import wolf.WolfDB;
 import com.google.common.base.Splitter;
 import com.google.common.collect.ImmutableList;
-import com.google.gson.JsonArray;
-import com.google.gson.JsonObject;
 import ez.DB;
 import ez.Row;
 
@@ -43,17 +42,17 @@ public class PlayerHandler implements HttpHandler {
         + "FROM wolf.players a, wolf.games b " + "WHERE name = '" + player
             + "' AND a.game_id = b.id AND b.rated = true ORDER BY start_date DESC");
 
-    JsonArray ret = new JsonArray();
+    Json ret = Json.array();
 
     for (Row row : rows) {
-      JsonObject o = new JsonObject();
-      o.addProperty("role", row.get("role"));
-      o.addProperty("winner", row.getBoolean("winner"));
-      o.addProperty("alive", row.getBoolean("alive"));
-      o.addProperty("rated", row.getBoolean("rated"));
-      o.addProperty("num_players", row.getInt("num_players"));
-      o.addProperty("start_date", format(row.getDateTime("start_date")));
-      o.addProperty("end_date", format(row.getDateTime("end_date")));
+      Json o = Json.object();
+      o.with("role", row.get("role"));
+      o.with("winner", row.getBoolean("winner"));
+      o.with("alive", row.getBoolean("alive"));
+      o.with("rated", row.getBoolean("rated"));
+      o.with("num_players", row.getInt("num_players"));
+      o.with("start_date", format(row.getDateTime("start_date")));
+      o.with("end_date", format(row.getDateTime("end_date")));
       ret.add(o);
     }
 

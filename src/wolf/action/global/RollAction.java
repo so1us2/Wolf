@@ -5,6 +5,7 @@ import java.util.Random;
 
 import wolf.action.Action;
 import wolf.model.Player;
+import wolf.model.stage.GameStage;
 import wolf.model.stage.Stage;
 
 public class RollAction extends Action {
@@ -17,6 +18,15 @@ public class RollAction extends Action {
 
   @Override
   protected void execute(Player invoker, List<String> args) {
+    // Short circuit in the case of players attempting to roll at night
+    Stage stage = getStage();
+    if (stage instanceof GameStage && ((GameStage)stage).isNight()) {
+      // probably send an admin message back to the individual player only saying that they can't roll at night
+      // idk how to do that right now, so sending a public shaming message instead, seems appropriate
+      getBot().sendMessage(invoker.getName() + " attempted to roll a dice at night. Shame on " + invoker.getName() + "!");
+      return;
+    }
+
     int min = 1;
     int max = 100;
     

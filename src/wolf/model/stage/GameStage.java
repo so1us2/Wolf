@@ -31,6 +31,7 @@ import wolf.action.privatechats.LeaveRoomAction;
 import wolf.action.privatechats.ListRoomsAction;
 import wolf.action.privatechats.NewRoomAction;
 import wolf.action.privatechats.RevokeAuthorizationAction;
+import wolf.action.setup.CurrentSetupAction;
 import wolf.bot.IBot;
 import wolf.model.Faction;
 import wolf.model.GameConfig;
@@ -122,6 +123,7 @@ public class GameStage extends Stage {
     }
     daytimeActions.add(new ListPlayersAction(this));
     daytimeActions.add(new GetRoleAction(this));
+    daytimeActions.add(new CurrentSetupAction(this));
 
     adminActions.add(new ModkillPlayerAction(this));
     adminActions.add(new GetVotersAction(this));

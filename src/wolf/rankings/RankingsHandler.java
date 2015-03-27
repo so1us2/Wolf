@@ -28,6 +28,8 @@ import ez.Row;
 
 public class RankingsHandler implements HttpHandler {
 
+  private static boolean HIDE_RANKINGS = true;
+
   private static final DecimalFormat format = new DecimalFormat("0.00");
 
   private final DB db = WolfDB.get();
@@ -36,7 +38,7 @@ public class RankingsHandler implements HttpHandler {
   public void handleHttpRequest(HttpRequest request, HttpResponse response, HttpControl control)
       throws Exception {
 
-    if (db == null) {
+    if (db == null || HIDE_RANKINGS) {
       response.content("[]").end();
       return;
     }

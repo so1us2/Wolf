@@ -6,6 +6,7 @@ import wolf.action.global.GetHelpAction;
 import wolf.action.global.ReportAction;
 import wolf.action.global.RollAction;
 import wolf.bot.IBot;
+import wolf.model.GameConfig;
 import wolf.model.Player;
 import com.google.common.collect.Lists;
 
@@ -82,5 +83,7 @@ public abstract class Stage {
   public void onAbort() {}
 
   public abstract int getStageIndex();
+
+  public abstract GameConfig getConfig();
 
 }

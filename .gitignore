@@ -2,3 +2,5 @@
 test-output
 bin/*
 /bin/
+*.jar
+!lib/**/*.jar

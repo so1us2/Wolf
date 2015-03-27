@@ -309,7 +309,7 @@ function append(from, msg, isSpectator) {
 
   if (fromNarrator) {
     if (msg.indexOf("A new game is forming") == 0) {
-      playSound("/new_game.mp3");
+      playSound("/new_game.ogg");
     }
     if (msg.indexOf("Assigning roles...") == 0) {
       playSound("/game_started.mp3");

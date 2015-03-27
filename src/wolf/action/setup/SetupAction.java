@@ -13,6 +13,7 @@ public abstract class SetupAction extends Action {
     this.stage = stage;
   }
 
+  @Override
   public SetupStage getStage() {
     return stage;
   }

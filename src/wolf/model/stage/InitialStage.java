@@ -1,12 +1,11 @@
 package wolf.model.stage;
 
 import java.util.List;
-
 import wolf.action.Action;
 import wolf.action.setup.NewGameAction;
 import wolf.bot.IBot;
+import wolf.model.GameConfig;
 import wolf.model.Player;
-
 import com.google.common.collect.ImmutableList;
 
 public class InitialStage extends Stage {
@@ -20,6 +19,11 @@ public class InitialStage extends Stage {
     getBot().onPlayersChanged();
   }
   
+  @Override
+  public GameConfig getConfig() {
+    return null;
+  }
+
   @Override
   public List<Action> getStageActions(Player player) {
     return actions;

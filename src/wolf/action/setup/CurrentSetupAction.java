@@ -3,15 +3,15 @@ package wolf.action.setup;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-
+import wolf.action.Action;
 import wolf.bot.IBot;
 import wolf.model.Player;
 import wolf.model.Role;
-import wolf.model.stage.SetupStage;
+import wolf.model.stage.Stage;
 
-public class CurrentSetupAction extends SetupAction {
+public class CurrentSetupAction extends Action {
 
-  public CurrentSetupAction(SetupStage stage) {
+  public CurrentSetupAction(Stage stage) {
     super(stage, "current");
   }
 
@@ -20,7 +20,7 @@ public class CurrentSetupAction extends SetupAction {
     getBot().sendMessage(invoker.getName(), printRoles(getStage(), getBot()));
   }
 
-  public static String printRoles(SetupStage stage, IBot bot) {
+  public static String printRoles(Stage stage, IBot bot) {
     Map<Role, Integer> roles = stage.getConfig().getRoles();
 
     if (roles.isEmpty()) {
